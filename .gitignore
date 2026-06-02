@@ -1,0 +1,34 @@
+# Environment — .env.example IS committed; .env and overrides are not
+.env
+.env.local
+.env.*.local
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.uv/
+
+# Data (raw corpus, generated briefs, schedule state, logs — never in git)
+data/raw/
+data/briefs/
+data/schedule/
+data/logs/
+
+# Node
+node_modules/
+web/node_modules/
+web/dist/
+web/.vite/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp

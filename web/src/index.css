@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Figtree:wght@400;500;600&family=DM+Mono:wght@400&display=swap');
+
+@import "tailwindcss";
+
+:root {
+  /* Neutral ramp */
+  --bg:          #FAF8F4;
+  --surface:     #FFFFFF;
+  --surface-2:   #F3F0EB;
+  --border:      #E4DDD3;
+  --text:        #1C1612;
+  --text-muted:  #7A6E64;
+
+  /* Brand + accents */
+  --brand:       #C0694A;
+  --accent-1:    #2C5F4A;
+  --accent-2:    #E8A23A;
+
+  /* Severity */
+  --sev-high:    #BF3B2F;
+  --sev-medium:  #C0694A;
+  --sev-low:     #7A8C6A;
+
+  /* Trend */
+  --trend-up:    #2C5F4A;
+  --trend-down:  #BF3B2F;
+  --trend-flat:  #7A6E64;
+
+  /* States */
+  --focus-ring:  #C0694A40;
+  --partial-bg:  #FEF3E2;
+
+  /* Radius */
+  --radius:      6px;
+
+  /* Typography */
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body:    'Figtree', system-ui, sans-serif;
+  --font-mono:    'DM Mono', ui-monospace, monospace;
+
+  /* Elevation */
+  --shadow-card:   0 1px 3px rgba(28,22,18,0.08), 0 0 0 1px var(--border);
+  --shadow-raised: 0 4px 16px rgba(28,22,18,0.10), 0 0 0 1px var(--border);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100svh;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+  color: var(--text);
+  margin: 0;
+}
+
+p { margin: 0; }
+
+code, .mono {
+  font-family: var(--font-mono);
+}

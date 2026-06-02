@@ -1,0 +1,29 @@
+[project]
+name = "tideline"
+version = "0.1.0"
+description = "Weekly review-based action brief for small business owners"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "anthropic>=0.40.0",
+    "fastapi>=0.111.0",
+    "uvicorn[standard]>=0.30.0",
+    "apscheduler>=3.10.0",
+    "python-dotenv>=1.0.0",
+    "httpx>=0.27.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["pipeline", "reliability", "scheduler", "api", "eval"]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

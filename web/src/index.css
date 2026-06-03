@@ -74,3 +74,27 @@ p { margin: 0; }
 code, .mono {
   font-family: var(--font-mono);
 }
+
+/* Responsive two-column layout for main dashboard grid */
+@media (min-width: 900px) {
+  .main-grid {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr) !important;
+  }
+}
+
+/* Focus-visible utility for motion elements */
+.focus-card:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+button:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--radius);
+}
+
+select:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}

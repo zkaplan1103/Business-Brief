@@ -38,7 +38,7 @@ export const FIXTURE_THEME_REPORT: ThemeReport = {
       count: 5,
       sample_quotes: [
         'The avocado toast was perfect last week, soggy this time.',
-        'Hit or miss depending on who's in the kitchen.',
+        "Hit or miss depending on who's in the kitchen.",
       ],
     },
     {
@@ -60,7 +60,7 @@ export const FIXTURE_THEME_REPORT: ThemeReport = {
       review_ids: ['r19', 'r20', 'r21'],
       count: 3,
       sample_quotes: [
-        'WiFi drops every 20 minutes — can't get work done.',
+        "WiFi drops every 20 minutes — can't get work done.",
         'Password works once, then nothing.',
       ],
     },

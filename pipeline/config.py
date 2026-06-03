@@ -6,7 +6,7 @@ class Config:
     # Generation
     gen_backend: str = "anthropic"
     gen_model: str = "claude-haiku-4-5-20251001"
-    min_reviews_for_brief: int = 5
+    min_reviews_for_brief: int = 1
     max_themes: int = 8
     briefs_dir: str = "data/briefs"
 

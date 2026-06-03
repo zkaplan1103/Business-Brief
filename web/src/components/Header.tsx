@@ -6,9 +6,23 @@ interface HeaderProps {
   themeReport: ThemeReport
   selectedWeek: string
   onWeekChange: (week: string) => void
+  businesses?: BusinessMeta[]
+  selectedBusiness?: string
+  onBusinessChange?: (id: string) => void
+  loading?: boolean
 }
 
-export default function Header({ business, brief, themeReport, selectedWeek, onWeekChange }: HeaderProps) {
+export default function Header({
+  business,
+  brief,
+  themeReport,
+  selectedWeek,
+  onWeekChange,
+  businesses,
+  selectedBusiness,
+  onBusinessChange,
+  loading,
+}: HeaderProps) {
   const delta = themeReport.prev_avg_stars != null
     ? (themeReport.avg_stars - themeReport.prev_avg_stars).toFixed(1)
     : null
@@ -77,8 +91,32 @@ export default function Header({ business, brief, themeReport, selectedWeek, onW
             </span>
           </div>
 
-          {/* Week selector */}
-          <div className="flex items-center gap-2">
+          {/* Business + week selectors */}
+          <div className="flex items-center gap-2 flex-wrap">
+            {businesses && businesses.length > 1 && onBusinessChange && (
+              <select
+                aria-label="Select business"
+                value={selectedBusiness}
+                onChange={e => onBusinessChange(e.target.value)}
+                style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: 13,
+                  color: 'var(--text)',
+                  background: 'var(--surface-2)',
+                  border: '1px solid var(--border)',
+                  borderRadius: 'var(--radius)',
+                  padding: '4px 10px',
+                  outline: 'none',
+                  cursor: 'pointer',
+                }}
+                onFocus={e => { e.currentTarget.style.boxShadow = '0 0 0 3px var(--focus-ring)' }}
+                onBlur={e => { e.currentTarget.style.boxShadow = 'none' }}
+              >
+                {businesses.map(b => (
+                  <option key={b.business_id} value={b.business_id}>{b.business_name}</option>
+                ))}
+              </select>
+            )}
             <label
               htmlFor="week-select"
               style={{
@@ -114,6 +152,11 @@ export default function Header({ business, brief, themeReport, selectedWeek, onW
                 <option key={w} value={w}>{formatWeek(w)}</option>
               ))}
             </select>
+            {loading && (
+              <span style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: 'var(--text-muted)' }}>
+                Loading…
+              </span>
+            )}
           </div>
         </div>
 

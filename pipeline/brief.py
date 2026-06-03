@@ -311,6 +311,10 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Run the Tideline brief pipeline")
     parser.add_argument("--business", required=True, help="Business ID (ASIN)")
     parser.add_argument("--week", required=True, help="ISO week, e.g. 2024-W31")
+    parser.add_argument(
+        "--skip-ingest", action="store_true",
+        help="Skip the ingest step (use existing data/processed/reviews.jsonl)"
+    )
     args = parser.parse_args()
 
     business_id: str = args.business
@@ -324,13 +328,16 @@ def main() -> None:
     run_id = str(uuid.uuid4())
 
     # -- Ingest --
-    print(f"[ingest] Fetching reviews for {business_id!r} …", flush=True)
-    try:
-        review_count = ingest_stage.run(business_id, week, cfg)
-        print(f"[ingest] {review_count:,} reviews written.", flush=True)
-    except Exception as exc:
-        print(f"[ingest] FAILED: {exc}", file=sys.stderr)
-        sys.exit(1)
+    if args.skip_ingest:
+        print(f"[ingest] Skipping — using existing data/processed/reviews.jsonl", flush=True)
+    else:
+        print(f"[ingest] Fetching reviews for {business_id!r} …", flush=True)
+        try:
+            review_count = ingest_stage.run(business_id, week, cfg)
+            print(f"[ingest] {review_count:,} reviews written.", flush=True)
+        except Exception as exc:
+            print(f"[ingest] FAILED: {exc}", file=sys.stderr)
+            sys.exit(1)
 
     # -- Analyze --
     print(f"[analyze] Classifying themes for {business_id!r} / {week!r} …", flush=True)

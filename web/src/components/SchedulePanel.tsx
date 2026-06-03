@@ -31,10 +31,9 @@ export default function SchedulePanel({ schedule, onSave }: SchedulePanelProps) 
 
   function handleSave() {
     setSaveState('saving')
-    // Simulate async save
+    onSave?.(settings)
     setTimeout(() => {
       setSaveState('saved')
-      onSave?.(settings)
       setTimeout(() => setSaveState('idle'), 1800)
     }, 400)
   }

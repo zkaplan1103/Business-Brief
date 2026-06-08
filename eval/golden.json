@@ -1,0 +1,20 @@
+[
+  {
+    "business_id": "B007IAE5WY",
+    "week": "2022-W40",
+    "expected_top_theme_labels": [
+      "Effective exfoliation and skin improvement",
+      "Durability and longevity of product",
+      "Product authenticity concerns"
+    ]
+  },
+  {
+    "business_id": "B012Q9NGE4",
+    "week": "2021-W30",
+    "expected_top_theme_labels": [
+      "Hair Shine and Smoothness Results",
+      "Pleasant Scent and Fragrance",
+      "Negative results on damaged hair"
+    ]
+  }
+]

@@ -7,353 +7,251 @@ interface BriefPanelProps {
   themeReport: ThemeReport
 }
 
-const severityStyles: Record<string, { color: string; bg: string; label: string }> = {
-  high: { color: 'var(--sev-high)', bg: 'color-mix(in srgb, var(--sev-high) 8%, var(--surface))', label: 'High Priority' },
-  medium: { color: 'var(--sev-medium)', bg: 'color-mix(in srgb, var(--sev-medium) 8%, var(--surface))', label: 'Medium Priority' },
-  low: { color: 'var(--sev-low)', bg: 'color-mix(in srgb, var(--sev-low) 8%, var(--surface))', label: 'Low Priority' },
-}
+const sevConfig = {
+  high:   { color: 'var(--neg)', bg: 'var(--neg-soft)', stripe: 'var(--neg)', label: 'High priority' },
+  medium: { color: 'var(--mix)', bg: 'var(--mix-soft)', stripe: 'var(--mix)', label: 'Medium priority' },
+  low:    { color: 'var(--pos)', bg: 'var(--pos-soft)', stripe: 'var(--pos)', label: 'Low priority' },
+} as const
 
-interface EvidenceDrawerProps {
-  item: ActionItem
-  themeReport: ThemeReport
-  open: boolean
-}
-
-function EvidenceDrawer({ item, themeReport, open }: EvidenceDrawerProps) {
-  const theme = themeReport.themes.find(t => t.theme_id === item.theme_id)
-  if (!theme) return null
-
-  return (
-    <AnimatePresence>
-      {open && (
-        <motion.div
-          key="drawer"
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: 'auto' }}
-          exit={{ opacity: 0, height: 0 }}
-          transition={{ duration: 0.25, ease: 'easeOut' }}
-          style={{ overflow: 'hidden' }}
-        >
-          <div
-            style={{
-              marginTop: 16,
-              paddingTop: 16,
-              borderTop: '1px solid var(--border)',
-            }}
-          >
-            <div
-              style={{
-                fontFamily: 'var(--font-body)',
-                fontSize: 11,
-                fontWeight: 600,
-                color: 'var(--text-muted)',
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase',
-                marginBottom: 10,
-              }}
-            >
-              Evidence — {item.evidence_review_ids.length} review{item.evidence_review_ids.length !== 1 ? 's' : ''}
-            </div>
-            <div className="flex flex-col gap-3">
-              {theme.sample_quotes.map((quote, i) => (
-                <blockquote
-                  key={i}
-                  style={{
-                    margin: 0,
-                    paddingLeft: 12,
-                    borderLeft: '2px solid var(--border)',
-                    fontFamily: 'var(--font-display)',
-                    fontStyle: 'italic',
-                    fontSize: 15,
-                    color: 'var(--text-muted)',
-                    lineHeight: 1.55,
-                  }}
-                >
-                  "{quote}"
-                </blockquote>
-              ))}
-            </div>
-            <div
-              style={{
-                marginTop: 10,
-                fontFamily: 'var(--font-mono)',
-                fontSize: 11,
-                color: 'var(--text-muted)',
-              }}
-            >
-              Review IDs: {item.evidence_review_ids.join(', ')}
-            </div>
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  )
-}
-
-interface ActionCardProps {
+function ActionCard({ item, themeReport, index }: {
   item: ActionItem
   themeReport: ThemeReport
   index: number
-  isFirst: boolean
-}
-
-function ActionCard({ item, themeReport, index, isFirst }: ActionCardProps) {
+}) {
   const [evidenceOpen, setEvidenceOpen] = useState(false)
-  const sev = severityStyles[item.severity]
+  const sev = sevConfig[item.severity]
+  const theme = themeReport.themes.find(t => t.theme_id === item.theme_id)
+  const hasEvidence = !!theme?.sample_quotes.length
 
   return (
     <motion.article
-      initial={{ opacity: 0, y: 12 }}
+      initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.35, ease: 'easeOut', delay: index * 0.07 }}
-      whileHover={{ y: -2, boxShadow: '0 4px 16px rgba(28,22,18,0.10), 0 0 0 1px var(--border)' }}
+      transition={{ duration: 0.28, ease: 'easeOut', delay: index * 0.06 }}
       style={{
         background: 'var(--surface)',
+        border: '1px solid var(--line)',
         borderRadius: 'var(--radius)',
-        boxShadow: 'var(--shadow-card)',
-        padding: isFirst ? '24px 28px' : '18px 24px',
-        cursor: 'pointer',
-        transition: 'box-shadow 0.15s easeOut',
-        border: isFirst ? `1.5px solid ${sev.color}` : '1px solid var(--border)',
+        boxShadow: 'var(--shadow)',
+        padding: '20px 22px',
         position: 'relative',
+        overflow: 'hidden',
+        marginTop: index === 0 ? 0 : 16,
       }}
-      onClick={() => setEvidenceOpen(v => !v)}
-      role="button"
-      aria-expanded={evidenceOpen}
-      aria-label={`Action item: ${item.headline}`}
-      tabIndex={0}
-      className="focus-card"
-      onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setEvidenceOpen(v => !v) } }}
     >
-      {/* Rank badge — absolutely positioned on first card */}
-      {isFirst && (
-        <div
+      {/* Left severity stripe */}
+      <div
+        style={{
+          position: 'absolute',
+          left: 0, top: 0, bottom: 0,
+          width: 4,
+          background: sev.stripe,
+        }}
+      />
+
+      {/* Rank + severity + evidence button */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+        <span
           style={{
-            position: 'absolute',
-            top: -1,
-            right: 16,
-            background: sev.color,
-            color: '#fff',
-            fontFamily: 'var(--font-body)',
-            fontSize: 11,
+            fontFamily: 'var(--font-display)',
+            fontSize: 13,
             fontWeight: 600,
-            letterSpacing: '0.06em',
-            textTransform: 'uppercase',
-            padding: '2px 10px',
-            borderRadius: '0 0 4px 4px',
+            color: 'var(--ink-faint)',
+            background: 'var(--surface-2)',
+            border: '1px solid var(--line)',
+            borderRadius: 7,
+            padding: '2px 9px',
           }}
         >
-          #1 Priority
-        </div>
-      )}
-
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex-1 min-w-0">
-          {/* Severity tag */}
-          <div className="flex items-center gap-2 mb-2 flex-wrap">
-            <span
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 5,
-                fontFamily: 'var(--font-body)',
-                fontSize: 11,
-                fontWeight: 600,
-                letterSpacing: '0.06em',
-                textTransform: 'uppercase',
-                color: sev.color,
-                background: sev.bg,
-                borderRadius: 3,
-                padding: '2px 8px',
-                border: `1px solid ${sev.color}30`,
-              }}
-            >
-              <span
-                style={{
-                  width: 6,
-                  height: 6,
-                  borderRadius: '50%',
-                  background: sev.color,
-                  display: 'inline-block',
-                }}
-              />
-              {sev.label}
-            </span>
-            {!isFirst && (
-              <span
-                style={{
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: 11,
-                  color: 'var(--text-muted)',
-                }}
-              >
-                #{item.rank}
-              </span>
-            )}
-          </div>
-
-          {/* Headline */}
-          <h3
-            style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: isFirst ? 24 : 18,
-              fontWeight: 600,
-              color: 'var(--text)',
-              letterSpacing: '-0.02em',
-              lineHeight: 1.2,
-              marginBottom: 8,
-            }}
-          >
-            {item.headline}
-          </h3>
-
-          {/* Why it matters */}
-          <p
-            style={{
-              fontFamily: 'var(--font-body)',
-              fontSize: isFirst ? 15 : 13,
-              color: 'var(--text-muted)',
-              lineHeight: 1.55,
-              marginBottom: 10,
-            }}
-          >
-            {item.why_it_matters}
-          </p>
-
-          {/* Recommended action */}
-          <div
-            style={{
-              background: 'var(--surface-2)',
-              border: '1px solid var(--border)',
-              borderRadius: 'var(--radius)',
-              padding: '10px 14px',
-              display: 'flex',
-              gap: 10,
-              alignItems: 'flex-start',
-            }}
-          >
-            <span
-              style={{
-                fontFamily: 'var(--font-body)',
-                fontSize: 11,
-                fontWeight: 600,
-                color: 'var(--accent-1)',
-                letterSpacing: '0.06em',
-                textTransform: 'uppercase',
-                marginTop: 1,
-                flexShrink: 0,
-              }}
-            >
-              Do this
-            </span>
-            <p
-              style={{
-                fontFamily: 'var(--font-body)',
-                fontSize: 13,
-                color: 'var(--text)',
-                lineHeight: 1.55,
-                margin: 0,
-              }}
-            >
-              {item.recommended_action}
-            </p>
-          </div>
-        </div>
-
-        {/* Evidence toggle chevron */}
-        <button
-          onClick={e => { e.stopPropagation(); setEvidenceOpen(v => !v) }}
+          #{item.rank}
+        </span>
+        <span
           style={{
-            flexShrink: 0,
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            padding: 4,
-            color: 'var(--text-muted)',
-            fontSize: 18,
-            lineHeight: 1,
-            transform: evidenceOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-            transition: 'transform 0.2s ease',
-            marginTop: 2,
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 6,
+            fontSize: 11,
+            fontWeight: 700,
+            letterSpacing: '.06em',
+            textTransform: 'uppercase' as const,
+            padding: '3px 10px',
+            borderRadius: 999,
+            color: sev.color,
+            background: sev.bg,
           }}
-          aria-label={evidenceOpen ? 'Hide evidence' : 'Show evidence'}
         >
-          ⌄
-        </button>
+          <span style={{ fontSize: 13, lineHeight: 1 }}>●</span>
+          {sev.label}
+        </span>
+
+        {hasEvidence && (
+          <button
+            onClick={() => setEvidenceOpen(v => !v)}
+            style={{
+              marginLeft: 'auto',
+              fontFamily: 'var(--font-body)',
+              fontSize: 12,
+              fontWeight: 600,
+              color: evidenceOpen ? 'var(--brand)' : 'var(--ink-soft)',
+              background: 'transparent',
+              border: `1px solid ${evidenceOpen ? 'var(--brand)' : 'var(--line-strong)'}`,
+              borderRadius: 999,
+              padding: '5px 12px',
+              cursor: 'pointer',
+              transition: 'all .15s',
+            }}
+            aria-expanded={evidenceOpen}
+          >
+            Evidence {evidenceOpen ? '▴' : '▾'}
+          </button>
+        )}
       </div>
 
-      <EvidenceDrawer item={item} themeReport={themeReport} open={evidenceOpen} />
+      {/* Headline */}
+      <h3
+        style={{
+          fontFamily: 'var(--font-display)',
+          fontSize: 21,
+          fontWeight: 600,
+          lineHeight: 1.25,
+          color: 'var(--ink)',
+        }}
+      >
+        {item.headline}
+      </h3>
+
+      {/* Why it matters */}
+      <p
+        style={{
+          fontSize: 14,
+          color: 'var(--ink-soft)',
+          marginTop: 8,
+          lineHeight: 1.55,
+          maxWidth: '64ch',
+        }}
+      >
+        {item.why_it_matters}
+      </p>
+
+      {/* Do this */}
+      <div
+        style={{
+          display: 'flex',
+          gap: 12,
+          marginTop: 16,
+          background: 'var(--surface-2)',
+          borderRadius: 10,
+          padding: '14px 16px',
+        }}
+      >
+        <span
+          style={{
+            fontSize: 10,
+            letterSpacing: '.14em',
+            textTransform: 'uppercase' as const,
+            fontWeight: 800,
+            color: 'var(--pos)',
+            whiteSpace: 'nowrap',
+            paddingTop: 2,
+          }}
+        >
+          Do this
+        </span>
+        <p style={{ fontSize: 13.5, color: 'var(--ink)', lineHeight: 1.55, margin: 0 }}>
+          {item.recommended_action}
+        </p>
+      </div>
+
+      {/* Evidence drawer */}
+      <AnimatePresence>
+        {evidenceOpen && hasEvidence && (
+          <motion.div
+            key="evidence"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+            style={{ overflow: 'hidden' }}
+          >
+            <div style={{ borderTop: '1px dashed var(--line-strong)', paddingTop: 12, marginTop: 14 }}>
+              <div
+                style={{
+                  fontSize: 10,
+                  letterSpacing: '.14em',
+                  textTransform: 'uppercase' as const,
+                  color: 'var(--ink-faint)',
+                  fontWeight: 700,
+                  marginBottom: 8,
+                }}
+              >
+                Sourced from {theme!.review_ids.length} review{theme!.review_ids.length !== 1 ? 's' : ''}
+              </div>
+              {theme!.sample_quotes.map((q, i) => (
+                <div
+                  key={i}
+                  style={{
+                    fontFamily: 'var(--font-display)',
+                    fontStyle: 'italic',
+                    fontSize: 14,
+                    color: 'var(--ink)',
+                    padding: '8px 0 8px 14px',
+                    borderLeft: '2px solid var(--line-strong)',
+                    marginBottom: i < theme!.sample_quotes.length - 1 ? 8 : 0,
+                    lineHeight: 1.5,
+                  }}
+                >
+                  "{q}"
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.article>
   )
 }
 
 export default function BriefPanel({ brief, themeReport }: BriefPanelProps) {
   return (
-    <section aria-label="Action brief">
-      {/* Summary */}
-      <div
-        style={{
-          background: 'var(--surface)',
-          borderRadius: 'var(--radius)',
-          boxShadow: 'var(--shadow-card)',
-          padding: '20px 24px',
-          marginBottom: 16,
-        }}
-      >
+    <section aria-label="Action brief" style={{ marginTop: 30 }}>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 14 }}>
+        <span
+          style={{
+            fontSize: 11,
+            letterSpacing: '.16em',
+            textTransform: 'uppercase' as const,
+            color: 'var(--ink-faint)',
+            fontWeight: 700,
+          }}
+        >
+          Action Items
+        </span>
+        <span style={{ fontSize: 11, color: 'var(--ink-faint)' }}>
+          {brief.action_items.length} this week · ranked by severity
+        </span>
+      </div>
+
+      <AnimatePresence>
+        {brief.action_items.map((item, i) => (
+          <ActionCard key={item.theme_id} item={item} themeReport={themeReport} index={i} />
+        ))}
+      </AnimatePresence>
+
+      {brief.action_items.length === 0 && (
         <div
           style={{
-            fontFamily: 'var(--font-body)',
-            fontSize: 11,
-            fontWeight: 600,
-            color: 'var(--text-muted)',
-            letterSpacing: '0.08em',
-            textTransform: 'uppercase',
-            marginBottom: 8,
+            padding: '24px 20px',
+            background: 'var(--surface)',
+            borderRadius: 'var(--radius)',
+            border: '1px solid var(--line)',
+            fontSize: 14,
+            color: 'var(--ink-soft)',
+            textAlign: 'center',
           }}
         >
-          Weekly Summary
+          No negative themes identified this week — nice work.
         </div>
-        <p
-          style={{
-            fontFamily: 'var(--font-display)',
-            fontStyle: 'italic',
-            fontSize: 18,
-            color: 'var(--text)',
-            lineHeight: 1.55,
-          }}
-        >
-          {brief.summary}
-        </p>
-      </div>
-
-      {/* Action items */}
-      <div
-        style={{
-          fontFamily: 'var(--font-body)',
-          fontSize: 11,
-          fontWeight: 600,
-          color: 'var(--text-muted)',
-          letterSpacing: '0.08em',
-          textTransform: 'uppercase',
-          marginBottom: 10,
-        }}
-      >
-        Your Action Items
-      </div>
-
-      <div className="flex flex-col gap-3">
-        <AnimatePresence>
-          {brief.action_items.map((item, i) => (
-            <ActionCard
-              key={item.theme_id}
-              item={item}
-              themeReport={themeReport}
-              index={i}
-              isFirst={i === 0}
-            />
-          ))}
-        </AnimatePresence>
-      </div>
+      )}
     </section>
   )
 }

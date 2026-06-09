@@ -8,24 +8,20 @@ export default function EmptyState({ themeReport }: EmptyStateProps) {
   return (
     <section
       style={{
-        background: 'var(--surface)',
-        borderRadius: 'var(--radius)',
-        boxShadow: 'var(--shadow-card)',
-        padding: '48px 32px',
+        maxWidth: 520,
+        margin: '64px auto',
         textAlign: 'center',
-        maxWidth: 560,
-        margin: '0 auto',
+        padding: '0 24px',
       }}
       aria-label="Not enough reviews this week"
     >
-      {/* Decorative mark */}
       <div
         style={{
           fontFamily: 'var(--font-display)',
-          fontSize: 48,
-          color: 'var(--border)',
+          fontSize: 40,
+          color: 'var(--line)',
           lineHeight: 1,
-          marginBottom: 20,
+          marginBottom: 24,
           userSelect: 'none',
         }}
         aria-hidden="true"
@@ -38,38 +34,37 @@ export default function EmptyState({ themeReport }: EmptyStateProps) {
           fontFamily: 'var(--font-display)',
           fontSize: 28,
           fontWeight: 600,
-          color: 'var(--text)',
+          color: 'var(--ink)',
           letterSpacing: '-0.02em',
           lineHeight: 1.2,
           marginBottom: 12,
         }}
       >
-        Not enough to call it this week
+        A quiet week
       </h2>
 
       <p
         style={{
           fontFamily: 'var(--font-body)',
           fontSize: 15,
-          color: 'var(--text-muted)',
-          lineHeight: 1.65,
-          maxWidth: 400,
-          margin: '0 auto 24px',
+          color: 'var(--ink-soft)',
+          lineHeight: 1.7,
+          marginBottom: 28,
         }}
       >
-        Tideline saw <strong style={{ color: 'var(--text)', fontWeight: 500 }}>{themeReport.review_count} review{themeReport.review_count !== 1 ? 's' : ''}</strong> for <span style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>{themeReport.week}</span>.
-        That's a quiet week — not enough signal to surface a meaningful action brief without the risk of reading too much into too little.
+        {themeReport.review_count} review{themeReport.review_count !== 1 ? 's' : ''} came in for{' '}
+        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>{themeReport.week}</span>.
+        That's not enough signal to surface a meaningful brief without the risk of reading too much into too little.
       </p>
 
       <div
         style={{
-          background: 'var(--surface-2)',
-          border: '1px solid var(--border)',
+          background: 'var(--surface)',
+          border: '1px solid var(--line)',
           borderRadius: 'var(--radius)',
           padding: '16px 20px',
           textAlign: 'left',
-          maxWidth: 380,
-          margin: '0 auto',
+          boxShadow: 'var(--shadow)',
         }}
       >
         <div
@@ -77,10 +72,10 @@ export default function EmptyState({ themeReport }: EmptyStateProps) {
             fontFamily: 'var(--font-body)',
             fontSize: 11,
             fontWeight: 600,
-            color: 'var(--text-muted)',
+            color: 'var(--ink-soft)',
             letterSpacing: '0.08em',
             textTransform: 'uppercase',
-            marginBottom: 8,
+            marginBottom: 10,
           }}
         >
           What to do
@@ -89,15 +84,15 @@ export default function EmptyState({ themeReport }: EmptyStateProps) {
           style={{
             fontFamily: 'var(--font-body)',
             fontSize: 13,
-            color: 'var(--text)',
-            lineHeight: 1.7,
+            color: 'var(--ink)',
+            lineHeight: 1.75,
             margin: 0,
-            paddingLeft: 18,
+            paddingLeft: 16,
           }}
         >
-          <li>Check back next week — patterns become clear over multiple weeks.</li>
-          <li>Consider enabling weekly scheduling so Tideline runs automatically.</li>
-          <li>If reviews aren't coming in, your Yelp profile may need a refresh.</li>
+          <li>Check back next week — patterns emerge over multiple weeks.</li>
+          <li>Enable weekly scheduling so Tideline runs automatically.</li>
+          <li>Consider whether your review profile needs attention.</li>
         </ul>
       </div>
 
@@ -105,13 +100,13 @@ export default function EmptyState({ themeReport }: EmptyStateProps) {
         style={{
           fontFamily: 'var(--font-display)',
           fontStyle: 'italic',
-          fontSize: 15,
-          color: 'var(--text-muted)',
-          marginTop: 24,
-          lineHeight: 1.55,
+          fontSize: 14,
+          color: 'var(--ink-soft)',
+          marginTop: 28,
+          lineHeight: 1.6,
         }}
       >
-        "A quiet week isn't a bad week — it's just a quiet one."
+        "A quiet week isn't a bad week."
       </p>
     </section>
   )

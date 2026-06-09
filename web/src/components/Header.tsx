@@ -1,232 +1,124 @@
-import type { BusinessMeta, Brief, ThemeReport } from '../types'
+import { useEffect, useState } from 'react'
+
+type Tab = 'overview' | 'charts' | 'actions'
 
 interface HeaderProps {
-  business: BusinessMeta
-  brief: Brief
-  themeReport: ThemeReport
-  selectedWeek: string
-  onWeekChange: (week: string) => void
-  businesses?: BusinessMeta[]
-  selectedBusiness?: string
-  onBusinessChange?: (id: string) => void
   loading?: boolean
+  activeTab: Tab
+  onTabChange: (t: Tab) => void
+  onSettingsOpen: () => void
+}
+
+function useTheme() {
+  const prefersDark = typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches
+  const [dark, setDark] = useState(prefersDark)
+  useEffect(() => {
+    document.documentElement.classList.remove('dark', 'light')
+    document.documentElement.classList.add(dark ? 'dark' : 'light')
+  }, [dark])
+  return { dark, toggle: () => setDark(d => !d) }
+}
+
+const TABS: { id: Tab; label: string }[] = [
+  { id: 'overview', label: 'Overview' },
+  { id: 'charts',   label: 'Charts' },
+  { id: 'actions',  label: 'Actions' },
+]
+
+const GearIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="3"/>
+    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+  </svg>
+)
+
+const SunIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="4"/>
+    <line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/>
+    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+    <line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/>
+    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+  </svg>
+)
+
+const MoonIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+  </svg>
+)
+
+const iconBtnStyle: React.CSSProperties = {
+  width: 36, height: 36, borderRadius: '50%',
+  border: '1px solid var(--glass-border)',
+  background: 'var(--glass-bg)',
+  backdropFilter: 'blur(12px) saturate(1.4)',
+  WebkitBackdropFilter: 'blur(12px) saturate(1.4)',
+  boxShadow: 'var(--glass-shadow)',
+  color: 'var(--ink-soft)', cursor: 'pointer',
+  display: 'flex', alignItems: 'center', justifyContent: 'center',
+  flexShrink: 0, padding: 0,
+  transition: 'background 0.15s, border-color 0.15s, color 0.15s',
 }
 
 export default function Header({
-  business,
-  brief,
-  themeReport,
-  selectedWeek,
-  onWeekChange,
-  businesses,
-  selectedBusiness,
-  onBusinessChange,
-  loading,
+  loading, activeTab, onTabChange, onSettingsOpen,
 }: HeaderProps) {
-  const delta = themeReport.prev_avg_stars != null
-    ? (themeReport.avg_stars - themeReport.prev_avg_stars).toFixed(1)
-    : null
-
-  const trendColor =
-    brief.trend === 'up' ? 'var(--trend-up)' :
-    brief.trend === 'down' ? 'var(--trend-down)' :
-    'var(--trend-flat)'
-
-  const trendArrow =
-    brief.trend === 'up' ? '↑' :
-    brief.trend === 'down' ? '↓' :
-    '→'
-
-  const deltaLabel = delta != null
-    ? `${Number(delta) > 0 ? '+' : ''}${delta} from last week`
-    : 'No prior week'
-
-  function formatWeek(w: string) {
-    // "2024-W31" → "Week 31, 2024"
-    const [year, wk] = w.split('-W')
-    return `Week ${wk}, ${year}`
-  }
+  const { dark, toggle } = useTheme()
 
   return (
-    <header
-      style={{
-        background: 'var(--surface)',
-        boxShadow: 'var(--shadow-card)',
-        borderBottom: '1px solid var(--border)',
-      }}
-    >
-      <div
-        style={{ maxWidth: 1200, margin: '0 auto', padding: '20px 24px' }}
-        className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
-      >
-        {/* Left: business name + week */}
-        <div className="flex flex-col gap-1">
-          <div className="flex items-center gap-3 flex-wrap">
-            <h1
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: 32,
-                fontWeight: 600,
-                letterSpacing: '-0.02em',
-                lineHeight: 1.1,
-                color: 'var(--text)',
-              }}
-            >
-              {business.business_name}
-            </h1>
-            <span
-              style={{
-                fontFamily: 'var(--font-mono)',
-                fontSize: 11,
-                color: 'var(--text-muted)',
-                background: 'var(--surface-2)',
-                border: '1px solid var(--border)',
-                borderRadius: 'var(--radius)',
-                padding: '2px 8px',
-                letterSpacing: '0.04em',
-                textTransform: 'uppercase',
-              }}
-            >
-              {brief.generated_by}
-            </span>
-          </div>
+    <header style={{ position: 'sticky', top: 0, zIndex: 100 }}>
 
-          {/* Business + week selectors */}
-          <div className="flex items-center gap-2 flex-wrap">
-            {businesses && businesses.length > 1 && onBusinessChange && (
-              <select
-                aria-label="Select business"
-                value={selectedBusiness}
-                onChange={e => onBusinessChange(e.target.value)}
-                style={{
-                  fontFamily: 'var(--font-body)',
-                  fontSize: 13,
-                  color: 'var(--text)',
-                  background: 'var(--surface-2)',
-                  border: '1px solid var(--border)',
-                  borderRadius: 'var(--radius)',
-                  padding: '4px 10px',
-                  outline: 'none',
-                  cursor: 'pointer',
-                }}
-                onFocus={e => { e.currentTarget.style.boxShadow = '0 0 0 3px var(--focus-ring)' }}
-                onBlur={e => { e.currentTarget.style.boxShadow = 'none' }}
-              >
-                {businesses.map(b => (
-                  <option key={b.business_id} value={b.business_id}>{b.business_name}</option>
-                ))}
-              </select>
-            )}
-            <label
-              htmlFor="week-select"
-              style={{
-                fontFamily: 'var(--font-body)',
-                fontSize: 13,
-                color: 'var(--text-muted)',
-                letterSpacing: '0.04em',
-                textTransform: 'uppercase',
-                fontWeight: 500,
-              }}
-            >
-              Brief for
-            </label>
-            <select
-              id="week-select"
-              value={selectedWeek}
-              onChange={e => onWeekChange(e.target.value)}
-              style={{
-                fontFamily: 'var(--font-mono)',
-                fontSize: 13,
-                color: 'var(--text)',
-                background: 'var(--surface-2)',
-                border: '1px solid var(--border)',
-                borderRadius: 'var(--radius)',
-                padding: '4px 10px',
-                outline: 'none',
-                cursor: 'pointer',
-              }}
-              onFocus={e => { e.currentTarget.style.boxShadow = '0 0 0 3px var(--focus-ring)' }}
-              onBlur={e => { e.currentTarget.style.boxShadow = 'none' }}
-            >
-              {business.weeks.map(w => (
-                <option key={w} value={w}>{formatWeek(w)}</option>
-              ))}
-            </select>
-            {loading && (
-              <span style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: 'var(--text-muted)' }}>
-                Loading…
-              </span>
-            )}
-          </div>
+      {/* Top row: brand | divider | selectors | → icons */}
+      <div style={{ background: 'var(--surface)', borderBottom: '1px solid var(--line)', maxWidth: '100%' }}>
+      <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 16px', height: 52, display: 'flex', alignItems: 'center' }}>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 2, flexShrink: 0 }}>
+          <span style={{ fontSize: 19, fontWeight: 700, color: 'var(--brand)', lineHeight: 1, letterSpacing: '-0.01em' }}>BizBrief</span>
+          <span style={{ fontSize: 9, fontWeight: 400, color: 'var(--ink-faint)', letterSpacing: '0.14em', textTransform: 'uppercase' as const, lineHeight: 1 }}>Review Brief</span>
         </div>
 
-        {/* Right: headline verdict */}
-        <div
-          className="flex flex-col items-start sm:items-end gap-0"
-          aria-label="Rating summary"
-        >
-          <div className="flex items-baseline gap-3">
-            <span
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: 64,
-                fontWeight: 600,
-                letterSpacing: '-0.02em',
-                lineHeight: 1,
-                color: trendColor,
-              }}
-              aria-label={`${themeReport.avg_stars} stars`}
-            >
-              {themeReport.avg_stars.toFixed(1)}
-            </span>
-            <span
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: 32,
-                fontWeight: 400,
-                color: 'var(--text-muted)',
-                lineHeight: 1,
-                marginBottom: 4,
-              }}
-            >
-              / 5
-            </span>
-            <span
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: 48,
-                fontWeight: 600,
-                color: trendColor,
-                lineHeight: 1,
-              }}
-              aria-label={`Trend: ${brief.trend}`}
-            >
-              {trendArrow}
-            </span>
-          </div>
-          <div
-            style={{
-              fontFamily: 'var(--font-body)',
-              fontSize: 13,
-              color: trendColor,
-              fontWeight: 500,
-              letterSpacing: '0.01em',
-            }}
-          >
-            {trendArrow} {deltaLabel}
-          </div>
-          <div
-            style={{
-              fontFamily: 'var(--font-body)',
-              fontSize: 13,
-              color: 'var(--text-muted)',
-              marginTop: 2,
-            }}
-          >
-            {themeReport.review_count} reviews this week
-          </div>
+        {loading && <span style={{ fontSize: 12, color: 'var(--ink-faint)', fontStyle: 'italic', marginLeft: 16 }}>Loading…</span>}
+
+        {/* Spacer pushes icons right */}
+        <div style={{ flex: 1 }} />
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+          <button style={iconBtnStyle} onClick={onSettingsOpen} title="Settings" aria-label="Open settings"
+            onMouseEnter={e => { const t = e.currentTarget; t.style.background = 'var(--surface)'; t.style.borderColor = 'var(--brand)'; t.style.color = 'var(--brand)' }}
+            onMouseLeave={e => { const t = e.currentTarget; t.style.background = 'var(--glass-bg)'; t.style.borderColor = 'var(--glass-border)'; t.style.color = 'var(--ink-soft)' }}
+          ><GearIcon /></button>
+          <button style={iconBtnStyle} onClick={toggle} title={dark ? 'Light mode' : 'Dark mode'} aria-label="Toggle dark mode"
+            onMouseEnter={e => { const t = e.currentTarget; t.style.background = 'var(--surface)'; t.style.borderColor = 'var(--brand)'; t.style.color = 'var(--brand)' }}
+            onMouseLeave={e => { const t = e.currentTarget; t.style.background = 'var(--glass-bg)'; t.style.borderColor = 'var(--glass-border)'; t.style.color = 'var(--ink-soft)' }}
+          >{dark ? <SunIcon /> : <MoonIcon />}</button>
         </div>
       </div>
+      </div>
+
+      {/* Bottom row: floating tab strip on page background */}
+      <nav style={{ maxWidth: 1180, margin: '0 auto', padding: '0 16px', display: 'flex', justifyContent: 'center', alignItems: 'flex-end' }} role="tablist">
+        {TABS.map(tab => (
+          <button
+            key={tab.id}
+            role="tab"
+            aria-selected={activeTab === tab.id}
+            onClick={() => onTabChange(tab.id)}
+            style={{
+              fontFamily: 'var(--font-body)', fontSize: 13, fontWeight: 600,
+              color: activeTab === tab.id ? 'var(--brand)' : 'var(--ink-soft)',
+              background: 'none', border: 'none',
+              borderBottom: `2px solid ${activeTab === tab.id ? 'var(--brand)' : 'transparent'}`,
+              padding: '10px 22px 8px',
+              cursor: 'pointer', whiteSpace: 'nowrap' as const,
+              transition: 'color 0.15s, border-color 0.15s',
+            }}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </nav>
+
     </header>
   )
 }

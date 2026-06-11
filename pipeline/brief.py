@@ -58,7 +58,7 @@ Brief:
 
 Write a short email draft (subject line + body, plain text, no HTML). Keep it \
 under 250 words. Tone: direct, warm, actionable. Address the owner as "Hi [Name]," \
-(leave the placeholder). End with "— Your Tideline Brief".
+(leave the placeholder). End with "— Your BizBrief".
 
 Return ONLY the email text, no extra explanation.
 """
@@ -308,7 +308,7 @@ def _write_brief(brief: dict, briefs_dir: str) -> str:
 def main() -> None:
     load_dotenv()
 
-    parser = argparse.ArgumentParser(description="Run the Tideline brief pipeline")
+    parser = argparse.ArgumentParser(description="Run the BizBrief pipeline")
     parser.add_argument("--business", required=True, help="Business ID (ASIN)")
     parser.add_argument("--week", required=True, help="ISO week, e.g. 2024-W31")
     parser.add_argument(

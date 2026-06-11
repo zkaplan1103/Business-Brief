@@ -91,7 +91,7 @@ export default function EmptyState({ themeReport }: EmptyStateProps) {
           }}
         >
           <li>Check back next week — patterns emerge over multiple weeks.</li>
-          <li>Enable weekly scheduling so Tideline runs automatically.</li>
+          <li>Enable weekly scheduling so BizBrief runs automatically.</li>
           <li>Consider whether your review profile needs attention.</li>
         </ul>
       </div>

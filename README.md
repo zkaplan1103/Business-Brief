@@ -1,10 +1,10 @@
-# Tideline
+# BizBrief
 
 > Turns a flood of customer reviews into a clear weekly action brief for small-business owners.
 
 ![Overview — rating gauge, weekly brief, top action](docs/screenshots/overview.png)
 
-Tideline ingests Amazon product reviews, classifies recurring themes with Claude, and produces a **prioritized weekly action brief**: top issues ranked by impact, each with a concrete recommended action and the review evidence behind it. A business owner can read the full picture in 15 seconds. Briefs run on a recurring schedule, all through a reliability layer that handles retries, cost caps, idempotent reruns, and structured logs.
+BizBrief ingests Amazon product reviews, classifies recurring themes with Claude, and produces a **prioritized weekly action brief**: top issues ranked by impact, each with a concrete recommended action and the review evidence behind it. A business owner can read the full picture in 15 seconds. Briefs run on a recurring schedule, all through a reliability layer that handles retries, cost caps, idempotent reruns, and structured logs.
 
 | Charts — theme bars + sentiment donut | Actions — ranked items + draft email |
 |---|---|

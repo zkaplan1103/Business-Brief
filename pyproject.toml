@@ -1,5 +1,5 @@
 [project]
-name = "tideline"
+name = "bizbrief"
 version = "0.1.0"
 description = "Weekly review-based action brief for small business owners"
 readme = "README.md"

@@ -196,7 +196,7 @@ def run(business_id: str | None, week: str | None, cfg: "Config") -> int:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Tideline ingest: Amazon Reviews 2023 All_Beauty → reviews.jsonl"
+        description="BizBrief ingest: Amazon Reviews 2023 All_Beauty → reviews.jsonl"
     )
     parser.add_argument(
         "--business", default=None,

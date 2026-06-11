@@ -231,10 +231,10 @@ def main() -> None:
         hour=6,
         minute=0,
         args=[cfg],
-        id="tideline_daily",
+        id="bizbrief_daily",
     )
 
-    print("Tideline scheduler started — running daily at 06:00.")
+    print("BizBrief scheduler started — running daily at 06:00.")
     print("Press Ctrl+C to stop.")
     try:
         scheduler.start()

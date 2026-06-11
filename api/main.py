@@ -22,7 +22,7 @@ from pipeline.config import Config
 
 cfg = Config()
 
-app = FastAPI(title="Tideline API", version="0.1.0")
+app = FastAPI(title="BizBrief API", version="0.1.0")
 
 app.add_middleware(
     CORSMiddleware,

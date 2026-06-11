@@ -77,7 +77,7 @@ export const FIXTURE_BRIEF: Brief = {
   partial: false,
   generated_by: 'claude-haiku-4-5-20251001',
   email_draft:
-    `Hi [Owner],\n\nYour Tideline brief for the week of July 29 – Aug 4, 2024 is ready.\n\nThe headline: your rating dipped from 4.1 → 3.8 this week. Seven reviewers flagged slow service at peak hours as the main driver. A simple staffing tweak on weekend mornings could recover this quickly.\n\nYour top three actions:\n1. Add one staff member to the floor on Sat/Sun 9–11am.\n2. Standardize the avocado toast prep with a laminated spec card.\n3. Contact your ISP about the WiFi drops — several remote workers mentioned it.\n\nThe full brief with evidence is in your dashboard.\n\nBest,\nTideline`,
+    `Hi [Owner],\n\nYour BizBrief brief for the week of July 29 – Aug 4, 2024 is ready.\n\nThe headline: your rating dipped from 4.1 → 3.8 this week. Seven reviewers flagged slow service at peak hours as the main driver. A simple staffing tweak on weekend mornings could recover this quickly.\n\nYour top three actions:\n1. Add one staff member to the floor on Sat/Sun 9–11am.\n2. Standardize the avocado toast prep with a laminated spec card.\n3. Contact your ISP about the WiFi drops — several remote workers mentioned it.\n\nThe full brief with evidence is in your dashboard.\n\nBest,\nBizBrief`,
   action_items: [
     {
       rank: 1,

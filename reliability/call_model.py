@@ -1,5 +1,5 @@
 """
-call_model — the single entry point for ALL model API calls in Tideline.
+call_model — the single entry point for ALL model API calls in BizBrief.
 
 Owns: retry/backoff/jitter (retryable errors only), per-run cost ceiling,
 idempotency cache (file-based), and structured logging.

@@ -58,8 +58,8 @@ function StatCard({ label, value, sub }: { label: string; value: string; sub?: s
   return (
     <div style={{ ...CARD, flex: 1 }}>
       <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-faint)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>{label}</div>
-      <div style={{ fontSize: 28, fontWeight: 700, color: 'var(--ink)', lineHeight: 1 }}>{value}</div>
-      {sub && <div style={{ fontSize: 12, color: 'var(--ink-soft)', marginTop: 6 }}>{sub}</div>}
+      <div className="tnum" style={{ fontSize: 28, fontWeight: 700, color: 'var(--ink)', lineHeight: 1 }}>{value}</div>
+      {sub && <div style={{ fontSize: 12, color: 'var(--ink-soft)', marginTop: 8 }}>{sub}</div>}
     </div>
   )
 }
@@ -108,7 +108,7 @@ function RoutingDonut({ mix }: { mix: MetricsData['routing_mix'] }) {
                 <div style={{ flex: 1, height: 5, background: 'var(--surface-2)', borderRadius: 999, overflow: 'hidden' }}>
                   <div style={{ height: '100%', borderRadius: 999, background: TIER_COLORS[d.name as keyof typeof TIER_COLORS] ?? '#aaa', width: `${d.value}%` }} />
                 </div>
-                <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--ink-soft)', width: 36, textAlign: 'right' }}>{d.value.toFixed(1)}%</span>
+                <span className="tnum" style={{ fontSize: 12, fontWeight: 700, color: 'var(--ink-soft)', width: 36, textAlign: 'right' }}>{d.value.toFixed(1)}%</span>
               </div>
             ))}
           </div>
@@ -213,8 +213,8 @@ export default function CostTab() {
 
       {/* Page header */}
       <div style={{ marginBottom: 24 }}>
-        <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--ink)' }}>Cost Engineering</div>
-        <div style={{ fontSize: 13, color: 'var(--ink-soft)', marginTop: 3 }}>
+        <h2 style={{ fontSize: 22, fontWeight: 700, color: 'var(--ink)' }}>Cost Engineering</h2>
+        <div style={{ fontSize: 13, color: 'var(--ink-soft)', marginTop: 4 }}>
           {metrics.days_covered} day{metrics.days_covered !== 1 ? 's' : ''} of log data · last updated {generatedAt}
         </div>
       </div>
@@ -271,8 +271,8 @@ export default function CostTab() {
                 <div style={{ height: 6, background: 'var(--surface-2)', borderRadius: 999, overflow: 'hidden' }}>
                   <div style={{ height: '100%', borderRadius: 999, background: 'var(--brand)', width: `${Math.min(100, (sv.total_cost_usd / (metrics.total_cost_usd || 1)) * 100)}%` }} />
                 </div>
-                <span style={{ fontSize: 12, color: 'var(--ink-soft)', textAlign: 'right' }}>{sv.calls} call{sv.calls !== 1 ? 's' : ''}</span>
-                <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--ink)', textAlign: 'right' }}>{fmt$(sv.total_cost_usd)}</span>
+                <span className="tnum" style={{ fontSize: 12, color: 'var(--ink-soft)', textAlign: 'right' }}>{sv.calls} call{sv.calls !== 1 ? 's' : ''}</span>
+                <span className="tnum" style={{ fontSize: 12, fontWeight: 700, color: 'var(--ink)', textAlign: 'right' }}>{fmt$(sv.total_cost_usd)}</span>
               </div>
             ))}
           </div>

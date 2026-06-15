@@ -100,8 +100,8 @@ export default function EvalTab() {
 
       {/* Header */}
       <div style={{ marginBottom: 24 }}>
-        <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--ink)' }}>Quality vs. Cost</div>
-        <div style={{ fontSize: 13, color: 'var(--ink-soft)', marginTop: 3 }}>
+        <h2 style={{ fontSize: 22, fontWeight: 700, color: 'var(--ink)' }}>Quality vs. Cost</h2>
+        <div style={{ fontSize: 13, color: 'var(--ink-soft)', marginTop: 4 }}>
           One scored run across all three model tiers · {data.review_count} reviews · {data.golden_themes} golden themes
           {data.business_name ? ` · ${data.business_name}` : ''}
         </div>
@@ -115,7 +115,7 @@ export default function EvalTab() {
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, flexWrap: 'wrap' }}>
           <span style={{ fontSize: 30, fontWeight: 700, color: 'var(--ink)', fontFamily: 'var(--font-display)' }}>{winner.label}</span>
           <span style={{ fontSize: 14, color: 'var(--ink-soft)' }}>
-            F1 <strong style={{ color: 'var(--ink)' }}>{winner.label_f1.toFixed(2)}</strong> at <strong style={{ color: 'var(--ink)' }}>{fmt$(winner.cost_usd)}</strong>/run
+            F1 <strong className="tnum" style={{ color: 'var(--ink)' }}>{winner.label_f1.toFixed(2)}</strong> at <strong className="tnum" style={{ color: 'var(--ink)' }}>{fmt$(winner.cost_usd)}</strong>/run
             {winner.label === 'Haiku' ? ' — the cheapest tier also scored highest on this batch.' : ''}
           </span>
         </div>
@@ -134,21 +134,21 @@ export default function EvalTab() {
         {rows.map((r, i) => {
           const isWinner = r.label === winner.label
           return (
-            <div key={r.model} style={{
+            <div key={r.model} className={isWinner ? undefined : 'data-row'} style={{
               display: 'grid', gridTemplateColumns: '1.1fr 0.9fr 0.9fr 1fr 1fr 0.9fr', gap: 0,
               alignItems: 'center', padding: '16px 24px',
               borderBottom: i < rows.length - 1 ? '1px solid var(--line)' : 'none',
               background: isWinner ? 'var(--pos-soft)' : 'transparent',
             }}>
-              <span style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <span style={{ width: 9, height: 9, borderRadius: 3, background: TIER_COLOR[r.label] ?? '#aaa', display: 'inline-block', flexShrink: 0 }} />
                 <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--ink)' }}>{r.label}</span>
               </span>
-              <span style={{ textAlign: 'right', fontSize: 14, fontFamily: 'var(--font-mono)', color: 'var(--ink-soft)' }}>{fmt$(r.cost_usd)}</span>
-              <span style={{ textAlign: 'right', fontSize: 15, fontWeight: 700, color: isWinner ? 'var(--brand-deep)' : 'var(--ink)' }}>{r.label_f1.toFixed(2)}</span>
-              <span style={{ textAlign: 'right', fontSize: 14, color: 'var(--ink-soft)' }}>{pct(r.evidence_overlap)}</span>
-              <span style={{ textAlign: 'right', fontSize: 14, color: 'var(--ink-soft)' }}>{pct(r.sentiment_accuracy)}</span>
-              <span style={{ textAlign: 'right', fontSize: 14, color: 'var(--ink-soft)' }}>{r.matched_themes}/{r.total_golden_themes}</span>
+              <span className="tnum" style={{ textAlign: 'right', fontSize: 14, fontFamily: 'var(--font-mono)', color: 'var(--ink-soft)' }}>{fmt$(r.cost_usd)}</span>
+              <span className="tnum" style={{ textAlign: 'right', fontSize: 15, fontWeight: 700, color: isWinner ? 'var(--brand-deep)' : 'var(--ink)' }}>{r.label_f1.toFixed(2)}</span>
+              <span className="tnum" style={{ textAlign: 'right', fontSize: 14, color: 'var(--ink-soft)' }}>{pct(r.evidence_overlap)}</span>
+              <span className="tnum" style={{ textAlign: 'right', fontSize: 14, color: 'var(--ink-soft)' }}>{pct(r.sentiment_accuracy)}</span>
+              <span className="tnum" style={{ textAlign: 'right', fontSize: 14, color: 'var(--ink-soft)' }}>{r.matched_themes}/{r.total_golden_themes}</span>
             </div>
           )
         })}

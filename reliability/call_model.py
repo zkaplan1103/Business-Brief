@@ -35,7 +35,16 @@ class CircuitOpen(Exception):
 
 
 class ModelResult:
-    __slots__ = ("text", "model", "input_tokens", "output_tokens", "cost_usd", "cached")
+    __slots__ = (
+        "text",
+        "model",
+        "input_tokens",
+        "output_tokens",
+        "cost_usd",
+        "cached",
+        "cache_creation_tokens",
+        "cache_read_tokens",
+    )
 
     def __init__(
         self,
@@ -45,6 +54,8 @@ class ModelResult:
         output_tokens: int,
         cost_usd: float,
         cached: bool = False,
+        cache_creation_tokens: int = 0,
+        cache_read_tokens: int = 0,
     ):
         self.text = text
         self.model = model
@@ -52,21 +63,93 @@ class ModelResult:
         self.output_tokens = output_tokens
         self.cost_usd = cost_usd
         self.cached = cached
+        self.cache_creation_tokens = cache_creation_tokens
+        self.cache_read_tokens = cache_read_tokens
 
 
 # Approximate token costs (USD per 1M tokens) — update when pricing changes.
-_COST_TABLE: dict[str, tuple[float, float]] = {
-    "claude-haiku-4-5-20251001": (0.80, 4.00),
-    "claude-sonnet-4-6": (3.00, 15.00),
-    "claude-opus-4-8": (15.00, 75.00),
+# Tuple layout: (input_rate, output_rate, cached_input_rate)
+# Sources: https://www.anthropic.com/pricing (retrieved 2026-06-14)
+#   Haiku:  $0.80 input / $4.00 output / $0.08 cached-input per 1M tokens
+#   Sonnet: $3.00 input / $15.00 output / $0.30 cached-input per 1M tokens
+#   Opus:   $15.00 input / $75.00 output / $1.50 cached-input per 1M tokens
+_COST_TABLE: dict[str, tuple[float, float, float]] = {
+    "claude-haiku-4-5-20251001": (0.80, 4.00, 0.08),
+    "claude-sonnet-4-6": (3.00, 15.00, 0.30),
+    "claude-opus-4-8": (15.00, 75.00, 1.50),
 }
 
 _RETRYABLE_HTTP = {429, 500, 502, 503, 504}
 
 
-def _estimate_cost(model: str, input_tokens: int, output_tokens: int) -> float:
-    in_rate, out_rate = _COST_TABLE.get(model, (3.00, 15.00))
-    return (input_tokens * in_rate + output_tokens * out_rate) / 1_000_000
+# Cache-write tokens are billed at 1.25x the base input rate (5-minute TTL).
+_CACHE_WRITE_MULTIPLIER = 1.25
+
+
+def _estimate_cost(
+    model: str,
+    input_tokens: int,
+    output_tokens: int,
+    cached_read_tokens: int = 0,
+    cache_creation_tokens: int = 0,
+) -> float:
+    """Compute cost in USD.
+
+    The Anthropic API reports three DISJOINT input-token buckets — they do not
+    overlap, so each is billed at its own rate and NONE is a subset of another:
+
+      input_tokens          full base input rate (uncached prompt + messages)
+      cache_creation_tokens 1.25x base rate (tokens written to the prompt cache)
+      cached_read_tokens    0.10x base rate (tokens served from the prompt cache)
+    """
+    rates = _COST_TABLE.get(model, (3.00, 15.00, 0.30))
+    in_rate, out_rate, cached_rate = rates
+    return (
+        input_tokens * in_rate
+        + cache_creation_tokens * in_rate * _CACHE_WRITE_MULTIPLIER
+        + cached_read_tokens * cached_rate
+        + output_tokens * out_rate
+    ) / 1_000_000
+
+
+def _prompt_cache_savings(
+    model: str,
+    input_tokens: int,
+    output_tokens: int,
+    cache_read_tokens: int,
+    cache_creation_tokens: int,
+) -> dict:
+    """
+    Compute prompt-cache savings for a completed model call.
+
+    Returns a dict with:
+      - cost_without_cache: what this call would have cost with no caching
+      - cost_with_cache:    what was actually charged
+      - saved_usd:          the difference (always >= 0)
+
+    Note: this measures PROMPT-CACHE savings only.  Idempotency-cache skips
+    (outcome="skipped_cache") mean the call was never made at all — zero cost —
+    and are a completely different mechanism.  Both appear in the logs; only
+    prompt-cache skips appear here.
+    """
+    rates = _COST_TABLE.get(model, (3.00, 15.00, 0.30))
+    in_rate, out_rate, _ = rates
+    # Hypothetical no-cache cost: every input token (uncached + the tokens that
+    # were instead written-to / read-from cache) billed at the full input rate.
+    # The three buckets are disjoint, so the no-cache prompt size is their sum.
+    total_input = input_tokens + cache_read_tokens + cache_creation_tokens
+    cost_without_cache = (total_input * in_rate + output_tokens * out_rate) / 1_000_000
+    # Actual cost (cache-write premium + cache-read discount).
+    cost_with_cache = _estimate_cost(
+        model, input_tokens, output_tokens, cache_read_tokens, cache_creation_tokens
+    )
+    return {
+        "cost_without_cache": cost_without_cache,
+        "cost_with_cache": cost_with_cache,
+        "saved_usd": max(0.0, cost_without_cache - cost_with_cache),
+        "cache_creation_tokens": cache_creation_tokens,
+        "cache_read_tokens": cache_read_tokens,
+    }
 
 
 def _cache_path(idempotency_key: str, briefs_dir: str) -> str:
@@ -116,19 +199,47 @@ def call_model(
     business_id: str = "",
     week: str = "",
     idempotency_key: str | None = None,
+    model: str | None = None,
+    system: list[dict] | None = None,
     _run_cost: list[float] | None = None,
     _logger: "StructuredLogger | None" = None,
 ) -> ModelResult:
     """
     Call the model with full reliability guarantees.
 
-    _run_cost is a mutable single-element list shared across a run so cost
-    accumulates across calls. Pass the same list for every call in a run.
+    Parameters
+    ----------
+    model:
+        Optional per-call model override (e.g. "claude-haiku-4-5-20251001").
+        When provided, this model is used instead of ``cfg.gen_model``.
+        All callers that don't pass *model* continue to use ``cfg.gen_model``
+        unchanged — full backward compatibility.
+
+    system:
+        Optional system prompt passed as the ``system`` field to the
+        Anthropic messages API.  Provide a list of content blocks so that
+        callers can attach ``cache_control`` to individual blocks, e.g.::
+
+            system=[{
+                "type": "text",
+                "text": "<long static instructions>",
+                "cache_control": {"type": "ephemeral"},
+            }]
+
+        When ``system`` is None (default) the API call is made without a
+        system prompt, preserving full backward compatibility.
+
+    _run_cost:
+        A mutable single-element list shared across a run so cost accumulates
+        across calls.  Pass the same list for every call in a run.
     """
     if _logger is None:
         _logger = StructuredLogger(cfg.log_dir)
     if _run_cost is None:
         _run_cost = [0.0]
+
+    # Resolve the model to use: explicit override > cfg.gen_model fallback.
+    effective_model = model if model is not None else cfg.gen_model
 
     # Check idempotency cache first.
     if idempotency_key:
@@ -158,15 +269,33 @@ def call_model(
     for attempt in range(cfg.max_retries + 1):
         t0 = time.monotonic()
         try:
-            response = client.messages.create(
-                model=cfg.gen_model,
-                max_tokens=4096,
-                messages=[{"role": "user", "content": prompt}],
-            )
+            create_kwargs: dict = {
+                "model": effective_model,
+                "max_tokens": 4096,
+                "messages": [{"role": "user", "content": prompt}],
+            }
+            if system is not None:
+                create_kwargs["system"] = system
+            response = client.messages.create(**create_kwargs)
             latency_ms = int((time.monotonic() - t0) * 1000)
             input_tokens = response.usage.input_tokens
             output_tokens = response.usage.output_tokens
-            cost = _estimate_cost(cfg.gen_model, input_tokens, output_tokens)
+            # Prompt-cache token counts — present only when cache_control blocks
+            # are used.  Use int() conversion with a fallback so that both real
+            # SDK responses (which set these to an int or None) and test mocks
+            # (which may return MagicMock for unknown attributes) are handled
+            # safely.
+            _raw_creation = getattr(response.usage, "cache_creation_input_tokens", None)
+            _raw_read = getattr(response.usage, "cache_read_input_tokens", None)
+            cache_creation_tokens = int(_raw_creation) if isinstance(_raw_creation, int) else 0
+            cache_read_tokens = int(_raw_read) if isinstance(_raw_read, int) else 0
+            cost = _estimate_cost(
+                effective_model,
+                input_tokens,
+                output_tokens,
+                cache_read_tokens,
+                cache_creation_tokens,
+            )
 
             # Enforce cost ceiling.
             _run_cost[0] += cost
@@ -178,7 +307,7 @@ def call_model(
                         business_id=business_id,
                         week=week,
                         stage=stage,
-                        model=cfg.gen_model,
+                        model=effective_model,
                         input_tokens=input_tokens,
                         output_tokens=output_tokens,
                         cost_usd=cost,
@@ -195,29 +324,41 @@ def call_model(
             text = response.content[0].text
             result = ModelResult(
                 text=text,
-                model=cfg.gen_model,
+                model=effective_model,
                 input_tokens=input_tokens,
                 output_tokens=output_tokens,
                 cost_usd=cost,
                 cached=False,
+                cache_creation_tokens=cache_creation_tokens,
+                cache_read_tokens=cache_read_tokens,
             )
 
-            _logger.emit(
-                LogEvent(
-                    ts=datetime.now(timezone.utc).isoformat(),
-                    run_id=run_id,
-                    business_id=business_id,
-                    week=week,
-                    stage=stage,
-                    model=cfg.gen_model,
-                    input_tokens=input_tokens,
-                    output_tokens=output_tokens,
-                    cost_usd=cost,
-                    latency_ms=latency_ms,
-                    outcome="ok",
-                    error_class=None,
-                )
+            log_event = LogEvent(
+                ts=datetime.now(timezone.utc).isoformat(),
+                run_id=run_id,
+                business_id=business_id,
+                week=week,
+                stage=stage,
+                model=effective_model,
+                input_tokens=input_tokens,
+                output_tokens=output_tokens,
+                cost_usd=cost,
+                latency_ms=latency_ms,
+                outcome="ok",
+                error_class=None,
             )
+            if cache_creation_tokens or cache_read_tokens:
+                log_event["cache_creation_tokens"] = cache_creation_tokens
+                log_event["cache_read_tokens"] = cache_read_tokens
+                savings = _prompt_cache_savings(
+                    effective_model,
+                    input_tokens,
+                    output_tokens,
+                    cache_read_tokens,
+                    cache_creation_tokens,
+                )
+                log_event["prompt_cache_saved_usd"] = savings["saved_usd"]
+            _logger.emit(log_event)
 
             if idempotency_key:
                 _save_cache(idempotency_key, result, cfg.briefs_dir)
@@ -234,7 +375,7 @@ def call_model(
         except (httpx.TimeoutException, anthropic.APITimeoutError):
             retryable = "timeout" in cfg.retry_on
             error_class = "Timeout"
-        except anthropic.AuthenticationError as exc:
+        except anthropic.AuthenticationError:
             # Never retry auth failures — paying to fail.
             _logger.emit(
                 LogEvent(
@@ -243,7 +384,7 @@ def call_model(
                     business_id=business_id,
                     week=week,
                     stage=stage,
-                    model=cfg.gen_model,
+                    model=effective_model,
                     input_tokens=None,
                     output_tokens=None,
                     cost_usd=None,
@@ -269,7 +410,7 @@ def call_model(
                 business_id=business_id,
                 week=week,
                 stage=stage,
-                model=cfg.gen_model,
+                model=effective_model,
                 input_tokens=None,
                 output_tokens=None,
                 cost_usd=None,

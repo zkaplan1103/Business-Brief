@@ -10,7 +10,9 @@ then appends what it learned. Keeps context small as the project grows.
 | `analysis` | `02-analysis.md` | analysis-engineer |
 | `brief` | `03-brief.md` | brief-engineer |
 | `ui` | `04-ui.md` | ui-engineer |
-| `eval` | `05-eval.md` | (future) |
+| `eval` | `05-eval.md` | eval-engineer |
+| `security` | `06-security.md` | security-engineer (red-team files to `red-team-findings.md`) |
+| `cost` | `02-analysis.md` | cost-engineer (shares the analysis log) |
 
 Protocol: before work → read INDEX + your tagged file. After work → append a
 dated entry to your tagged file + one line to `00-decisions.md`. Never edit

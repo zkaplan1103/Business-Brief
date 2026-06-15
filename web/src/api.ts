@@ -1,7 +1,7 @@
 // API client — reads from /api/* (proxied to FastAPI by Vite dev server).
 // All components stay on fixture types; Phase 2 just swaps the data source.
 
-import type { Brief, ThemeReport, ScheduleSettings, RunRecord, BusinessMeta } from './types'
+import type { Brief, ThemeReport, ScheduleSettings, RunRecord, BusinessMeta, MetricsData, EvalData } from './types'
 
 const BASE = '/api'
 
@@ -36,4 +36,10 @@ export const api = {
 
   runs: (businessId: string): Promise<RunRecord[]> =>
     get(`/runs?business_id=${encodeURIComponent(businessId)}`),
+
+  metrics: (): Promise<MetricsData> =>
+    get('/metrics'),
+
+  eval: (): Promise<EvalData> =>
+    get('/eval'),
 }

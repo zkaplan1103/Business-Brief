@@ -1,0 +1,91 @@
+{
+  "business_id": "B007IAE5WY",
+  "week": "2017-W38",
+  "business_name": "Salux Nylon Japanese Beauty Skin Bath Wash Cloth/towel",
+  "note": "Approved by owner 2026-06-15",
+  "derivation": "Read from data/processed/reviews.jsonl, filtered to business_id=B007IAE5WY, week=2017-W38 (17 reviews). Themes derived by human analyst (eval-engineer) reading each review and grouping recurring patterns.",
+  "themes": [
+    {
+      "label": "Effective exfoliation and skin improvement",
+      "sentiment": "positive",
+      "review_ids": [
+        "B007IAE5WY_79163",
+        "B007IAE5WY_160098",
+        "B007IAE5WY_160100",
+        "B007IAE5WY_272925",
+        "B007IAE5WY_468226",
+        "B007IAE5WY_468369",
+        "B007IAE5WY_468495",
+        "B007IAE5WY_143132"
+      ],
+      "sample_quotes": [
+        "LOVE this product makes your skin tingle and you actually feel clean",
+        "Exfoliating without being too harsh. Each pad lasts forever",
+        "Better than any loofah or bath puff that I have ever tried. Exfoliation was a plus."
+      ]
+    },
+    {
+      "label": "Cloth is too rough or abrasive for sensitive skin",
+      "sentiment": "negative",
+      "review_ids": [
+        "B007IAE5WY_18127",
+        "B007IAE5WY_94273",
+        "B007IAE5WY_143132",
+        "B007IAE5WY_468369"
+      ],
+      "sample_quotes": [
+        "the cloth is huge, and a little rough for my skin",
+        "These were a lot rougher than I was expecting. it hurt too much for me.",
+        "if you have sensitive skin beware!"
+      ]
+    },
+    {
+      "label": "Product quality decline in recent orders",
+      "sentiment": "negative",
+      "review_ids": [
+        "B007IAE5WY_137931"
+      ],
+      "sample_quotes": [
+        "disappointed with my most recent order. They seem thinner."
+      ]
+    },
+    {
+      "label": "Good value and durability over time",
+      "sentiment": "positive",
+      "review_ids": [
+        "B007IAE5WY_336586",
+        "B007IAE5WY_267410",
+        "B007IAE5WY_396175",
+        "B007IAE5WY_10361"
+      ],
+      "sample_quotes": [
+        "The value on these were good and I've been using the same one for months.",
+        "Originally bought them while living in Hawaii and still use them years later!!",
+        "Great quality and much cheaper than the store."
+      ]
+    },
+    {
+      "label": "Helps with keratosis pilaris (KP) on skin",
+      "sentiment": "positive",
+      "review_ids": [
+        "B007IAE5WY_160098",
+        "B007IAE5WY_160100",
+        "B007IAE5WY_468226"
+      ],
+      "sample_quotes": [
+        "persistent use of these washcloths has reduced the redness and bumpiness!",
+        "I use one on my face and one on my arms for KP."
+      ]
+    }
+  ],
+  "action_items": [
+    {
+      "label": "Add sizing / roughness guidance in product listing to set expectations for sensitive skin",
+      "sentiment": "negative"
+    },
+    {
+      "label": "Investigate and address quality thinning in recent production batches",
+      "sentiment": "negative"
+    }
+  ]
+}

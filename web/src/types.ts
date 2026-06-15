@@ -78,3 +78,67 @@ export interface BusinessMeta {
   business_name: string
   weeks: string[]
 }
+
+// Phase 4: cost/metrics endpoint
+
+export interface ModelMetrics {
+  calls: number
+  total_cost_usd: number
+  avg_latency_ms: number
+  p95_latency_ms: number
+  total_input_tokens: number
+  total_output_tokens: number
+  cache_read_tokens: number
+  cache_creation_tokens: number
+  prompt_cache_saved_usd: number
+}
+
+export interface StageMetrics {
+  calls: number
+  total_cost_usd: number
+  avg_latency_ms: number
+}
+
+export interface RoutingMix {
+  haiku_pct: number
+  sonnet_pct: number
+  opus_pct: number
+}
+
+export interface MetricsData {
+  total_cost_usd: number
+  total_calls: number
+  by_model: Record<string, ModelMetrics>
+  by_stage: Record<string, StageMetrics>
+  routing_mix: RoutingMix
+  idempotency_skips: number
+  days_covered: number
+  generated_at: string
+}
+
+// Quality-vs-cost eval (Phase 5) — one scored run per model tier against the
+// human-signed-off golden set. Served by GET /api/eval (static artifact).
+export interface EvalRow {
+  model: string
+  label: string
+  cost_usd: number
+  label_f1: number
+  label_precision: number
+  label_recall: number
+  evidence_overlap: number
+  sentiment_accuracy: number
+  matched_themes: number
+  total_golden_themes: number
+}
+
+export interface EvalData {
+  available: boolean
+  business_id?: string
+  week?: string
+  business_name?: string
+  review_count?: number
+  golden_themes?: number
+  note?: string
+  generated_at?: string
+  rows?: EvalRow[]
+}

@@ -1,0 +1,4 @@
+Model,Cost/run ($),Label F1,Evidence Overlap,Sentiment Acc,Avg Latency (ms)
+Haiku,0.000000,0.6000,0.8167,1.0000,3
+Sonnet,0.000000,0.1818,1.0000,1.0000,1
+Opus,0.000000,0.5000,0.9259,1.0000,1

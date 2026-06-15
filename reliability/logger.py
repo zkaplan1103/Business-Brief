@@ -19,6 +19,13 @@ class LogEvent(TypedDict, total=False):
     latency_ms: int | None
     outcome: str           # "ok" | "retry" | "fail" | "skipped_cache"
     error_class: str | None
+    # Prompt-cache fields (distinct from idempotency-cache skips):
+    # cache_creation_tokens  = tokens written to Anthropic's prompt cache (billed at input rate)
+    # cache_read_tokens      = tokens served from prompt cache (billed at cached_input rate)
+    # prompt_cache_saved_usd = cost delta vs. calling with no caching (informational)
+    cache_creation_tokens: int | None
+    cache_read_tokens: int | None
+    prompt_cache_saved_usd: float | None
 
 
 class RunRecord(TypedDict, total=False):

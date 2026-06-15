@@ -9,10 +9,12 @@ import Header from './components/Header'
 import OverviewTab from './components/OverviewTab'
 import ChartsTab from './components/ChartsTab'
 import ActionsTab from './components/ActionsTab'
+import CostTab from './components/CostTab'
+import EvalTab from './components/EvalTab'
 import SettingsPanel from './components/SettingsPanel'
 import EmptyState from './components/EmptyState'
 
-type Tab = 'overview' | 'charts' | 'actions'
+type Tab = 'overview' | 'charts' | 'actions' | 'cost' | 'eval'
 
 const USE_FIXTURES = false
 
@@ -76,7 +78,11 @@ export default function App() {
       />
 
       <main style={{ maxWidth: 1180, margin: '0 auto', padding: '28px 16px 64px' }}>
-        {!themeReport.sufficient ? (
+        {activeTab === 'cost' ? (
+          <CostTab />
+        ) : activeTab === 'eval' ? (
+          <EvalTab />
+        ) : !themeReport.sufficient ? (
           <EmptyState themeReport={themeReport} />
         ) : (
           <>

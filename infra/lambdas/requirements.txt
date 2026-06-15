@@ -1,0 +1,8 @@
+# Lambda runtime dependencies (installed into the deployment package by
+# `sam build`). boto3 is provided by the Lambda runtime, so it is intentionally
+# NOT pinned here — keeping the package small.
+anthropic>=0.40.0
+
+# The pipeline/, reliability/, and pipeline/router.py modules are vendored into
+# the build via the Makefile target `make lambda-deps` (see infra/README.md),
+# which copies them next to the handlers so the import paths resolve in Lambda.

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-type Tab = 'overview' | 'charts' | 'actions'
+type Tab = 'overview' | 'charts' | 'actions' | 'cost' | 'eval'
 
 interface HeaderProps {
   loading?: boolean
@@ -23,6 +23,8 @@ const TABS: { id: Tab; label: string }[] = [
   { id: 'overview', label: 'Overview' },
   { id: 'charts',   label: 'Charts' },
   { id: 'actions',  label: 'Actions' },
+  { id: 'cost',     label: 'Cost' },
+  { id: 'eval',     label: 'Eval' },
 ]
 
 const GearIcon = () => (

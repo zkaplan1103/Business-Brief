@@ -1,7 +1,7 @@
 // Fixture data for Phase 1 UI development.
 // Components build against these shapes; Phase 2 swaps in the real API.
 
-import type { Brief, ThemeReport, ScheduleSettings, RunRecord, BusinessMeta } from './types'
+import type { Brief, ThemeReport, ScheduleSettings, RunRecord, BusinessMeta, EvalData } from './types'
 
 export const FIXTURE_BUSINESS: BusinessMeta = {
   business_id: 'biz_goldenharvest',
@@ -148,3 +148,21 @@ export const FIXTURE_RUNS: RunRecord[] = [
     note: '1/5 batches failed after retries; brief produced from 4 batches',
   },
 ]
+
+// Offline fallback for the Eval tab — mirrors eval/results.json so the tab
+// renders without the API. Real numbers from the live 3-model scored run.
+export const FIXTURE_EVAL: EvalData = {
+  available: true,
+  business_id: 'B007IAE5WY',
+  week: '2017-W38',
+  business_name: 'Salux Nylon Japanese Beauty Skin Bath Wash Cloth/towel',
+  review_count: 17,
+  golden_themes: 5,
+  note: 'Quality-vs-cost comparison from the live 3-model eval. Costs are first-run charges (reruns hit the idempotency cache at $0). Golden set signed off by owner.',
+  generated_at: '2026-06-15',
+  rows: [
+    { model: 'claude-haiku-4-5-20251001', label: 'Haiku', cost_usd: 0.004541, label_f1: 0.6000, label_precision: 0.6000, label_recall: 0.6000, evidence_overlap: 0.8167, sentiment_accuracy: 1.0, matched_themes: 3, total_golden_themes: 5 },
+    { model: 'claude-sonnet-4-6', label: 'Sonnet', cost_usd: 0.016911, label_f1: 0.1818, label_precision: 0.1667, label_recall: 0.2000, evidence_overlap: 1.0, sentiment_accuracy: 1.0, matched_themes: 1, total_golden_themes: 5 },
+    { model: 'claude-opus-4-8', label: 'Opus', cost_usd: 0.089985, label_f1: 0.5000, label_precision: 0.4286, label_recall: 0.6000, evidence_overlap: 0.9259, sentiment_accuracy: 1.0, matched_themes: 3, total_golden_themes: 5 },
+  ],
+}

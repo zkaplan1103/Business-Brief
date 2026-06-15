@@ -1,0 +1,237 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  BizBrief — event-driven serverless review-to-brief pipeline.
+  Dropping uploads/<business_id>/<week>.jsonl into the raw bucket triggers
+  ingest → analyze → brief, persisting to DynamoDB and rendering the brief JSON
+  to the briefs bucket. Cost / latency / throughput are published as CloudWatch
+  custom metrics and rendered on a live dashboard.
+
+Parameters:
+  AnthropicApiKey:
+    Type: String
+    NoEcho: true
+    Description: ANTHROPIC_API_KEY for the analyze/brief functions.
+  Stage:
+    Type: String
+    Default: dev
+    AllowedValues: [dev, prod]
+
+Globals:
+  Function:
+    Runtime: python3.11
+    Timeout: 120          # analyze can fan out several model calls
+    MemorySize: 512
+    Architectures: [arm64]
+    Environment:
+      Variables:
+        BIZBRIEF_TABLE: !Ref ReviewsTable
+        BIZBRIEF_RAW_BUCKET: !Ref RawBucket
+        BIZBRIEF_BRIEFS_BUCKET: !Ref BriefsBucket
+        ANTHROPIC_API_KEY: !Ref AnthropicApiKey
+
+Resources:
+
+  # ---------------------------------------------------------------------------
+  # Storage
+  # ---------------------------------------------------------------------------
+  ReviewsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub bizbrief-${Stage}
+      BillingMode: PAY_PER_REQUEST       # on-demand: no idle cost, scales to zero
+      AttributeDefinitions:
+        - AttributeName: PK
+          AttributeType: S
+        - AttributeName: SK
+          AttributeType: S
+      KeySchema:
+        - AttributeName: PK
+          KeyType: HASH
+        - AttributeName: SK
+          KeyType: RANGE
+
+  RawBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub bizbrief-raw-${Stage}-${AWS::AccountId}
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      LifecycleConfiguration:
+        Rules:
+          - Id: expire-raw-uploads
+            Status: Enabled
+            ExpirationInDays: 30          # raw uploads are transient input
+
+  BriefsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub bizbrief-briefs-${Stage}-${AWS::AccountId}
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+  # Dead-letter queue for failed async invocations (cloud analogue of
+  # data/logs/dead-letter/). Failed events land here instead of vanishing.
+  DeadLetterQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub bizbrief-dlq-${Stage}
+      MessageRetentionPeriod: 1209600    # 14 days
+
+  # ---------------------------------------------------------------------------
+  # Functions
+  # ---------------------------------------------------------------------------
+  IngestFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub bizbrief-ingest-${Stage}
+      CodeUri: lambdas/
+      Handler: handler_ingest.handler
+      Environment:
+        Variables:
+          ANALYZE_FUNCTION_NAME: !Sub bizbrief-analyze-${Stage}
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ReviewsTable
+        - S3ReadPolicy:
+            BucketName: !Sub bizbrief-raw-${Stage}-${AWS::AccountId}
+        - CloudWatchPutMetricPolicy: {}
+        - LambdaInvokePolicy:
+            FunctionName: !Sub bizbrief-analyze-${Stage}
+      Events:
+        RawUpload:
+          Type: S3
+          Properties:
+            Bucket: !Ref RawBucket
+            Events: s3:ObjectCreated:*
+            Filter:
+              S3Key:
+                Rules:
+                  - Name: prefix
+                    Value: uploads/
+                  - Name: suffix
+                    Value: .jsonl
+
+  AnalyzeFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub bizbrief-analyze-${Stage}
+      CodeUri: lambdas/
+      Handler: handler_analyze.handler
+      Timeout: 300
+      Environment:
+        Variables:
+          BRIEF_FUNCTION_NAME: !Sub bizbrief-brief-${Stage}
+      EventInvokeConfig:
+        MaximumRetryAttempts: 2
+        DestinationConfig:
+          OnFailure:
+            Type: SQS
+            Destination: !GetAtt DeadLetterQueue.Arn
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ReviewsTable
+        - CloudWatchPutMetricPolicy: {}
+        - LambdaInvokePolicy:
+            FunctionName: !Sub bizbrief-brief-${Stage}
+
+  BriefFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub bizbrief-brief-${Stage}
+      CodeUri: lambdas/
+      Handler: handler_brief.handler
+      Timeout: 180
+      EventInvokeConfig:
+        MaximumRetryAttempts: 2
+        DestinationConfig:
+          OnFailure:
+            Type: SQS
+            Destination: !GetAtt DeadLetterQueue.Arn
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ReviewsTable
+        - S3CrudPolicy:
+            BucketName: !Sub bizbrief-briefs-${Stage}-${AWS::AccountId}
+        - CloudWatchPutMetricPolicy: {}
+
+  # ---------------------------------------------------------------------------
+  # Live cost / latency / throughput dashboard
+  # ---------------------------------------------------------------------------
+  CostDashboard:
+    Type: AWS::CloudWatch::Dashboard
+    Properties:
+      DashboardName: !Sub BizBrief-${Stage}
+      DashboardBody: !Sub |
+        {
+          "widgets": [
+            {
+              "type": "metric", "x": 0, "y": 0, "width": 12, "height": 6,
+              "properties": {
+                "title": "Model spend (USD) by stage",
+                "region": "${AWS::Region}",
+                "stat": "Sum", "period": 300,
+                "metrics": [
+                  [ "BizBrief", "CostUsd", "Stage", "analyze" ],
+                  [ "BizBrief", "CostUsd", "Stage", "brief" ]
+                ]
+              }
+            },
+            {
+              "type": "metric", "x": 12, "y": 0, "width": 12, "height": 6,
+              "properties": {
+                "title": "Spend by model (cost routing mix)",
+                "region": "${AWS::Region}",
+                "stat": "Sum", "period": 300,
+                "metrics": [
+                  [ "BizBrief", "CostUsd", "Stage", "analyze", "Model", "haiku" ],
+                  [ "BizBrief", "CostUsd", "Stage", "analyze", "Model", "sonnet" ],
+                  [ "BizBrief", "CostUsd", "Stage", "analyze", "Model", "opus" ]
+                ]
+              }
+            },
+            {
+              "type": "metric", "x": 0, "y": 6, "width": 12, "height": 6,
+              "properties": {
+                "title": "Latency (ms) by stage",
+                "region": "${AWS::Region}",
+                "stat": "Average", "period": 300,
+                "metrics": [
+                  [ "BizBrief", "LatencyMs", "Stage", "ingest" ],
+                  [ "BizBrief", "LatencyMs", "Stage", "analyze" ],
+                  [ "BizBrief", "LatencyMs", "Stage", "brief" ]
+                ]
+              }
+            },
+            {
+              "type": "metric", "x": 12, "y": 6, "width": 12, "height": 6,
+              "properties": {
+                "title": "Throughput (reviews) + prompt-cache tokens served",
+                "region": "${AWS::Region}",
+                "stat": "Sum", "period": 300,
+                "metrics": [
+                  [ "BizBrief", "Throughput", "Stage", "ingest" ],
+                  [ "BizBrief", "CacheReadTokens", "Stage", "analyze", "Model", "sonnet" ],
+                  [ "BizBrief", "CacheReadTokens", "Stage", "analyze", "Model", "opus" ]
+                ]
+              }
+            }
+          ]
+        }
+
+Outputs:
+  RawBucketName:
+    Description: Drop uploads/<business_id>/<week>.jsonl here to trigger the pipeline.
+    Value: !Ref RawBucket
+  BriefsBucketName:
+    Description: Rendered <business_id>/<week>.brief.json objects land here.
+    Value: !Ref BriefsBucket
+  DashboardURL:
+    Description: Live cost/latency/throughput dashboard.
+    Value: !Sub https://${AWS::Region}.console.aws.amazon.com/cloudwatch/home?region=${AWS::Region}#dashboards:name=BizBrief-${Stage}

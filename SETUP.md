@@ -231,7 +231,19 @@ uv run python -m scheduler.run
 > code. Deploying it incurs AWS + Anthropic charges. You do NOT need this to run
 > BizBrief locally — it's a separate, résumé-grade serverless variant.
 
-**Run a handler locally (no AWS account, needs Docker + SAM CLI):**
+**Run the full pipeline locally on mock AWS (no AWS account, no Docker):**
+
+```bash
+uv sync --group local-aws        # one-time: installs moto + boto3
+cd infra
+make local-e2e ARGS="--business B007IAE5WY --week 2017-W38"
+```
+
+This runs ingest → analyze → brief end-to-end against in-process mocks of S3 +
+DynamoDB ([`infra/local_run.py`](infra/local_run.py)). Needs `ANTHROPIC_API_KEY`
+in `.env` (analyze calls Claude; reruns are free via the idempotency cache).
+
+**Or invoke a single handler in a Lambda container (needs Docker + SAM CLI):**
 
 ```bash
 cd infra

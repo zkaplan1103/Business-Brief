@@ -26,6 +26,13 @@ packages = ["pipeline", "reliability", "scheduler", "api", "eval"]
 dev = [
     "pytest>=9.0.3",
 ]
+# Local serverless emulation: run the Lambda handlers end-to-end against
+# in-process mocks of S3 + DynamoDB (no real AWS account, no charges).
+#   uv sync --group local-aws
+local-aws = [
+    "boto3>=1.34.0",
+    "moto[s3,dynamodb]>=5.0.0",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

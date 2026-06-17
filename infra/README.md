@@ -70,7 +70,34 @@ Each access pattern is a single query: all reviews for a business+week is one
 
 ## Run it locally (no AWS account needed)
 
-Requires Docker and the [AWS SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html).
+There are two ways to run the handlers without a real AWS account.
+
+### Option A — full end-to-end on mock AWS (recommended, no Docker)
+
+Runs the entire **ingest → analyze → brief** chain against in-process mocks of
+S3 + DynamoDB ([moto]). This exercises the exact handler code and is the
+fastest way to prove the pipeline works. The analyze stage calls Claude, so it
+needs `ANTHROPIC_API_KEY` (set in the repo `.env`); reruns hit the idempotency
+cache and are free.
+
+```bash
+# one-time: install the mock-AWS deps
+uv sync --group local-aws
+
+cd infra
+make local-e2e                                          # default business/week
+make local-e2e ARGS="--business B007IAE5WY --week 2017-W38"
+```
+
+Under the hood this runs [`infra/local_run.py`](local_run.py): it creates the
+mock bucket + table (same schema as `template.yaml`), drops a real review file
+into the mock raw bucket, then invokes `handler_ingest` → `handler_analyze` →
+`handler_brief` in sequence, and verifies the rendered brief lands in the mock
+briefs bucket. The integration is covered by `tests/test_serverless_storage.py`.
+
+### Option B — single handler in a Lambda container (needs Docker + SAM CLI)
+
+Requires Docker running and the [AWS SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html).
 
 ```bash
 cd infra
@@ -78,10 +105,10 @@ make validate          # lint the template
 make local-analyze     # invoke AnalyzeFunction against events/analyze.json
 ```
 
-`sam local invoke` runs the handler in a Lambda-like container. Metrics
-emission is disabled locally (`BIZBRIEF_METRICS_DISABLED=1`), and the storage
-calls hit DynamoDB/S3 — point them at [DynamoDB Local] + [moto]/MinIO, or supply
-real credentials, to exercise the full path.
+`sam local invoke` runs one handler in a Lambda-like container. Its storage
+calls hit real S3/DynamoDB, so without credentials it builds + boots the handler
+(proving packaging) but errors at the first AWS call. Use Option A for a full
+offline run.
 
 [DynamoDB Local]: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.html
 [moto]: https://github.com/getmoto/moto

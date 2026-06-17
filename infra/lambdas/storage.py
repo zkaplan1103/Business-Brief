@@ -76,6 +76,25 @@ def _s3():
     return boto3.client("s3")
 
 
+def _undecimalize(obj):
+    """Recursively convert DynamoDB Decimal values to native int/float.
+
+    boto3's DynamoDB resource returns all numbers as decimal.Decimal, which is
+    not JSON-serializable and breaks downstream json.dumps / arithmetic. Convert
+    at the read boundary so handlers always get plain Python numbers.
+    """
+    from decimal import Decimal  # noqa: PLC0415
+
+    if isinstance(obj, list):
+        return [_undecimalize(v) for v in obj]
+    if isinstance(obj, dict):
+        return {k: _undecimalize(v) for k, v in obj.items()}
+    if isinstance(obj, Decimal):
+        # Whole numbers -> int, otherwise float (mirrors the source review data).
+        return int(obj) if obj % 1 == 0 else float(obj)
+    return obj
+
+
 # ---------------------------------------------------------------------------
 # Key helpers (pure — unit-testable without AWS)
 # ---------------------------------------------------------------------------
@@ -179,7 +198,7 @@ def get_reviews(business_id: str, week: str) -> list[dict]:
         if "LastEvaluatedKey" not in resp:
             break
         kwargs["ExclusiveStartKey"] = resp["LastEvaluatedKey"]
-    return items
+    return _undecimalize(items)
 
 
 # ---------------------------------------------------------------------------

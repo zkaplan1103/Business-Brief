@@ -1,6 +1,6 @@
 # BizBrief serverless — build / local-invoke / deploy helpers.
 # Run from the infra/ directory. Requires the AWS SAM CLI for build/deploy.
-.PHONY: lambda-deps build local-ingest local-analyze validate deploy delete clean
+.PHONY: lambda-deps build local-ingest local-analyze local-e2e validate deploy delete clean
 
 # Vendor the shared pipeline code next to the handlers so Lambda's import paths
 # resolve (Lambda has no editable install of the repo). Copies are git-ignored.
@@ -25,6 +25,14 @@ local-ingest: build
 local-analyze: build
 	BIZBRIEF_METRICS_DISABLED=1 sam local invoke AnalyzeFunction \
 		--event events/analyze.json
+
+# Full ingest -> analyze -> brief end-to-end against in-process mock S3 +
+# DynamoDB (moto). No AWS account, no Docker, no SAM. Needs ANTHROPIC_API_KEY
+# (the analyze stage calls Claude; reruns hit the idempotency cache and are free).
+#   make local-e2e                         # default business/week
+#   make local-e2e ARGS="--business B007IAE5WY --week 2017-W38"
+local-e2e:
+	cd .. && uv run --group local-aws python infra/local_run.py $(ARGS)
 
 deploy: build
 	sam deploy --guided

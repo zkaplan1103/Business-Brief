@@ -1,0 +1,68 @@
+name: Deploy to AWS
+
+# Builds and deploys the serverless stack on push to main.
+#
+# OPT-IN: this workflow no-ops until you complete the one-time AWS setup below
+# and add the repo variable AWS_DEPLOY_ROLE_ARN. It uses GitHub OIDC — NO
+# long-lived AWS access keys are stored in GitHub.
+#
+# ── One-time AWS setup (do once, then this runs automatically) ──────────────
+# 1. Create an IAM OIDC identity provider for GitHub (if your account doesn't
+#    have one):
+#      Provider URL: https://token.actions.githubusercontent.com
+#      Audience:     sts.amazonaws.com
+# 2. Create an IAM role (e.g. bizbrief-github-deploy) with:
+#    - Trust policy allowing token.actions.githubusercontent.com, scoped to
+#      this repo:  "token.actions.githubusercontent.com:sub":
+#                  "repo:zkaplan1103/Business-Brief:ref:refs/heads/main"
+#    - Permissions: the same deployer policy you use locally (the scoped
+#      CloudFormation/Lambda/S3/DynamoDB/etc. policy).
+# 3. In GitHub → repo Settings → Secrets and variables → Actions → Variables,
+#    add  AWS_DEPLOY_ROLE_ARN = arn:aws:iam::<account>:role/bizbrief-github-deploy
+# 4. Add the Anthropic key as an Actions SECRET: ANTHROPIC_API_KEY
+#
+# Until AWS_DEPLOY_ROLE_ARN is set, the job is skipped (the `if` guard below).
+# ─────────────────────────────────────────────────────────────────────────────
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+permissions:
+  id-token: write       # required for OIDC
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # Skip entirely until the deploy role ARN is configured.
+    if: ${{ vars.AWS_DEPLOY_ROLE_ARN != '' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC, no stored keys)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: us-east-1
+
+      - uses: aws-actions/setup-sam@v2
+        with:
+          use-installer: true
+
+      - name: Vendor pipeline code + build
+        working-directory: infra
+        run: make build
+
+      - name: Deploy
+        working-directory: infra
+        run: |
+          sam deploy \
+            --no-confirm-changeset \
+            --no-fail-on-empty-changeset \
+            --stack-name bizbrief \
+            --capabilities CAPABILITY_IAM \
+            --parameter-overrides \
+              Stage=prod \
+              AnthropicApiKey=${{ secrets.ANTHROPIC_API_KEY }}

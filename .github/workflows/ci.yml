@@ -1,0 +1,34 @@
+name: CI
+
+# Runs the test suite on every push and PR. No AWS, no secrets — safe to run
+# anywhere. This is the part of CI/CD that's useful immediately; the deploy
+# workflow (deploy.yml) is opt-in and needs one-time AWS OIDC setup.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Set up Python
+        run: uv python install 3.11
+
+      - name: Install dependencies (incl. local-aws for the moto tests)
+        run: uv sync --group local-aws
+
+      - name: Run test suite
+        run: uv run python -m pytest tests/ -q
+
+      - name: Validate SAM template
+        run: |
+          pip install cfn-lint
+          cfn-lint infra/template.yaml

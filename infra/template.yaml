@@ -18,6 +18,22 @@ Parameters:
     Type: String
     Default: dev
     AllowedValues: [dev, prod]
+  LogRetentionDays:
+    Type: Number
+    Default: 30
+    Description: CloudWatch Logs retention for the Lambda log groups (cost control).
+    AllowedValues: [1, 3, 5, 7, 14, 30, 60, 90, 180, 365]
+  AlarmEmail:
+    Type: String
+    Default: ""
+    Description: >
+      Optional email for the dead-letter-queue alarm. If set, you'll get an SNS
+      confirmation email; confirm it to receive alerts when a run fails. Leave
+      empty to create the alarm without email notification.
+
+Conditions:
+  # True when AlarmEmail is non-empty — gates the SNS email subscription.
+  HasAlarmEmail: !Not [!Equals [!Ref AlarmEmail, ""]]
 
 Globals:
   Function:
@@ -38,6 +54,29 @@ Globals:
         ANTHROPIC_SECRET_ARN: !Ref AnthropicSecret
 
 Resources:
+
+  # ---------------------------------------------------------------------------
+  # Log groups — created explicitly so retention is bounded (otherwise Lambda
+  # auto-creates them with infinite retention = unbounded storage cost). Names
+  # MUST match Lambda's convention (/aws/lambda/<function-name>); the functions
+  # DependsOn these so the retention-bounded group exists before Lambda would
+  # create its own.
+  # ---------------------------------------------------------------------------
+  IngestLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/bizbrief-ingest-${Stage}
+      RetentionInDays: !Ref LogRetentionDays
+  AnalyzeLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/bizbrief-analyze-${Stage}
+      RetentionInDays: !Ref LogRetentionDays
+  BriefLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/bizbrief-brief-${Stage}
+      RetentionInDays: !Ref LogRetentionDays
 
   # ---------------------------------------------------------------------------
   # Storage
@@ -113,6 +152,36 @@ Resources:
       SourceAccount: !Ref AWS::AccountId
       SourceArn: !Sub arn:aws:s3:::bizbrief-raw-${Stage}-${AWS::AccountId}
 
+  # Hardening for the raw (trigger) bucket: on top of the public-access block,
+  # explicitly DENY any write from a principal outside this account and DENY all
+  # non-TLS access. The trigger fires on uploads/*.jsonl, and each upload costs
+  # Anthropic spend downstream — so we lock writes to this account's principals.
+  RawBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref RawBucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: DenyWritesOutsideThisAccount
+            Effect: Deny
+            Principal: "*"
+            Action: s3:PutObject
+            Resource: !Sub arn:aws:s3:::bizbrief-raw-${Stage}-${AWS::AccountId}/*
+            Condition:
+              StringNotEquals:
+                aws:PrincipalAccount: !Ref AWS::AccountId
+          - Sid: DenyInsecureTransport
+            Effect: Deny
+            Principal: "*"
+            Action: s3:*
+            Resource:
+              - !Sub arn:aws:s3:::bizbrief-raw-${Stage}-${AWS::AccountId}
+              - !Sub arn:aws:s3:::bizbrief-raw-${Stage}-${AWS::AccountId}/*
+            Condition:
+              Bool:
+                aws:SecureTransport: "false"
+
   BriefsBucket:
     Type: AWS::S3::Bucket
     Properties:
@@ -131,11 +200,49 @@ Resources:
       QueueName: !Sub bizbrief-dlq-${Stage}
       MessageRetentionPeriod: 1209600    # 14 days
 
+  # SNS topic the DLQ alarm publishes to. If AlarmEmail is provided, an email
+  # subscription is added (you must confirm the subscription email once).
+  AlarmTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: !Sub bizbrief-alarms-${Stage}
+
+  AlarmEmailSubscription:
+    Type: AWS::SNS::Subscription
+    Condition: HasAlarmEmail
+    Properties:
+      TopicArn: !Ref AlarmTopic
+      Protocol: email
+      Endpoint: !Ref AlarmEmail
+
+  # Fires when any message lands in the DLQ — i.e. a run failed all its retries.
+  # Without this, failed runs sit silently in the queue. ApproximateNumberOf
+  # MessagesVisible >= 1 over one period = "something failed, go look".
+  DeadLetterAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub bizbrief-dlq-not-empty-${Stage}
+      AlarmDescription: A BizBrief run failed all retries and landed in the DLQ.
+      Namespace: AWS/SQS
+      MetricName: ApproximateNumberOfMessagesVisible
+      Dimensions:
+        - Name: QueueName
+          Value: !GetAtt DeadLetterQueue.QueueName
+      Statistic: Maximum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 1
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      TreatMissingData: notBreaching
+      AlarmActions:
+        - !Ref AlarmTopic
+
   # ---------------------------------------------------------------------------
   # Functions
   # ---------------------------------------------------------------------------
   IngestFunction:
     Type: AWS::Serverless::Function
+    DependsOn: IngestLogGroup
     Properties:
       FunctionName: !Sub bizbrief-ingest-${Stage}
       CodeUri: lambdas/
@@ -156,6 +263,7 @@ Resources:
 
   AnalyzeFunction:
     Type: AWS::Serverless::Function
+    DependsOn: AnalyzeLogGroup
     Properties:
       FunctionName: !Sub bizbrief-analyze-${Stage}
       CodeUri: lambdas/
@@ -181,6 +289,7 @@ Resources:
 
   BriefFunction:
     Type: AWS::Serverless::Function
+    DependsOn: BriefLogGroup
     Properties:
       FunctionName: !Sub bizbrief-brief-${Stage}
       CodeUri: lambdas/

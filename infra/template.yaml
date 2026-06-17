@@ -26,8 +26,11 @@ Globals:
     Environment:
       Variables:
         BIZBRIEF_TABLE: !Ref ReviewsTable
-        BIZBRIEF_RAW_BUCKET: !Ref RawBucket
-        BIZBRIEF_BRIEFS_BUCKET: !Ref BriefsBucket
+        # Static bucket names (not !Ref) so functions don't take a resource
+        # dependency on the buckets — that !Ref is what created the S3-trigger
+        # circular dependency. The names are deterministic via !Sub.
+        BIZBRIEF_RAW_BUCKET: !Sub bizbrief-raw-${Stage}-${AWS::AccountId}
+        BIZBRIEF_BRIEFS_BUCKET: !Sub bizbrief-briefs-${Stage}-${AWS::AccountId}
         ANTHROPIC_API_KEY: !Ref AnthropicApiKey
 
 Resources:
@@ -51,8 +54,14 @@ Resources:
         - AttributeName: SK
           KeyType: RANGE
 
+  # The raw bucket's S3->Lambda notification is wired explicitly (not via SAM's
+  # Events: S3 sugar) to avoid the CloudFormation circular dependency between
+  # the bucket, the function, and the auto-generated invoke permission. The
+  # bucket depends on the permission so S3 is allowed to invoke before the
+  # notification is registered.
   RawBucket:
     Type: AWS::S3::Bucket
+    DependsOn: IngestInvokePermission
     Properties:
       BucketName: !Sub bizbrief-raw-${Stage}-${AWS::AccountId}
       PublicAccessBlockConfiguration:
@@ -65,6 +74,29 @@ Resources:
           - Id: expire-raw-uploads
             Status: Enabled
             ExpirationInDays: 30          # raw uploads are transient input
+      NotificationConfiguration:
+        LambdaConfigurations:
+          - Event: s3:ObjectCreated:*
+            Function: !GetAtt IngestFunction.Arn
+            Filter:
+              S3Key:
+                Rules:
+                  - Name: prefix
+                    Value: uploads/
+                  - Name: suffix
+                    Value: .jsonl
+
+  # Allows S3 to invoke the ingest function. Uses a static (account/region/stage)
+  # bucket ARN as SourceArn rather than !Ref RawBucket, which is what breaks the
+  # circular dependency (the permission no longer depends on the bucket resource).
+  IngestInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref IngestFunction
+      Principal: s3.amazonaws.com
+      SourceAccount: !Ref AWS::AccountId
+      SourceArn: !Sub arn:aws:s3:::bizbrief-raw-${Stage}-${AWS::AccountId}
 
   BriefsBucket:
     Type: AWS::S3::Bucket
@@ -104,19 +136,8 @@ Resources:
         - CloudWatchPutMetricPolicy: {}
         - LambdaInvokePolicy:
             FunctionName: !Sub bizbrief-analyze-${Stage}
-      Events:
-        RawUpload:
-          Type: S3
-          Properties:
-            Bucket: !Ref RawBucket
-            Events: s3:ObjectCreated:*
-            Filter:
-              S3Key:
-                Rules:
-                  - Name: prefix
-                    Value: uploads/
-                  - Name: suffix
-                    Value: .jsonl
+      # S3 trigger wired explicitly via RawBucket.NotificationConfiguration +
+      # IngestInvokePermission (above) to avoid a circular dependency.
 
   AnalyzeFunction:
     Type: AWS::Serverless::Function

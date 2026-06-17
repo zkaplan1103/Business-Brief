@@ -37,6 +37,8 @@ tests/            unit + `make smoke`
 - Run scheduler: `uv run python -m scheduler.run`
 - Run UI: `cd web && npm run dev`
 - Smoke: `make smoke` (busy business, sparse week, forced-failure case)
+- Local serverless e2e (mock AWS, no account): `cd infra && make local-e2e`
+- Deploy to AWS (SAM): `cd infra && make deploy`. **Before deploying, read `docs/memory/07-deploy-lessons.md`** — it lists the bugs that bit the first deploy (SAM S3-trigger circular dependency, DynamoDB Decimal serialization, dotenv import crash in Lambda, IAM least-privilege whack-a-mole, log-group collisions) and how to avoid them. Public deploy guide for others: `DEPLOY.md`.
 
 ## Defaults (overridable via Config)
 - Classification: Claude (`haiku` dev / `sonnet` final), batched. Brief output: JSON in `data/briefs/`.

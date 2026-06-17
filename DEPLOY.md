@@ -5,20 +5,18 @@ drop a review file in **S3** → a **Lambda** chain (ingest → analyze → brie
 classifies themes with Claude and writes results to **DynamoDB** + S3, with a
 **live CloudWatch dashboard** tracking cost, latency, and throughput.
 
-This is the guide that makes the résumé bullet literally true. After following
-it you will have running cloud infrastructure, a dashboard URL, and brief JSON
-objects produced by Lambda — not a local mock.
+After following it you will have running cloud infrastructure in your own AWS
+account, a dashboard URL, and brief JSON objects produced by Lambda.
 
 > ⚠️ **This deploys real, billable AWS infrastructure and calls the Anthropic
-> API.** Costs are small (see [§8](#8-cost-expectations)) but nonzero. Tear down
-> with `make delete` when done ([§9](#9-teardown)).
+> API.** Costs are small (see [§8](#8-cost-expectations)) but nonzero. Set a
+> billing budget alarm first, and tear down with `make delete` when done
+> ([§9](#9-teardown)).
 
-Everything below is verified against `infra/template.yaml` on `main`. The
-template passes `sam validate --lint` (AWS's own linter), the pipeline code
-vendors and imports cleanly into the Lambda package, and the handlers have been
-run end-to-end against mock S3 + DynamoDB. The one thing only *you* can do is
-the real `sam build` + `sam deploy` against your AWS account (needs Docker +
-credentials + spend) — that's §4–§5.
+The template (`infra/template.yaml`) passes `sam validate --lint`, and the
+Lambda handlers reuse the same `pipeline/` + `reliability/` code as the local
+app. You can also run the whole pipeline offline against mock S3 + DynamoDB
+before spending anything — see `infra/README.md` (`make local-e2e`).
 
 ---
 
@@ -87,10 +85,16 @@ aws configure
 aws sts get-caller-identity
 ```
 
-> **IAM scope:** for a personal project, an admin or PowerUser identity is
-> simplest. For a locked-down account, the deployer needs `cloudformation:*`
-> plus create/update/delete on the resource types above. SAM creates the
-> per-function execution roles for you (least-privilege, defined in the template).
+> **IAM scope:** the fastest path is an `AdministratorAccess` identity, but a
+> scoped deployer policy is safer (a leaked key then can't touch your whole
+> account). The deployer needs: `cloudformation:*`; full `s3:*` scoped to the
+> SAM staging bucket (`aws-sam-cli-managed-default*`) and `bizbrief-*` buckets;
+> `lambda:*`; create/manage on DynamoDB, SQS, CloudWatch (dashboards + alarms),
+> CloudWatch Logs, SNS, and Secrets Manager; and `iam:CreateRole`/`PassRole`/…
+> scoped to `arn:aws:iam::*:role/bizbrief-*`. SAM creates the per-function
+> execution roles for you. **Heads-up:** with least-privilege you'll likely hit
+> one missing S3/Logs action at a time across early deploys — granting `s3:*`
+> on the bucket ARNs (rather than per-action) avoids most of that churn.
 
 ---
 
@@ -148,11 +152,19 @@ The guided prompts (first deploy only — answers are saved to `samconfig.toml`)
 | Stack Name | `bizbrief` |
 | AWS Region | `us-east-1` (or yours) |
 | Parameter Stage | `prod` (or `dev`) |
+| Parameter LogRetentionDays | press Enter for default `30` |
+| Parameter AlarmEmail | your email for DLQ failure alerts, or Enter to skip |
 | Parameter AnthropicApiKey | `sk-ant-...` (hidden; stored in Secrets Manager, not a plaintext env var) |
 | Confirm changes before deploy | `Y` |
 | Allow SAM to create IAM roles | `Y` ← required (per-function execution roles) |
 | Disable rollback | `N` |
 | Save arguments to samconfig.toml | `Y` |
+| SAM configuration file | press **Enter** (default `samconfig.toml`) — do NOT type `Y` |
+| SAM configuration environment | press **Enter** (default) |
+
+> **Prompt tip:** bracketed `[default]` prompts want **Enter**, not `Y`. Typing
+> `Y` at the config-file prompt makes SAM treat `Y` as a filename and error out.
+> Only answer `Y` to prompts that literally end in `[y/N]`.
 
 When it finishes, SAM prints the stack **Outputs**. Capture them:
 
@@ -175,7 +187,7 @@ Upload a review file to the raw bucket. The key path **must** be
 ingest handler's key parser expect.
 
 ```bash
-cd /Users/zackkaplan/Developer/BIZBRIEF
+# Run from the repo root.
 
 # Get the raw bucket name from the stack outputs
 RAW=$(aws cloudformation describe-stacks --stack-name bizbrief \
@@ -288,18 +300,25 @@ make delete       # sam delete — removes the whole stack
 
 ---
 
-## 10. Production hardening checklist
+## 10. Production hardening
 
-The deploy above is functional and demo-ready. To make it genuinely
-production-grade, address these (in priority order):
+These are **already built into the template** — they deploy automatically, no
+extra steps:
 
-- [x] **Secrets Manager for the API key** — DONE ([§3](#3-how-the-anthropic-key-is-handled-secrets-manager--already-wired)). Key lives in Secrets Manager, fetched at cold start, never a plaintext env var.
-- [ ] **Per-function log retention** — set a `LogGroup` retention (e.g. 30 days) so CloudWatch Logs don't accumulate cost indefinitely.
-- [ ] **Alarms on the DLQ** — a CloudWatch alarm on `DeadLetterQueue` depth (>0) so failed runs page you instead of sitting silently.
-- [ ] **Reserved/provisioned concurrency** (optional) — if cold-start latency matters; otherwise on-demand is cheaper.
-- [ ] **S3 upload validation** — restrict who can write to the raw bucket (the trigger fires on any `uploads/*.jsonl`); add a bucket policy or upload via a signed/authenticated path.
-- [ ] **Stage separation** — deploy `dev` and `prod` stacks separately (the `Stage` parameter already namespaces every resource).
-- [ ] **CI/CD** — wire `sam build && sam deploy` into a GitHub Action on merge to `main`.
+- [x] **Secrets Manager for the API key** ([§3](#3-how-the-anthropic-key-is-handled-secrets-manager--already-wired)) — key fetched at cold start, never a plaintext env var.
+- [x] **Per-function log retention** — explicit `LogGroup`s with a `LogRetentionDays` parameter (default 30) so CloudWatch Logs don't accumulate cost indefinitely.
+- [x] **DLQ alarm** — a CloudWatch alarm on dead-letter-queue depth (≥1) wired to an SNS topic. Pass `AlarmEmail=you@example.com` at deploy to get failure emails (confirm the SNS subscription once).
+- [x] **Raw-bucket write restriction** — bucket policy denies `PutObject` from outside the account and denies non-TLS access (protects the cost-incurring trigger).
+- [x] **Stage separation** — the `Stage` parameter namespaces every resource; deploy `dev` and `prod` independently.
+
+One thing **you** still own outside the template:
+
+- [ ] **Billing budget alarm** — set an AWS Budgets monthly cost alarm (e.g. $5) in the Billing console as a spend tripwire. Free, and the one guardrail the template can't create for you.
+
+Optional extras:
+
+- **CI/CD** — `.github/workflows/deploy.yml` does OIDC-based `sam deploy` on push to `main`. It's dormant until you create a GitHub deploy role and set the `AWS_DEPLOY_ROLE_ARN` repo variable (setup steps are documented inline in that file).
+- **Reserved/provisioned concurrency** — only if cold-start latency matters; on-demand is cheaper otherwise.
 
 ---
 

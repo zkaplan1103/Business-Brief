@@ -13,6 +13,7 @@ then appends what it learned. Keeps context small as the project grows.
 | `eval` | `05-eval.md` | eval-engineer |
 | `security` | `06-security.md` | security-engineer (red-team files to `red-team-findings.md`) |
 | `cost` | `02-analysis.md` | cost-engineer (shares the analysis log) |
+| `deploy` | `07-deploy-lessons.md` | anyone deploying to AWS — READ BEFORE `sam deploy` |
 
 Protocol: before work → read INDEX + your tagged file. After work → append a
 dated entry to your tagged file + one line to `00-decisions.md`. Never edit

@@ -11,7 +11,9 @@ Parameters:
   AnthropicApiKey:
     Type: String
     NoEcho: true
-    Description: ANTHROPIC_API_KEY for the analyze/brief functions.
+    Description: >
+      Anthropic API key. Stored in AWS Secrets Manager (NOT as a plaintext
+      Lambda env var). The analyze/brief functions fetch it at cold start.
   Stage:
     Type: String
     Default: dev
@@ -31,7 +33,9 @@ Globals:
         # circular dependency. The names are deterministic via !Sub.
         BIZBRIEF_RAW_BUCKET: !Sub bizbrief-raw-${Stage}-${AWS::AccountId}
         BIZBRIEF_BRIEFS_BUCKET: !Sub bizbrief-briefs-${Stage}-${AWS::AccountId}
-        ANTHROPIC_API_KEY: !Ref AnthropicApiKey
+        # The key is fetched from Secrets Manager at cold start (see secrets.py),
+        # NOT injected as a plaintext env var. Only the secret's ARN is exposed.
+        ANTHROPIC_SECRET_ARN: !Ref AnthropicSecret
 
 Resources:
 
@@ -53,6 +57,17 @@ Resources:
           KeyType: HASH
         - AttributeName: SK
           KeyType: RANGE
+
+  # Anthropic API key in Secrets Manager. Seeded from the AnthropicApiKey
+  # parameter at deploy time; the functions read it via secrets.py at cold start.
+  # To rotate without redeploying: update the secret value directly in Secrets
+  # Manager (aws secretsmanager put-secret-value ...).
+  AnthropicSecret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: !Sub bizbrief/anthropic-api-key-${Stage}
+      Description: Anthropic API key for BizBrief analyze/brief Lambdas.
+      SecretString: !Ref AnthropicApiKey
 
   # The raw bucket's S3->Lambda notification is wired explicitly (not via SAM's
   # Events: S3 sugar) to avoid the CloudFormation circular dependency between
@@ -161,6 +176,8 @@ Resources:
         - CloudWatchPutMetricPolicy: {}
         - LambdaInvokePolicy:
             FunctionName: !Sub bizbrief-brief-${Stage}
+        - AWSSecretsManagerGetSecretValuePolicy:
+            SecretArn: !Ref AnthropicSecret
 
   BriefFunction:
     Type: AWS::Serverless::Function
@@ -181,6 +198,8 @@ Resources:
         - S3CrudPolicy:
             BucketName: !Sub bizbrief-briefs-${Stage}-${AWS::AccountId}
         - CloudWatchPutMetricPolicy: {}
+        - AWSSecretsManagerGetSecretValuePolicy:
+            SecretArn: !Ref AnthropicSecret
 
   # ---------------------------------------------------------------------------
   # Live cost / latency / throughput dashboard

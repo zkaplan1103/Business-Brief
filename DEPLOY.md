@@ -94,33 +94,28 @@ aws sts get-caller-identity
 
 ---
 
-## 3. Decide how to supply the Anthropic key
+## 3. How the Anthropic key is handled (Secrets Manager — already wired)
 
-The template accepts `AnthropicApiKey` as a CloudFormation parameter and injects
-it into the Lambda environment. Two paths:
+You supply the key **once**, at deploy time, via the `AnthropicApiKey`
+parameter. The template does **not** put it in the Lambda environment as
+plaintext. Instead it:
 
-### 3a. Quick (parameter) — fine for a demo/portfolio deploy
-The key is passed at deploy time and stored as a Lambda env var. Simple, works
-immediately. The value is `NoEcho` in CloudFormation (not shown in console
-output), but it **is** readable in plaintext by anyone with `lambda:GetFunction`
-on the account.
+1. Stores the value in an `AWS::SecretsManager::Secret`
+   (`bizbrief/anthropic-api-key-<stage>`).
+2. Exposes only the secret's ARN to the functions (`ANTHROPIC_SECRET_ARN`).
+3. Grants the analyze + brief functions a scoped `secretsmanager:GetSecretValue`.
 
-### 3b. Production-grade (Secrets Manager) — recommended for a real product
-Store the key in AWS Secrets Manager and have the Lambdas read it at cold start.
-This keeps the secret out of the function's environment entirely.
+At cold start, `infra/lambdas/secrets_provider.py` fetches the key and places it
+in the environment so the shared `reliability.call_model` works unchanged. The
+key is never a readable plaintext env var.
 
+**To rotate the key later** (no redeploy needed):
 ```bash
-aws secretsmanager create-secret \
-  --name bizbrief/anthropic-api-key \
-  --secret-string "sk-ant-..."
+aws secretsmanager put-secret-value \
+  --secret-id bizbrief/anthropic-api-key-prod \
+  --secret-string "sk-ant-NEW..."
 ```
-
-> This requires a small code change (fetch the secret in the handler instead of
-> reading `os.environ["ANTHROPIC_API_KEY"]`) and adding
-> `secretsmanager:GetSecretValue` to each function's IAM policy. It's the only
-> gap between "deployable demo" and "production secret hygiene" — see
-> [§10](#10-production-hardening-checklist). The steps below use **3a** so you
-> get a working deploy first; harden after.
+New Lambda cold starts pick it up automatically.
 
 ---
 
@@ -153,7 +148,7 @@ The guided prompts (first deploy only — answers are saved to `samconfig.toml`)
 | Stack Name | `bizbrief` |
 | AWS Region | `us-east-1` (or yours) |
 | Parameter Stage | `prod` (or `dev`) |
-| Parameter AnthropicApiKey | `sk-ant-...` (hidden) |
+| Parameter AnthropicApiKey | `sk-ant-...` (hidden; stored in Secrets Manager, not a plaintext env var) |
 | Confirm changes before deploy | `Y` |
 | Allow SAM to create IAM roles | `Y` ← required (per-function execution roles) |
 | Disable rollback | `N` |
@@ -298,7 +293,7 @@ make delete       # sam delete — removes the whole stack
 The deploy above is functional and demo-ready. To make it genuinely
 production-grade, address these (in priority order):
 
-- [ ] **Secrets manager for the API key** ([§3b](#3b-production-grade-secrets-manager--recommended-for-a-real-product)) — move `ANTHROPIC_API_KEY` out of the Lambda env into Secrets Manager; add `secretsmanager:GetSecretValue` to each function role.
+- [x] **Secrets Manager for the API key** — DONE ([§3](#3-how-the-anthropic-key-is-handled-secrets-manager--already-wired)). Key lives in Secrets Manager, fetched at cold start, never a plaintext env var.
 - [ ] **Per-function log retention** — set a `LogGroup` retention (e.g. 30 days) so CloudWatch Logs don't accumulate cost indefinitely.
 - [ ] **Alarms on the DLQ** — a CloudWatch alarm on `DeadLetterQueue` depth (>0) so failed runs page you instead of sitting silently.
 - [ ] **Reserved/provisioned concurrency** (optional) — if cold-start latency matters; otherwise on-demand is cheaper.

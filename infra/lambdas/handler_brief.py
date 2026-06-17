@@ -28,6 +28,7 @@ import uuid
 
 import storage
 import metrics
+import secrets_provider as bizbrief_secrets
 
 from pipeline.config import Config  # type: ignore
 import pipeline.brief as brief_stage  # type: ignore
@@ -35,6 +36,8 @@ import pipeline.brief as brief_stage  # type: ignore
 
 def handler(event: dict, context) -> dict:  # noqa: ANN001
     t0 = time.monotonic()
+    # Hydrate ANTHROPIC_API_KEY from Secrets Manager if not already in the env.
+    bizbrief_secrets.ensure_anthropic_key()
     business_id = event["business_id"]
     week = event["week"]
 

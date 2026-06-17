@@ -12,7 +12,14 @@ import sys
 import uuid
 from typing import TYPE_CHECKING
 
-from dotenv import load_dotenv
+# Optional: only used by the CLI entry point for local runs. Absent in Lambda
+# (no .env, python-dotenv not packaged); a missing dependency must not break the
+# module import there.
+try:
+    from dotenv import load_dotenv
+except ModuleNotFoundError:
+    def load_dotenv(*_args, **_kwargs):  # no-op fallback
+        return False
 
 if TYPE_CHECKING:
     from pipeline.config import Config

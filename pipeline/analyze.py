@@ -14,9 +14,16 @@ import re
 from datetime import datetime, timezone
 from typing import TYPE_CHECKING
 
-from dotenv import load_dotenv
+# Optional: load ANTHROPIC_API_KEY from a .env file for local/dev runs. In the
+# serverless deployment there is no .env and python-dotenv isn't packaged, so a
+# missing dependency must not break the import — the key comes from Secrets
+# Manager there (see infra/lambdas/secrets_provider.py).
+try:
+    from dotenv import load_dotenv
 
-load_dotenv()  # picks up ANTHROPIC_API_KEY from .env at project root
+    load_dotenv()  # picks up ANTHROPIC_API_KEY from .env at project root
+except ModuleNotFoundError:
+    pass
 
 from pipeline.router import pick_model
 from reliability import BudgetExceeded, call_model

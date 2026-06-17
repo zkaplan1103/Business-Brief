@@ -199,7 +199,32 @@ Tell me which you want and I'll add them.
 
 ## Where we are right now
 
-**Stage 0 ✅ complete. Next action: yours — Stage 1 (AWS account & credentials).**
+**Stages 0–2 ✅ complete.** Hardening done; AWS creds verified (account
+`<ACCOUNT_ID>`, region `us-east-1`); clean stack; template valid. Deployer IAM
+scoped down from AdministratorAccess to a least-privilege inline policy —
+verified the deploy-critical actions (CloudFormation/Lambda/DynamoDB/SQS/
+CloudWatch/SecretsManager + IAM role create scoped to `bizbrief-*`) are all
+permitted. (Account-wide `List*` calls are intentionally denied — not needed,
+correct least-privilege.)
 
-Do Stage 1, paste me `aws sts get-caller-identity`, and say "continue."
+**Stages 3–7 ✅ COMPLETE — BizBrief is LIVE on AWS (us-east-1, stack `bizbrief`).**
+
+Verified end-to-end on B007IAE5WY/2017-W38: S3 upload → ingest (17 reviews to
+DynamoDB) → analyze (Claude, 6.5s, THEMES# written) → brief (BRIEF# + rendered
+JSON to the briefs bucket). CloudWatch publishing CostUsd/LatencyMs/Throughput.
+
+Deploy bugs found + fixed along the way (all real, would've failed any deploy):
+- IAM least-privilege gaps surfaced one at a time (s3:TagResource, DeleteBucket,
+  PutLifecycleConfiguration, …) → settled on s3:* scoped to aws-sam-*/bizbrief-*
+  buckets + a read-only VerifyAndInspect statement.
+- `Runtime.ImportModuleError: No module named 'dotenv'` — analyze/brief imported
+  python-dotenv at module top; not packaged in Lambda. Fixed: made the dotenv
+  import optional (no-op fallback) in pipeline/analyze.py + brief.py.
+
+Resources: 3 Lambdas (bizbrief-{ingest,analyze,brief}-prod), DynamoDB
+bizbrief-prod, buckets bizbrief-{raw,briefs}-prod-<ACCOUNT_ID>, SQS DLQ,
+Secrets Manager bizbrief/anthropic-api-key-prod, CloudWatch dashboard BizBrief-prod.
+
+**Remaining (optional): Stage 8 hardening follow-ups, and `make delete` to tear
+down when you want to stop incurring (tiny) cost.**
 ```

@@ -23,6 +23,7 @@ This is the terminal stage; it invokes nothing downstream.
 
 from __future__ import annotations
 
+import json
 import time
 import uuid
 
@@ -32,6 +33,7 @@ import secrets_provider as bizbrief_secrets
 
 from pipeline.config import Config  # type: ignore
 import pipeline.brief as brief_stage  # type: ignore
+from reliability import BudgetExceeded  # type: ignore
 
 
 def handler(event: dict, context) -> dict:  # noqa: ANN001
@@ -49,9 +51,18 @@ def handler(event: dict, context) -> dict:  # noqa: ANN001
     cfg = Config()
     cfg.briefs_dir = "/tmp/briefs"   # ephemeral; the canonical copy goes to S3
     cfg.log_dir = "/tmp/logs"
+    if context is not None:
+        cfg.deadline = time.monotonic() + context.get_remaining_time_in_millis() / 1000 - 10
     run_id = f"sls_{uuid.uuid4().hex[:8]}"
 
-    brief = brief_stage.run(business_id, week, cfg, run_id, theme_report)
+    try:
+        brief = brief_stage.run(business_id, week, cfg, run_id, theme_report)
+    except BudgetExceeded as exc:
+        # Return instead of raising: a Lambda retry would only spend again.
+        print(json.dumps({"run_record": {"run_id": run_id, "business_id": business_id,
+                                         "week": week, "status": "failed",
+                                         "note": str(exc)}}))
+        return {"statusCode": 200, "status": "failed", "error": "cost ceiling reached"}
 
     storage.put_brief(business_id, week, brief)
 

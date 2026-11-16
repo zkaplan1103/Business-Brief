@@ -173,7 +173,6 @@ export default function CostTab() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    setLoading(true)
     api.metrics()
       .then(data => { setMetrics(data); setLoading(false) })
       .catch(() => { setError('Could not load metrics — is the API running?'); setLoading(false) })
@@ -239,7 +238,7 @@ export default function CostTab() {
       </div>
 
       {/* Routing donut + cost bar side by side */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 20 }}>
+      <div className="stack-mobile" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 20 }}>
         <RoutingDonut mix={metrics.routing_mix} />
         <BarCard
           title="Cost by model"
@@ -266,7 +265,7 @@ export default function CostTab() {
           <div style={{ fontSize: 12, color: 'var(--ink-faint)', marginBottom: 16 }}>Cost and call count per stage</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {Object.entries(metrics.by_stage).map(([stage, sv]) => (
-              <div key={stage} style={{ display: 'grid', gridTemplateColumns: '100px 1fr 80px 80px', alignItems: 'center', gap: 12, padding: '8px 0', borderBottom: '1px solid var(--line)' }}>
+              <div key={stage} style={{ display: 'grid', gridTemplateColumns: '72px 1fr 64px 64px', alignItems: 'center', gap: 12, padding: '8px 0', borderBottom: '1px solid var(--line)' }}>
                 <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink)', textTransform: 'capitalize' }}>{stage}</span>
                 <div style={{ height: 6, background: 'var(--surface-2)', borderRadius: 999, overflow: 'hidden' }}>
                   <div style={{ height: '100%', borderRadius: 999, background: 'var(--brand)', width: `${Math.min(100, (sv.total_cost_usd / (metrics.total_cost_usd || 1)) * 100)}%` }} />

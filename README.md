@@ -1,5 +1,7 @@
 # BizBrief
 
+**[Live demo](https://zkaplan1103.github.io/Business-Brief/)**. It runs on simulated data for four fictional businesses. No backend, no API key, no cost.
+
 > Turns a flood of customer reviews into a clear weekly action brief for small-business owners — at production-grade reliability and demo-grade cost.
 
 ![Overview — rating gauge, weekly brief, top action](docs/screenshots/overview.png)
@@ -76,7 +78,19 @@ s3://raw/uploads/<biz>/<week>.jsonl ──S3 event──▶ IngestLambda ──�
 
 The Lambdas **import the existing `pipeline/` and `reliability/` modules** — the model router, prompt caching, retry/backoff, cost ceiling and idempotency cache all carry over unchanged. The only new code is `infra/lambdas/storage.py` (S3 + DynamoDB adapter) and `metrics.py` (CloudWatch emitter).
 
-> **Status: deployable, not deployed.** This is complete, importable handler code + IaC, not pseudo-code — its AWS-independent surface is covered by 19 tests in [tests/test_serverless.py](tests/test_serverless.py). It is intentionally not `sam deploy`'d, since running it incurs AWS + Anthropic charges. See [infra/README.md](infra/README.md) for the architecture, DynamoDB design, `sam local invoke` instructions, and the deploy walkthrough.
+> **Status: deployable, not deployed.** This is complete handler code and IaC, not pseudo-code. It is not deployed because running it costs AWS and Anthropic money. The template passes `cfn-lint` and `sam validate --lint`. The handlers are tested against mock AWS in [tests/test_serverless_edge_cases.py](tests/test_serverless_edge_cases.py), and CI runs the full chain offline with `make local-e2e`. The hardening is listed below. See [infra/README.md](infra/README.md) for the architecture and [DEPLOY.md](DEPLOY.md) for the deploy walkthrough.
+
+### Security & reliability
+
+- The Anthropic key lives in Secrets Manager. The stack only receives its ARN, so the key never passes through CloudFormation.
+- Each function's IAM role lists only the actions its handler calls.
+- Reserved concurrency caps each function, and an AWS Budget emails when spend nears the monthly limit.
+- Failed async invocations of all three functions land in an SQS dead-letter queue with an alarm.
+- Both buckets deny non-TLS access. The raw bucket also denies uploads from other accounts.
+- Ingest only accepts `uploads/<business_id>/<YYYY-Www>.jsonl`. Empty, malformed, non-UTF-8 and oversized files are rejected before any model call.
+- A repeated S3 delivery of the same file is skipped, so the model runs once per upload.
+- Model retries and backoff stop before the Lambda timeout. A failed secret fetch fails fast with a clear error.
+- When the per-run cost ceiling trips, analyze stops, saves a partial report, and logs the run status.
 
 ---
 
@@ -106,6 +120,10 @@ cd web && npm run dev              # → http://localhost:5173
 
 # 6. Smoke tests
 make smoke
+
+# Static demo build (simulated data, what the live demo serves)
+uv run python scripts/make_demo_data.py   # regenerate web/src/demo-data.json
+cd web && npm run build:demo
 ```
 
 ---
@@ -150,6 +168,7 @@ web/
     api.ts         typed fetch client
     types.ts       contract types (mirrors CONTRACTS.md)
     fixtures.ts    demo fixtures for offline development
+    demo-data.json simulated data for the static demo (from scripts/make_demo_data.py)
     components/    Header · BriefPanel · ThemeChart · TrendIndicator · EmailDraft ·
                    SchedulePanel · RunStatus · EmptyState · CostTab · EvalTab
 

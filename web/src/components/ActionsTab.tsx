@@ -149,7 +149,7 @@ export default function ActionsTab({ brief, themeReport }: Props) {
   return (
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: 'easeOut' }}>
 
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 22, gap: 16 }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 22, gap: 16 }}>
         <div>
           <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--ink)' }}>Action Items</div>
           <div style={{ fontSize: 13, color: 'var(--ink-soft)', marginTop: 3 }}>{brief.action_items.length} item{brief.action_items.length !== 1 ? 's' : ''} this week · ranked by severity</div>
@@ -163,7 +163,7 @@ export default function ActionsTab({ brief, themeReport }: Props) {
       </div>
 
       {/* Two-column: action list left, email right */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: 20, alignItems: 'start' }}>
+      <div className="stack-mobile" style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: 20, alignItems: 'start' }}>
 
         <div>
           <AnimatePresence mode="popLayout">

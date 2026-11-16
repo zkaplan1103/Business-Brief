@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import './index.css'
 
-import { api } from './api'
+import { api, DEMO } from './api'
 import type { Brief, ThemeReport, ScheduleSettings, RunRecord, BusinessMeta } from './types'
 import { FIXTURE_BRIEF, FIXTURE_THEME_REPORT, FIXTURE_SCHEDULE, FIXTURE_RUNS, FIXTURE_BUSINESS } from './fixtures'
 
@@ -13,6 +13,7 @@ import CostTab from './components/CostTab'
 import EvalTab from './components/EvalTab'
 import SettingsPanel from './components/SettingsPanel'
 import EmptyState from './components/EmptyState'
+import DemoBanner from './components/DemoBanner'
 
 type Tab = 'overview' | 'charts' | 'actions' | 'cost' | 'eval'
 
@@ -26,7 +27,6 @@ export default function App() {
   const [themeReport, setThemeReport] = useState<ThemeReport>(FIXTURE_THEME_REPORT)
   const [schedule, setSchedule] = useState<ScheduleSettings>(FIXTURE_SCHEDULE)
   const [runs, setRuns] = useState<RunRecord[]>(FIXTURE_RUNS)
-  const [loading, setLoading] = useState(false)
   const [apiAvailable, setApiAvailable] = useState(false)
   const [activeTab, setActiveTab] = useState<Tab>('overview')
   const [settingsOpen, setSettingsOpen] = useState(false)
@@ -43,30 +43,39 @@ export default function App() {
     }).catch(() => {})
   }, [])
 
-  const loadData = useCallback(async (businessId: string, week: string) => {
+  // Loading is derived (selection differs from what was last loaded) rather
+  // than set synchronously inside the effect.
+  const selectionKey = `${selectedBusiness}/${selectedWeek}`
+  const [loadedKey, setLoadedKey] = useState(selectionKey)
+  const loading = apiAvailable && !USE_FIXTURES && loadedKey !== selectionKey
+
+  useEffect(() => {
     if (!apiAvailable || USE_FIXTURES) return
-    setLoading(true)
-    try {
-      const [briefData, schedData, runsData] = await Promise.all([
-        api.brief(businessId, week),
-        api.schedule(businessId),
-        api.runs(businessId),
-      ])
+    Promise.all([
+      api.brief(selectedBusiness, selectedWeek),
+      api.schedule(selectedBusiness),
+      api.runs(selectedBusiness),
+    ]).then(([briefData, schedData, runsData]) => {
       setBrief(briefData.brief)
       setThemeReport(briefData.themeReport)
       setSchedule(schedData)
       setRuns(runsData)
-    } catch { /* keep current state */ } finally { setLoading(false) }
-  }, [apiAvailable])
-
-  useEffect(() => { loadData(selectedBusiness, selectedWeek) }, [selectedBusiness, selectedWeek, loadData])
+    }).catch(() => { /* keep current state */ })
+      .finally(() => setLoadedKey(`${selectedBusiness}/${selectedWeek}`))
+  }, [apiAvailable, selectedBusiness, selectedWeek])
 
   const handleSaveSchedule = async (settings: ScheduleSettings) => {
     if (!apiAvailable) return
-    try { const saved = await api.saveSchedule(settings); setSchedule(saved) } catch {}
+    try { const saved = await api.saveSchedule(settings); setSchedule(saved) } catch { /* keep current state */ }
   }
 
   const currentBusiness = businesses.find(b => b.business_id === selectedBusiness) ?? FIXTURE_BUSINESS
+
+  const changeBusiness = (biz: string) => {
+    setSelectedBusiness(biz)
+    const b = businesses.find(x => x.business_id === biz)
+    if (b?.weeks.length) setSelectedWeek(b.weeks[b.weeks.length - 1])
+  }
 
   return (
     <div style={{ minHeight: '100svh', background: 'var(--bg)' }}>
@@ -74,8 +83,19 @@ export default function App() {
         loading={loading}
         activeTab={activeTab}
         onTabChange={setActiveTab}
-        onSettingsOpen={() => setSettingsOpen(true)}
+        onSettingsOpen={DEMO ? undefined : () => setSettingsOpen(true)}
       />
+
+      {DEMO && (
+        <DemoBanner
+          businesses={businesses}
+          selectedBusiness={selectedBusiness}
+          onBusinessChange={changeBusiness}
+          weeks={currentBusiness.weeks}
+          selectedWeek={selectedWeek}
+          onWeekChange={setSelectedWeek}
+        />
+      )}
 
       <main style={{ maxWidth: 1180, margin: '0 auto', padding: '28px 16px 64px' }}>
         {activeTab === 'cost' ? (
@@ -93,7 +113,7 @@ export default function App() {
         )}
       </main>
 
-      <SettingsPanel
+      {!DEMO && <SettingsPanel
         open={settingsOpen}
         onClose={() => setSettingsOpen(false)}
         schedule={schedule}
@@ -101,15 +121,11 @@ export default function App() {
         runs={runs}
         businesses={businesses}
         selectedBusiness={selectedBusiness}
-        onBusinessChange={biz => {
-          setSelectedBusiness(biz)
-          const b = businesses.find(x => x.business_id === biz)
-          if (b?.weeks.length) setSelectedWeek(b.weeks[b.weeks.length - 1])
-        }}
+        onBusinessChange={changeBusiness}
         selectedWeek={selectedWeek}
         onWeekChange={week => setSelectedWeek(week)}
         business={currentBusiness}
-      />
+      />}
     </div>
   )
 }

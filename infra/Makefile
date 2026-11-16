@@ -27,9 +27,10 @@ local-analyze: build
 		--event events/analyze.json
 
 # Full ingest -> analyze -> brief end-to-end against in-process mock S3 +
-# DynamoDB (moto). No AWS account, no Docker, no SAM. Needs ANTHROPIC_API_KEY
-# (the analyze stage calls Claude; reruns hit the idempotency cache and are free).
-#   make local-e2e                         # default business/week
+# DynamoDB (moto). No AWS account, no Docker, no SAM. With ANTHROPIC_API_KEY set
+# it calls Claude (reruns hit the idempotency cache and are free). Without one it
+# runs offline on a fictional sample with a stubbed model, as CI does.
+#   make local-e2e                         # live if a key is set, else offline
 #   make local-e2e ARGS="--business B007IAE5WY --week 2017-W38"
 local-e2e:
 	cd .. && uv run --group local-aws python infra/local_run.py $(ARGS)

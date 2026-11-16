@@ -1,8 +1,7 @@
 name: CI
 
-# Runs the test suite on every push and PR. No AWS, no secrets — safe to run
-# anywhere. This is the part of CI/CD that's useful immediately; the deploy
-# workflow (deploy.yml) is opt-in and needs one-time AWS OIDC setup.
+# Runs on every push and PR. No AWS account, no secrets, no model calls, so it
+# is safe to run anywhere. The deploy workflow (deploy.yml) stays opt-in.
 
 on:
   push:
@@ -28,7 +27,46 @@ jobs:
       - name: Run test suite
         run: uv run python -m pytest tests/ -q
 
-      - name: Validate SAM template
-        run: |
-          pip install cfn-lint
-          cfn-lint infra/template.yaml
+      # Full ingest, analyze, brief chain on mock AWS. With no API key it runs
+      # offline on a fictional sample with a stubbed model.
+      - name: Local serverless end to end
+        working-directory: infra
+        run: make local-e2e
+
+  template:
+    runs-on: ubuntu-latest
+    env:
+      AWS_DEFAULT_REGION: us-east-1
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: cfn-lint
+        run: uvx cfn-lint infra/template.yaml
+
+      - uses: aws-actions/setup-sam@v2
+        with:
+          use-installer: true
+
+      - name: sam validate --lint
+        working-directory: infra
+        run: sam validate --lint
+
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
+      - run: npm run build:demo

@@ -123,3 +123,8 @@ button:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px
 
 .reveal { opacity: 0; transform: translateY(8px); animation: rise .45s cubic-bezier(.2,.8,.2,1) forwards; }
 @keyframes rise { to { opacity: 1; transform: none; } }
+
+/* Phone widths: two-column card grids stack into one column. */
+@media (max-width: 720px) {
+  .stack-mobile { grid-template-columns: minmax(0, 1fr) !important; }
+}

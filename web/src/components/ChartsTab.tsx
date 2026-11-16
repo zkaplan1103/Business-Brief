@@ -57,7 +57,7 @@ export default function ChartsTab({ themeReport }: Props) {
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: 'easeOut' }}>
 
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 22, gap: 16 }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 22, gap: 16 }}>
         <div>
           <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--ink)' }}>Theme Analysis</div>
           <div style={{ fontSize: 13, color: 'var(--ink-soft)', marginTop: 3 }}>{themeReport.review_count} reviews · click any bar for quotes</div>
@@ -90,7 +90,7 @@ export default function ChartsTab({ themeReport }: Props) {
             <div key={theme.theme_id}>
               <div
                 onClick={() => setActiveDrill(isActive ? null : theme.theme_id)}
-                style={{ display: 'grid', gridTemplateColumns: '200px 1fr 36px', alignItems: 'center', gap: 14, padding: '8px 6px', borderRadius: 7, cursor: 'pointer', background: isActive ? 'var(--surface-2)' : 'transparent', transition: 'background 0.1s' }}
+                style={{ display: 'grid', gridTemplateColumns: 'minmax(90px, 200px) 1fr 36px', alignItems: 'center', gap: 14, padding: '8px 6px', borderRadius: 7, cursor: 'pointer', background: isActive ? 'var(--surface-2)' : 'transparent', transition: 'background 0.1s' }}
                 role="button" tabIndex={0}
                 onKeyDown={e => { if (e.key === 'Enter') setActiveDrill(isActive ? null : theme.theme_id) }}
               >
@@ -133,7 +133,7 @@ export default function ChartsTab({ themeReport }: Props) {
       </div>
 
       {/* 2-col: sentiment donut + rating trend */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+      <div className="stack-mobile" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
 
         {/* Sentiment breakdown */}
         <div style={{ ...card, marginBottom: 0 }}>

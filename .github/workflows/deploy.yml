@@ -19,7 +19,9 @@ name: Deploy to AWS
 #      CloudFormation/Lambda/S3/DynamoDB/etc. policy).
 # 3. In GitHub → repo Settings → Secrets and variables → Actions → Variables,
 #    add  AWS_DEPLOY_ROLE_ARN = arn:aws:iam::<account>:role/bizbrief-github-deploy
-# 4. Add the Anthropic key as an Actions SECRET: ANTHROPIC_API_KEY
+# 4. Create the Anthropic key secret once (DEPLOY.md section 3) and add its
+#    ARN as an Actions VARIABLE: ANTHROPIC_SECRET_ARN. The key itself never
+#    goes into GitHub or CloudFormation.
 #
 # Until AWS_DEPLOY_ROLE_ARN is set, the job is skipped (the `if` guard below).
 # ─────────────────────────────────────────────────────────────────────────────
@@ -65,4 +67,4 @@ jobs:
             --capabilities CAPABILITY_IAM \
             --parameter-overrides \
               Stage=prod \
-              AnthropicApiKey=${{ secrets.ANTHROPIC_API_KEY }}
+              AnthropicSecretArn=${{ vars.ANTHROPIC_SECRET_ARN }}

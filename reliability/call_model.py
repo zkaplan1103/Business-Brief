@@ -263,16 +263,28 @@ def call_model(
             )
             return cached
 
-    client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY", ""))
+    # max_retries=0: this wrapper owns retries. Leaving the SDK's own retries on
+    # would multiply attempts and make the worst-case runtime unbounded.
+    client = anthropic.Anthropic(
+        api_key=os.environ.get("ANTHROPIC_API_KEY", ""), max_retries=0
+    )
 
     last_exc: Exception | None = None
+    error_class = "DeadlineExceeded"
     for attempt in range(cfg.max_retries + 1):
+        timeout = cfg.request_timeout_s
+        if cfg.deadline is not None:
+            timeout = min(timeout, cfg.deadline - time.monotonic())
+            if timeout <= 0:
+                error_class = "DeadlineExceeded"
+                break
         t0 = time.monotonic()
         try:
             create_kwargs: dict = {
                 "model": effective_model,
                 "max_tokens": 4096,
                 "messages": [{"role": "user", "content": prompt}],
+                "timeout": timeout,
             }
             if system is not None:
                 create_kwargs["system"] = system
@@ -400,7 +412,11 @@ def call_model(
             last_exc = exc
 
         latency_ms = int((time.monotonic() - t0) * 1000)
-        is_final = attempt >= cfg.max_retries or not retryable
+        # Exponential backoff with full jitter. A sleep that would run past the
+        # deadline is never started, so the call fails inside the time budget.
+        delay = random.uniform(0, cfg.backoff_base_s * (2**attempt))
+        out_of_time = cfg.deadline is not None and time.monotonic() + delay >= cfg.deadline
+        is_final = attempt >= cfg.max_retries or not retryable or out_of_time
         outcome = "fail" if is_final else "retry"
 
         _logger.emit(
@@ -423,10 +439,7 @@ def call_model(
         if is_final:
             break
 
-        # Exponential backoff with full jitter.
-        delay = cfg.backoff_base_s * (2**attempt)
-        jitter = random.uniform(0, delay)
-        time.sleep(jitter)
+        time.sleep(delay)
 
     raise RuntimeError(
         f"call_model failed after {cfg.max_retries + 1} attempts "

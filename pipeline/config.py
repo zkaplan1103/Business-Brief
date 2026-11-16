@@ -16,6 +16,11 @@ class Config:
     retry_on: tuple = (429, 500, 502, 503, 504, "timeout")
     run_cost_ceiling_usd: float = 1.00
     circuit_breaker_threshold: int = 5
+    # Per-request timeout for one model call. The SDK default is 10 minutes.
+    request_timeout_s: float = 120.0
+    # Optional time.monotonic() deadline. Lambda handlers set it from the
+    # invocation's remaining time so retries and backoff never outlive it.
+    deadline: float | None = None
 
     # Paths
     log_dir: str = "data/logs"

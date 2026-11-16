@@ -48,9 +48,21 @@ def ensure_anthropic_key() -> None:
         return
 
     import boto3  # noqa: PLC0415 — lazy
+    from botocore.config import Config  # noqa: PLC0415
 
-    resp = boto3.client("secretsmanager").get_secret_value(SecretId=secret_id)
-    raw = resp.get("SecretString", "")
+    # Short timeouts and few retries: boto3's defaults (60s connect + 60s read,
+    # retried) could eat the whole Lambda timeout and look like a hang.
+    client = boto3.client(
+        "secretsmanager",
+        config=Config(connect_timeout=3, read_timeout=5, retries={"max_attempts": 2}),
+    )
+    try:
+        raw = client.get_secret_value(SecretId=secret_id).get("SecretString", "")
+    except Exception as exc:  # noqa: BLE001 — re-raised with a clear message
+        raise RuntimeError(
+            f"Could not read the Anthropic API key from Secrets Manager "
+            f"({secret_id}): {exc}"
+        ) from exc
 
     key = raw
     # If the secret is a JSON blob, pull the ANTHROPIC_API_KEY field out of it.
@@ -60,6 +72,7 @@ def ensure_anthropic_key() -> None:
         except json.JSONDecodeError:
             key = ""
 
-    if key:
-        os.environ["ANTHROPIC_API_KEY"] = key
+    if not key:
+        raise RuntimeError(f"Secret {secret_id} holds no Anthropic API key")
+    os.environ["ANTHROPIC_API_KEY"] = key
     _hydrated = True

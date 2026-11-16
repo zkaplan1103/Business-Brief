@@ -43,6 +43,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from typing import Iterator
 
 
@@ -123,14 +124,26 @@ def brief_sk(week: str) -> str:
 # S3 — raw uploads (read side of the ingest trigger)
 # ---------------------------------------------------------------------------
 
-def read_s3_jsonl(bucket: str, key: str) -> Iterator[dict]:
+# Largest upload ingest will read. A week of reviews for one business is a few
+# hundred KB at most; anything bigger is a mistake or abuse, and every review
+# read here turns into model spend downstream.
+MAX_UPLOAD_BYTES = 5 * 1024 * 1024
+
+
+def read_s3_jsonl(bucket: str, key: str, max_bytes: int = MAX_UPLOAD_BYTES) -> Iterator[dict]:
     """Stream a JSONL object from S3, yielding one parsed dict per line.
 
     Streams via the StreamingBody iterator rather than .read() so a large
     upload does not have to be held in memory at once — the same discipline as
     the local _stream_jsonl in pipeline/ingest.py.
+
+    Raises ValueError for an object over ``max_bytes``, a line that is not
+    UTF-8, or a line that is not valid JSON (UnicodeDecodeError and
+    JSONDecodeError are both ValueErrors).
     """
     obj = _s3().get_object(Bucket=bucket, Key=key)
+    if obj["ContentLength"] > max_bytes:
+        raise ValueError(f"upload is {obj['ContentLength']} bytes, limit is {max_bytes}")
     buffer = b""
     for chunk in obj["Body"].iter_chunks(chunk_size=65536):
         buffer += chunk
@@ -138,26 +151,46 @@ def read_s3_jsonl(bucket: str, key: str) -> Iterator[dict]:
         for line in lines:
             line = line.strip()
             if line:
-                yield json.loads(line)
+                yield json.loads(line.decode("utf-8"))
     if buffer.strip():
-        yield json.loads(buffer)
+        yield json.loads(buffer.decode("utf-8"))
+
+
+# Same shapes the API accepts (api/security.py), so a key can't smuggle path
+# segments or odd characters into DynamoDB keys or the briefs bucket.
+_UPLOAD_KEY_RE = re.compile(r"^uploads/([A-Za-z0-9_-]{1,64})/(\d{4}-W\d{2})\.jsonl$")
 
 
 def parse_upload_key(key: str) -> tuple[str, str]:
     """Extract (business_id, week) from an upload key.
 
-    Expected key shape: ``uploads/<business_id>/<week>.jsonl``
-    Raises ValueError on anything else so a malformed event fails loudly into
-    the dead-letter queue rather than silently processing garbage.
+    Expected key shape: ``uploads/<business_id>/<week>.jsonl`` with
+    ``<week>`` like ``2024-W31``. Raises ValueError on anything else.
     """
-    parts = key.split("/")
-    if len(parts) != 3 or parts[0] != "uploads" or not parts[2].endswith(".jsonl"):
+    m = _UPLOAD_KEY_RE.match(key)
+    if not m:
         raise ValueError(f"unexpected upload key shape: {key!r}")
-    business_id = parts[1]
-    week = parts[2][: -len(".jsonl")]
-    if not business_id or not week:
-        raise ValueError(f"empty business_id or week in key: {key!r}")
-    return business_id, week
+    return m.group(1), m.group(2)
+
+
+def claim_upload(business_id: str, week: str, etag: str) -> bool:
+    """Record that this exact upload (by ETag) was ingested.
+
+    Returns False when it was already claimed, i.e. S3 delivered the same
+    event twice. The conditional put makes this safe under concurrent deliveries.
+    """
+    from botocore.exceptions import ClientError  # noqa: PLC0415
+
+    try:
+        _dynamo_table().put_item(
+            Item={"PK": biz_pk(business_id), "SK": f"UPLOAD#{week}#{etag}"},
+            ConditionExpression="attribute_not_exists(PK)",
+        )
+    except ClientError as exc:
+        if exc.response["Error"]["Code"] == "ConditionalCheckFailedException":
+            return False
+        raise
+    return True
 
 
 # ---------------------------------------------------------------------------

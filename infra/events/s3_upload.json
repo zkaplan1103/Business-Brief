@@ -8,7 +8,8 @@
           "name": "bizbrief-raw-dev-123456789012"
         },
         "object": {
-          "key": "uploads/B007IAE5WY/2017-W38.jsonl"
+          "key": "uploads/B007IAE5WY/2017-W38.jsonl",
+          "eTag": "0123456789abcdef0123456789abcdef"
         }
       }
     }

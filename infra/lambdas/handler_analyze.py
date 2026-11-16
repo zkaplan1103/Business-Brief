@@ -18,6 +18,10 @@ What it does
 4. Emit cost / latency / throughput / cache metrics (broken down by model).
 5. Invoke the brief Lambda.
 
+Cost ceiling: if reliability.call_model raises BudgetExceeded the loop stops at
+once (no further model calls), the report is marked partial, and a RunRecord
+with status "partial" or "failed" is logged.
+
 Abstention: if the review count is below cfg.min_reviews_for_brief, a
 ``sufficient=False`` report is written and the brief Lambda is NOT invoked —
 identical semantics to the local pipeline (never manufacture a brief).
@@ -44,7 +48,7 @@ from pipeline.analyze import (  # type: ignore
     _parse_batch_themes,
 )
 from pipeline.router import pick_model  # type: ignore
-from reliability import call_model  # type: ignore
+from reliability import BudgetExceeded, call_model  # type: ignore
 from reliability.logger import StructuredLogger  # type: ignore
 
 
@@ -74,6 +78,10 @@ def handler(event: dict, context) -> dict:  # noqa: ANN001
     # but readable within the invocation.
     cfg.log_dir = "/tmp/logs"
     cfg.briefs_dir = "/tmp/briefs"
+    # Retries and backoff must finish before Lambda kills the invocation. Keep
+    # 10s back for writing the report and emitting metrics.
+    if context is not None:
+        cfg.deadline = time.monotonic() + context.get_remaining_time_in_millis() / 1000 - 10
     run_id = f"sls_{uuid.uuid4().hex[:8]}"
     logger = StructuredLogger(cfg.log_dir)
 
@@ -121,6 +129,10 @@ def handler(event: dict, context) -> dict:  # noqa: ANN001
                 model=model, system=_SYSTEM_BLOCK,
                 _run_cost=_run_cost, _logger=logger,
             )
+        except BudgetExceeded as exc:
+            print(f"[analyze] cost ceiling hit at batch {batch_idx}: {exc}")
+            batches_failed += len(batches) - batch_idx
+            break
         except Exception as exc:  # noqa: BLE001 — partial-failure handling
             print(f"[analyze] batch {batch_idx} failed: {exc}")
             batches_failed += 1
@@ -140,6 +152,13 @@ def handler(event: dict, context) -> dict:  # noqa: ANN001
         "themes": themes, "sufficient": bool(themes), "partial": partial,
     }
     storage.put_theme_report(business_id, week, report)
+    status = "success" if not batches_failed else ("partial" if themes else "failed")
+    # RunRecord (CONTRACTS §7) as one log line; CloudWatch Logs is the cloud runs.jsonl.
+    print(json.dumps({"run_record": {
+        "run_id": run_id, "business_id": business_id, "week": week, "status": status,
+        "total_cost_usd": round(_run_cost[0], 6), "batches_total": len(batches),
+        "batches_failed": batches_failed,
+    }}))
 
     metrics.emit(
         stage="analyze", cost_usd=round(_run_cost[0], 6),
@@ -151,4 +170,4 @@ def handler(event: dict, context) -> dict:  # noqa: ANN001
         _invoke_brief(business_id, week)
 
     return {"statusCode": 200, "sufficient": bool(themes),
-            "themes": len(themes), "partial": partial}
+            "themes": len(themes), "partial": partial, "status": status}

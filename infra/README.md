@@ -77,23 +77,28 @@ There are two ways to run the handlers without a real AWS account.
 Runs the entire **ingest → analyze → brief** chain against in-process mocks of
 S3 + DynamoDB ([moto]). This exercises the exact handler code and is the
 fastest way to prove the pipeline works. The analyze stage calls Claude, so it
-needs `ANTHROPIC_API_KEY` (set in the repo `.env`); reruns hit the idempotency
-cache and are free.
+uses `ANTHROPIC_API_KEY` (set in the repo `.env`); reruns hit the idempotency
+cache and are free. With no key, or with `ARGS=--offline`, it runs on a
+fictional sample upload with a stubbed model. That needs no key and costs
+nothing, and it is what CI runs.
 
 ```bash
 # one-time: install the mock-AWS deps
 uv sync --group local-aws
 
 cd infra
-make local-e2e                                          # default business/week
+make local-e2e                                          # live if a key is set, else offline
+make local-e2e ARGS="--offline"                         # stub model, no key, no cost
 make local-e2e ARGS="--business B007IAE5WY --week 2017-W38"
 ```
 
 Under the hood this runs [`infra/local_run.py`](local_run.py): it creates the
 mock bucket + table (same schema as `template.yaml`), drops a real review file
 into the mock raw bucket, then invokes `handler_ingest` → `handler_analyze` →
-`handler_brief` in sequence, and verifies the rendered brief lands in the mock
-briefs bucket. The integration is covered by `tests/test_serverless_storage.py`.
+`handler_brief` in sequence, redelivers the same S3 event to check it is
+skipped, and verifies the rendered brief lands in the mock briefs bucket. The
+integration is covered by `tests/test_serverless_storage.py`, and the failure
+modes by `tests/test_serverless_edge_cases.py`.
 
 ### Option B — single handler in a Lambda container (needs Docker + SAM CLI)
 
@@ -118,7 +123,8 @@ offline run.
 ```bash
 cd infra
 make deploy            # sam build && sam deploy --guided
-# Prompts for stack name, region, and AnthropicApiKey (NoEcho).
+# Prompts for stack name, region, and AnthropicSecretArn. Create that secret
+# once first, see DEPLOY.md section 3.
 ```
 
 Then trigger the pipeline by uploading a file:
@@ -141,5 +147,8 @@ stack outputs (`DashboardURL`). Tear down with `make delete`.
   router + prompt caching + per-run cost ceiling as the local build.
 - **Email stays draft-only** in the cloud path exactly as locally — nothing is
   auto-sent (CONTRACTS §5).
-- **Least-privilege IAM**: each function gets only the policies it needs
-  (ingest can't write briefs; brief can't read the raw bucket).
+- **Least-privilege IAM**: each function's role lists only the actions its
+  handler calls (ingest can't write briefs; brief can't read the raw bucket).
+- **Bounded blast radius**: reserved concurrency per function, a monthly AWS
+  Budget, a 5 MB upload cap, and model retries that stop before the Lambda
+  timeout. See DEPLOY.md section 10 for the full list.

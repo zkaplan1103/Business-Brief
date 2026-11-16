@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { ScheduleSettings, RunRecord, BusinessMeta } from '../types'
 
@@ -94,7 +94,10 @@ export default function SettingsPanel({
   const [saveState, setSaveState] = useState<SaveState>('idle')
   const latest = runs[0]
 
-  useEffect(() => { setSettings(schedule) }, [schedule])
+  // Reset the form when a new schedule arrives (React's "adjust state on prop
+  // change" pattern, instead of setState inside an effect).
+  const [prevSchedule, setPrevSchedule] = useState(schedule)
+  if (schedule !== prevSchedule) { setPrevSchedule(schedule); setSettings(schedule) }
 
   function handleSave() {
     setSaveState('saving')

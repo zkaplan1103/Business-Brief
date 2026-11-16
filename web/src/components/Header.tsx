@@ -6,7 +6,7 @@ interface HeaderProps {
   loading?: boolean
   activeTab: Tab
   onTabChange: (t: Tab) => void
-  onSettingsOpen: () => void
+  onSettingsOpen?: () => void   // omitted in the read-only demo, which hides the button
 }
 
 function useTheme() {
@@ -86,10 +86,10 @@ export default function Header({
         <div style={{ flex: 1 }} />
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-          <button style={iconBtnStyle} onClick={onSettingsOpen} title="Settings" aria-label="Open settings"
+          {onSettingsOpen && <button style={iconBtnStyle} onClick={onSettingsOpen} title="Settings" aria-label="Open settings"
             onMouseEnter={e => { const t = e.currentTarget; t.style.background = 'var(--surface)'; t.style.borderColor = 'var(--brand)'; t.style.color = 'var(--brand)' }}
             onMouseLeave={e => { const t = e.currentTarget; t.style.background = 'var(--glass-bg)'; t.style.borderColor = 'var(--glass-border)'; t.style.color = 'var(--ink-soft)' }}
-          ><GearIcon /></button>
+          ><GearIcon /></button>}
           <button style={iconBtnStyle} onClick={toggle} title={dark ? 'Light mode' : 'Dark mode'} aria-label="Toggle dark mode"
             onMouseEnter={e => { const t = e.currentTarget; t.style.background = 'var(--surface)'; t.style.borderColor = 'var(--brand)'; t.style.color = 'var(--brand)' }}
             onMouseLeave={e => { const t = e.currentTarget; t.style.background = 'var(--glass-bg)'; t.style.borderColor = 'var(--glass-border)'; t.style.color = 'var(--ink-soft)' }}
@@ -111,7 +111,7 @@ export default function Header({
               color: activeTab === tab.id ? 'var(--brand)' : 'var(--ink-soft)',
               background: 'none', border: 'none',
               borderBottom: `2px solid ${activeTab === tab.id ? 'var(--brand)' : 'transparent'}`,
-              padding: '10px 22px 8px',
+              padding: '10px clamp(8px, 2.5vw, 22px) 8px',
               cursor: 'pointer', whiteSpace: 'nowrap' as const,
               transition: 'color 0.15s, border-color 0.15s',
             }}

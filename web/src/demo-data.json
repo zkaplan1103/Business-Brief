@@ -1,0 +1,3257 @@
+{
+ "businesses": [
+  {
+   "business_id": "demo-fernhollow-bakery",
+   "business_name": "Fernhollow Bakery",
+   "weeks": [
+    "2026-W40",
+    "2026-W41",
+    "2026-W42",
+    "2026-W43",
+    "2026-W44",
+    "2026-W45"
+   ]
+  },
+  {
+   "business_id": "demo-gearloop-bikes",
+   "business_name": "Gearloop Bike Repair",
+   "weeks": [
+    "2026-W40",
+    "2026-W41",
+    "2026-W42",
+    "2026-W43",
+    "2026-W44",
+    "2026-W45"
+   ]
+  },
+  {
+   "business_id": "demo-saltmarsh-yoga",
+   "business_name": "Saltmarsh Yoga Studio",
+   "weeks": [
+    "2026-W40",
+    "2026-W41",
+    "2026-W42",
+    "2026-W43",
+    "2026-W44",
+    "2026-W45"
+   ]
+  },
+  {
+   "business_id": "demo-copperpot-diner",
+   "business_name": "Copperpot Diner",
+   "weeks": [
+    "2026-W40",
+    "2026-W41",
+    "2026-W42",
+    "2026-W43",
+    "2026-W44",
+    "2026-W45"
+   ]
+  }
+ ],
+ "briefs": {
+  "demo-fernhollow-bakery": {
+   "2026-W40": {
+    "brief": {
+     "business_id": "demo-fernhollow-bakery",
+     "business_name": "Fernhollow Bakery",
+     "week": "2026-W40",
+     "summary": "17 reviews came in this week, averaging 4.0 stars. The issue to fix first is long waits at the weekend counter. Customers keep praising excellent sourdough and croissants, so protect that while you fix the rest.",
+     "trend": "flat",
+     "action_items": [
+      {
+       "rank": 1,
+       "theme_id": "theme_00_long_waits_at_the_weekend_counter",
+       "headline": "Weekend lines are costing you regulars",
+       "why_it_matters": "Wait complaints are the most common negative theme, and they cluster on Saturday and Sunday mornings.",
+       "recommended_action": "Put a second person on the register from 8 to 11am Saturday and Sunday for the next two weekends.",
+       "evidence_review_ids": [
+        "demo-fernhollow-bakery-2026-W40-r01",
+        "demo-fernhollow-bakery-2026-W40-r02",
+        "demo-fernhollow-bakery-2026-W40-r03"
+       ],
+       "severity": "high"
+      },
+      {
+       "rank": 2,
+       "theme_id": "theme_01_pastries_sell_out_before_noon",
+       "headline": "Popular pastries run out too early",
+       "why_it_matters": "Customers who arrive late leave without buying, and some say they won't come back.",
+       "recommended_action": "Double the almond croissant bake on weekends and post a sold out sign online before people make the trip.",
+       "evidence_review_ids": [
+        "demo-fernhollow-bakery-2026-W40-r04",
+        "demo-fernhollow-bakery-2026-W40-r05"
+       ],
+       "severity": "medium"
+      }
+     ],
+     "email_draft": "Subject: Your week at Fernhollow Bakery\n\nHi [Name],\n\n17 reviews came in this week, averaging 4.0 stars.\n\nThis week's actions:\n1. Put a second person on the register from 8 to 11am Saturday and Sunday for the next two weekends.\n2. Double the almond croissant bake on weekends and post a sold out sign online before people make the trip.\n\nThe full brief with the review evidence is in your dashboard.\n\n— Your BizBrief",
+     "partial": false,
+     "generated_by": "simulated"
+    },
+    "themeReport": {
+     "business_id": "demo-fernhollow-bakery",
+     "week": "2026-W40",
+     "review_count": 17,
+     "avg_stars": 4.04,
+     "prev_avg_stars": null,
+     "themes": [
+      {
+       "theme_id": "theme_02_excellent_sourdough_and_croissants",
+       "label": "Excellent sourdough and croissants",
+       "sentiment": "positive",
+       "review_ids": [
+        "demo-fernhollow-bakery-2026-W40-r06",
+        "demo-fernhollow-bakery-2026-W40-r07",
+        "demo-fernhollow-bakery-2026-W40-r08",
+        "demo-fernhollow-bakery-2026-W40-r09",
+        "demo-fernhollow-bakery-2026-W40-r10",
+        "demo-fernhollow-bakery-2026-W40-r11",
+        "demo-fernhollow-bakery-2026-W40-r12",
+        "demo-fernhollow-bakery-2026-W40-r13"
+       ],
+       "count": 8,
+       "sample_quotes": [
+        "Best sourdough in town. The crust is perfect.",
+        "The croissants are flaky and buttery every time.",
+        "Worth the drive for the country loaf alone."
+       ]
+      },
+      {
+       "theme_id": "theme_03_warm__friendly_staff",
+       "label": "Warm, friendly staff",
+       "sentiment": "positive",
+       "review_ids": [
+        "demo-fernhollow-bakery-2026-W40-r14",
+        "demo-fernhollow-bakery-2026-W40-r15",
+        "demo-fernhollow-bakery-2026-W40-r16",
+        "demo-fernhollow-bakery-2026-W40-r17"
+       ],
+       "count": 4,
+       "sample_quotes": [
+        "The staff remember my order and always say hello.",
+        "Friendly team even when it's packed."
+       ]
+      },
+      {
+       "theme_id": "theme_00_long_waits_at_the_weekend_counter",
+       "label": "Long waits at the weekend counter",
+       "sentiment": "negative",
+       "review_ids": [
+        "demo-fernhollow-bakery-2026-W40-r01",
+        "demo-fernhollow-bakery-2026-W40-r02",
+        "demo-fernhollow-bakery-2026-W40-r03"
+       ],
+       "count": 3,
+       "sample_quotes": [
+        "Twenty minutes in line for two croissants on Saturday.",
+        "The weekend queue goes out the door and barely moves.",
+        "Love the bread but I can't wait this long every Sunday."
+       ]
+      },
+      {
+       "theme_id": "theme_01_pastries_sell_out_before_noon",
+       "label": "Pastries sell out before noon",
+       "sentiment": "mixed",
+       "review_ids": [
+        "demo-fernhollow-bakery-2026-W40-r04",
+        "demo-fernhollow-bakery-2026-W40-r05"
+       ],
+       "count": 2,
+       "sample_quotes": [
+        "Almond croissants were gone by 10am again.",
+        "Great selection early, empty shelves by lunch.",
+        "Came at 11 and half the case was sold out."
+       ]
+      }
+     ],
+     "sufficient": true,
+     "partial": false
+    }
+   },
+   "2026-W41": {
+    "brief": {
+     "business_id": "demo-fernhollow-bakery",
+     "business_name": "Fernhollow Bakery",
+     "week": "2026-W41",
+     "summary": "22 reviews came in this week, averaging 3.8 stars, down from 4.0 last week. The issue to fix first is long waits at the weekend counter. Customers keep praising excellent sourdough and croissants, so protect that while you fix the rest.",
+     "trend": "down",
+     "action_items": [
+      {
+       "rank": 1,
+       "theme_id": "theme_00_long_waits_at_the_weekend_counter",
+       "headline": "Weekend lines are costing you regulars",
+       "why_it_matters": "Wait complaints are the most common negative theme, and they cluster on Saturday and Sunday mornings.",
+       "recommended_action": "Put a second person on the register from 8 to 11am Saturday and Sunday for the next two weekends.",
+       "evidence_review_ids": [
+        "demo-fernhollow-bakery-2026-W41-r01",
+        "demo-fernhollow-bakery-2026-W41-r02",
+        "demo-fernhollow-bakery-2026-W41-r03",
+        "demo-fernhollow-bakery-2026-W41-r04",
+        "demo-fernhollow-bakery-2026-W41-r05"
+       ],
+       "severity": "high"
+      },
+      {
+       "rank": 2,
+       "theme_id": "theme_01_pastries_sell_out_before_noon",
+       "headline": "Popular pastries run out too early",
+       "why_it_matters": "Customers who arrive late leave without buying, and some say they won't come back.",
+       "recommended_action": "Double the almond croissant bake on weekends and post a sold out sign online before people make the trip.",
+       "evidence_review_ids": [
+        "demo-fernhollow-bakery-2026-W41-r06",
+        "demo-fernhollow-bakery-2026-W41-r07",
+        "demo-fernhollow-bakery-2026-W41-r08"
+       ],
+       "severity": "medium"
+      },
+      {
+       "rank": 3,
+       "theme_id": "theme_04_online_orders_not_ready_on_time",
+       "headline": "Online pickup times are slipping",
+       "why_it_matters": "Pre-orders are your most loyal customers. A missed pickup time undoes the reason they ordered ahead.",
+       "recommended_action": "Print online orders on a separate ticket rail and start them 15 minutes before the pickup time.",
+       "evidence_review_ids": [
+        "demo-fernhollow-bakery-2026-W41-r22"
+       ],
+       "severity": "medium"
+      }
+     ],
+     "email_draft": "Subject: Your week at Fernhollow Bakery\n\nHi [Name],\n\n22 reviews came in this week, averaging 3.8 stars, down from 4.0 last week.\n\nThis week's actions:\n1. Put a second person on the register from 8 to 11am Saturday and Sunday for the next two weekends.\n2. Double the almond croissant bake on weekends and post a sold out sign online before people make the trip.\n3. Print online orders on a separate ticket rail and start them 15 minutes before the pickup time.\n\nThe full brief with the review evidence is in your dashboard.\n\n— Your BizBrief",
+     "partial": false,
+     "generated_by": "simulated"
+    },
+    "themeReport": {
+     "business_id": "demo-fernhollow-bakery",
+     "week": "2026-W41",
+     "review_count": 22,
+     "avg_stars": 3.75,
+     "prev_avg_stars": 4.04,
+     "themes": [
+      {
+       "theme_id": "theme_02_excellent_sourdough_and_croissants",
+       "label": "Excellent sourdough and croissants",
+       "sentiment": "positive",
+       "review_ids": [
+        "demo-fernhollow-bakery-2026-W41-r09",
+        "demo-fernhollow-bakery-2026-W41-r10",
+        "demo-fernhollow-bakery-2026-W41-r11",
+        "demo-fernhollow-bakery-2026-W41-r12",
+        "demo-fernhollow-bakery-2026-W41-r13",
+        "demo-fernhollow-bakery-2026-W41-r14",
+        "demo-fernhollow-bakery-2026-W41-r15",
+        "demo-fernhollow-bakery-2026-W41-r16",
+        "demo-fernhollow-bakery-2026-W41-r17"
+       ],
+       "count": 9,
+       "sample_quotes": [
+        "The croissants are flaky and buttery every time.",
+        "Worth the drive for the country loaf alone.",
+        "Best sourdough in town. The crust is perfect."
+       ]
+      },
+      {
+       "theme_id": "theme_00_long_waits_at_the_weekend_counter",
+       "label": "Long waits at the weekend counter",
+       "sentiment": "negative",
+       "review_ids": [
+        "demo-fernhollow-bakery-2026-W41-r01",
+        "demo-fernhollow-bakery-2026-W41-r02",
+        "demo-fernhollow-bakery-2026-W41-r03",
+        "demo-fernhollow-bakery-2026-W41-r04",
+        "demo-fernhollow-bakery-2026-W41-r05"
+       ],
+       "count": 5,
+       "sample_quotes": [
+        "The weekend queue goes out the door and barely moves.",
+        "Love the bread but I can't wait this long every Sunday.",
+        "Only one person at the till during the morning rush."
+       ]
+      },
+      {
+       "theme_id": "theme_03_warm__friendly_staff",
+       "label": "Warm, friendly staff",
+       "sentiment": "positive",
+       "review_ids": [
+        "demo-fernhollow-bakery-2026-W41-r18",
+        "demo-fernhollow-bakery-2026-W41-r19",
+        "demo-fernhollow-bakery-2026-W41-r20",
+        "demo-fernhollow-bakery-2026-W41-r21"
+       ],
+       "count": 4,
+       "sample_quotes": [
+        "Friendly team even when it's packed.",
+        "The staff remember my order and always say hello."
+       ]
+      },
+      {
+       "theme_id": "theme_01_pastries_sell_out_before_noon",
+       "label": "Pastries sell out before noon",
+       "sentiment": "mixed",
+       "review_ids": [
+        "demo-fernhollow-bakery-2026-W41-r06",
+        "demo-fernhollow-bakery-2026-W41-r07",
+        "demo-fernhollow-bakery-2026-W41-r08"
+       ],
+       "count": 3,
+       "sample_quotes": [
+        "Great selection early, empty shelves by lunch.",
+        "Came at 11 and half the case was sold out.",
+        "Almond croissants were gone by 10am again."
+       ]
+      },
+      {
+       "theme_id": "theme_04_online_orders_not_ready_on_time",
+       "label": "Online orders not ready on time",
+       "sentiment": "negative",
+       "review_ids": [
+        "demo-fernhollow-bakery-2026-W41-r22"
+       ],
+       "count": 1,
+       "sample_quotes": [
+        "Pickup time came and went, still waited ten minutes.",
+        "Ordered ahead online and they hadn't started it."
+       ]
+      }
+     ],
+     "sufficient": true,
+     "partial": false
+    }
+   },
+   "2026-W42": {
+    "brief": {
+     "business_id": "demo-fernhollow-bakery",
+     "business_name": "Fernhollow Bakery",
+     "week": "2026-W42",
+     "summary": "24 reviews came in this week, averaging 3.3 stars, down from 3.8 last week. The issue to fix first is long waits at the weekend counter. Customers keep praising excellent sourdough and croissants, so protect that while you fix the rest.",
+     "trend": "down",
+     "action_items": [
+      {
+       "rank": 1,
+       "theme_id": "theme_00_long_waits_at_the_weekend_counter",
+       "headline": "Weekend lines are costing you regulars",
+       "why_it_matters": "Wait complaints are the most common negative theme, and they cluster on Saturday and Sunday mornings.",
+       "recommended_action": "Put a second person on the register from 8 to 11am Saturday and Sunday for the next two weekends.",
+       "evidence_review_ids": [
+        "demo-fernhollow-bakery-2026-W42-r01",
+        "demo-fernhollow-bakery-2026-W42-r02",
+        "demo-fernhollow-bakery-2026-W42-r03",
+        "demo-fernhollow-bakery-2026-W42-r04",
+        "demo-fernhollow-bakery-2026-W42-r05"
+       ],
+       "severity": "high"
+      },
+      {
+       "rank": 2,
+       "theme_id": "theme_01_pastries_sell_out_before_noon",
+       "headline": "Popular pastries run out too early",
+       "why_it_matters": "Customers who arrive late leave without buying, and some say they won't come back.",
+       "recommended_action": "Double the almond croissant bake on weekends and post a sold out sign online before people make the trip.",
+       "evidence_review_ids": [
+        "demo-fernhollow-bakery-2026-W42-r08",
+        "demo-fernhollow-bakery-2026-W42-r09",
+        "demo-fernhollow-bakery-2026-W42-r10",
+        "demo-fernhollow-bakery-2026-W42-r11"
+       ],
+       "severity": "medium"
+      },
+      {
+       "rank": 3,
+       "theme_id": "theme_04_online_orders_not_ready_on_time",
+       "headline": "Online pickup times are slipping",
+       "why_it_matters": "Pre-orders are your most loyal customers. A missed pickup time undoes the reason they ordered ahead.",
+       "recommended_action": "Print online orders on a separate ticket rail and start them 15 minutes before the pickup time.",
+       "evidence_review_ids": [
+        "demo-fernhollow-bakery-2026-W42-r22",
+        "demo-fernhollow-bakery-2026-W42-r23",
+        "demo-fernhollow-bakery-2026-W42-r24"
+       ],
+       "severity": "medium"
+      }
+     ],
+     "email_draft": "Subject: Your week at Fernhollow Bakery\n\nHi [Name],\n\n24 reviews came in this week, averaging 3.3 stars, down from 3.8 last week.\n\nThis week's actions:\n1. Put a second person on the register from 8 to 11am Saturday and Sunday for the next two weekends.\n2. Double the almond croissant bake on weekends and post a sold out sign online before people make the trip.\n3. Print online orders on a separate ticket rail and start them 15 minutes before the pickup time.\n\nThe full brief with the review evidence is in your dashboard.\n\n— Your BizBrief",
+     "partial": false,
+     "generated_by": "simulated"
+    },
+    "themeReport": {
+     "business_id": "demo-fernhollow-bakery",
+     "week": "2026-W42",
+     "review_count": 24,
+     "avg_stars": 3.3,
+     "prev_avg_stars": 3.75,
+     "themes": [
+      {
+       "theme_id": "theme_00_long_waits_at_the_weekend_counter",
+       "label": "Long waits at the weekend counter",
+       "sentiment": "negative",
+       "review_ids": [
+        "demo-fernhollow-bakery-2026-W42-r01",
+        "demo-fernhollow-bakery-2026-W42-r02",
+        "demo-fernhollow-bakery-2026-W42-r03",
+        "demo-fernhollow-bakery-2026-W42-r04",
+        "demo-fernhollow-bakery-2026-W42-r05",
+        "demo-fernhollow-bakery-2026-W42-r06",
+        "demo-fernhollow-bakery-2026-W42-r07"
+       ],
+       "count": 7,
+       "sample_quotes": [
+        "Love the bread but I can't wait this long every Sunday.",
+        "Only one person at the till during the morning rush.",
+        "Twenty minutes in line for two croissants on Saturday."
+       ]
+      },
+      {
+       "theme_id": "theme_02_excellent_sourdough_and_croissants",
+       "label": "Excellent sourdough and croissants",
+       "sentiment": "positive",
+       "review_ids": [
+        "demo-fernhollow-bakery-2026-W42-r12",
+        "demo-fernhollow-bakery-2026-W42-r13",
+        "demo-fernhollow-bakery-2026-W42-r14",
+        "demo-fernhollow-bakery-2026-W42-r15",
+        "demo-fernhollow-bakery-2026-W42-r16",
+        "demo-fernhollow-bakery-2026-W42-r17",
+        "demo-fernhollow-bakery-2026-W42-r18"
+       ],
+       "count": 7,
+       "sample_quotes": [
+        "Worth the drive for the country loaf alone.",
+        "Best sourdough in town. The crust is perfect.",
+        "The croissants are flaky and buttery every time."
+       ]
+      },
+      {
+       "theme_id": "theme_01_pastries_sell_out_before_noon",
+       "label": "Pastries sell out before noon",
+       "sentiment": "mixed",
+       "review_ids": [
+        "demo-fernhollow-bakery-2026-W42-r08",
+        "demo-fernhollow-bakery-2026-W42-r09",
+        "demo-fernhollow-bakery-2026-W42-r10",
+        "demo-fernhollow-bakery-2026-W42-r11"
+       ],
+       "count": 4,
+       "sample_quotes": [
+        "Came at 11 and half the case was sold out.",
+        "Almond croissants were gone by 10am again.",
+        "Great selection early, empty shelves by lunch."
+       ]
+      },
+      {
+       "theme_id": "theme_03_warm__friendly_staff",
+       "label": "Warm, friendly staff",
+       "sentiment": "positive",
+       "review_ids": [
+        "demo-fernhollow-bakery-2026-W42-r19",
+        "demo-fernhollow-bakery-2026-W42-r20",
+        "demo-fernhollow-bakery-2026-W42-r21"
+       ],
+       "count": 3,
+       "sample_quotes": [
+        "The staff remember my order and always say hello.",
+        "Friendly team even when it's packed."
+       ]
+      },
+      {
+       "theme_id": "theme_04_online_orders_not_ready_on_time",
+       "label": "Online orders not ready on time",
+       "sentiment": "negative",
+       "review_ids": [
+        "demo-fernhollow-bakery-2026-W42-r22",
+        "demo-fernhollow-bakery-2026-W42-r23",
+        "demo-fernhollow-bakery-2026-W42-r24"
+       ],
+       "count": 3,
+       "sample_quotes": [
+        "Ordered ahead online and they hadn't started it.",
+        "Pickup time came and went, still waited ten minutes."
+       ]
+      }
+     ],
+     "sufficient": true,
+     "partial": false
+    }
+   },
+   "2026-W43": {
+    "brief": {
+     "business_id": "demo-fernhollow-bakery",
+     "business_name": "Fernhollow Bakery",
+     "week": "2026-W43",
+     "summary": "24 reviews came in this week, averaging 3.5 stars, up from 3.3 last week. The issue to fix first is long waits at the weekend counter. Customers keep praising excellent sourdough and croissants, so protect that while you fix the rest.",
+     "trend": "up",
+     "action_items": [
+      {
+       "rank": 1,
+       "theme_id": "theme_00_long_waits_at_the_weekend_counter",
+       "headline": "Weekend lines are costing you regulars",
+       "why_it_matters": "Wait complaints are the most common negative theme, and they cluster on Saturday and Sunday mornings.",
+       "recommended_action": "Put a second person on the register from 8 to 11am Saturday and Sunday for the next two weekends.",
+       "evidence_review_ids": [
+        "demo-fernhollow-bakery-2026-W43-r01",
+        "demo-fernhollow-bakery-2026-W43-r02",
+        "demo-fernhollow-bakery-2026-W43-r03",
+        "demo-fernhollow-bakery-2026-W43-r04",
+        "demo-fernhollow-bakery-2026-W43-r05"
+       ],
+       "severity": "high"
+      },
+      {
+       "rank": 2,
+       "theme_id": "theme_01_pastries_sell_out_before_noon",
+       "headline": "Popular pastries run out too early",
+       "why_it_matters": "Customers who arrive late leave without buying, and some say they won't come back.",
+       "recommended_action": "Double the almond croissant bake on weekends and post a sold out sign online before people make the trip.",
+       "evidence_review_ids": [
+        "demo-fernhollow-bakery-2026-W43-r07",
+        "demo-fernhollow-bakery-2026-W43-r08",
+        "demo-fernhollow-bakery-2026-W43-r09",
+        "demo-fernhollow-bakery-2026-W43-r10"
+       ],
+       "severity": "medium"
+      },
+      {
+       "rank": 3,
+       "theme_id": "theme_04_online_orders_not_ready_on_time",
+       "headline": "Online pickup times are slipping",
+       "why_it_matters": "Pre-orders are your most loyal customers. A missed pickup time undoes the reason they ordered ahead.",
+       "recommended_action": "Print online orders on a separate ticket rail and start them 15 minutes before the pickup time.",
+       "evidence_review_ids": [
+        "demo-fernhollow-bakery-2026-W43-r23",
+        "demo-fernhollow-bakery-2026-W43-r24"
+       ],
+       "severity": "medium"
+      }
+     ],
+     "email_draft": null,
+     "partial": true,
+     "generated_by": "simulated"
+    },
+    "themeReport": {
+     "business_id": "demo-fernhollow-bakery",
+     "week": "2026-W43",
+     "review_count": 24,
+     "avg_stars": 3.53,
+     "prev_avg_stars": 3.3,
+     "themes": [
+      {
+       "theme_id": "theme_02_excellent_sourdough_and_croissants",
+       "label": "Excellent sourdough and croissants",
+       "sentiment": "positive",
+       "review_ids": [
+        "demo-fernhollow-bakery-2026-W43-r11",
+        "demo-fernhollow-bakery-2026-W43-r12",
+        "demo-fernhollow-bakery-2026-W43-r13",
+        "demo-fernhollow-bakery-2026-W43-r14",
+        "demo-fernhollow-bakery-2026-W43-r15",
+        "demo-fernhollow-bakery-2026-W43-r16",
+        "demo-fernhollow-bakery-2026-W43-r17",
+        "demo-fernhollow-bakery-2026-W43-r18"
+       ],
+       "count": 8,
+       "sample_quotes": [
+        "Best sourdough in town. The crust is perfect.",
+        "The croissants are flaky and buttery every time.",
+        "Worth the drive for the country loaf alone."
+       ]
+      },
+      {
+       "theme_id": "theme_00_long_waits_at_the_weekend_counter",
+       "label": "Long waits at the weekend counter",
+       "sentiment": "negative",
+       "review_ids": [
+        "demo-fernhollow-bakery-2026-W43-r01",
+        "demo-fernhollow-bakery-2026-W43-r02",
+        "demo-fernhollow-bakery-2026-W43-r03",
+        "demo-fernhollow-bakery-2026-W43-r04",
+        "demo-fernhollow-bakery-2026-W43-r05",
+        "demo-fernhollow-bakery-2026-W43-r06"
+       ],
+       "count": 6,
+       "sample_quotes": [
+        "Only one person at the till during the morning rush.",
+        "Twenty minutes in line for two croissants on Saturday.",
+        "The weekend queue goes out the door and barely moves."
+       ]
+      },
+      {
+       "theme_id": "theme_01_pastries_sell_out_before_noon",
+       "label": "Pastries sell out before noon",
+       "sentiment": "mixed",
+       "review_ids": [
+        "demo-fernhollow-bakery-2026-W43-r07",
+        "demo-fernhollow-bakery-2026-W43-r08",
+        "demo-fernhollow-bakery-2026-W43-r09",
+        "demo-fernhollow-bakery-2026-W43-r10"
+       ],
+       "count": 4,
+       "sample_quotes": [
+        "Almond croissants were gone by 10am again.",
+        "Great selection early, empty shelves by lunch.",
+        "Came at 11 and half the case was sold out."
+       ]
+      },
+      {
+       "theme_id": "theme_03_warm__friendly_staff",
+       "label": "Warm, friendly staff",
+       "sentiment": "positive",
+       "review_ids": [
+        "demo-fernhollow-bakery-2026-W43-r19",
+        "demo-fernhollow-bakery-2026-W43-r20",
+        "demo-fernhollow-bakery-2026-W43-r21",
+        "demo-fernhollow-bakery-2026-W43-r22"
+       ],
+       "count": 4,
+       "sample_quotes": [
+        "Friendly team even when it's packed.",
+        "The staff remember my order and always say hello."
+       ]
+      },
+      {
+       "theme_id": "theme_04_online_orders_not_ready_on_time",
+       "label": "Online orders not ready on time",
+       "sentiment": "negative",
+       "review_ids": [
+        "demo-fernhollow-bakery-2026-W43-r23",
+        "demo-fernhollow-bakery-2026-W43-r24"
+       ],
+       "count": 2,
+       "sample_quotes": [
+        "Pickup time came and went, still waited ten minutes.",
+        "Ordered ahead online and they hadn't started it."
+       ]
+      }
+     ],
+     "sufficient": true,
+     "partial": true
+    }
+   },
+   "2026-W44": {
+    "brief": {
+     "business_id": "demo-fernhollow-bakery",
+     "business_name": "Fernhollow Bakery",
+     "week": "2026-W44",
+     "summary": "22 reviews came in this week, averaging 4.0 stars, up from 3.5 last week. The issue to fix first is long waits at the weekend counter. Customers keep praising excellent sourdough and croissants, so protect that while you fix the rest.",
+     "trend": "up",
+     "action_items": [
+      {
+       "rank": 1,
+       "theme_id": "theme_00_long_waits_at_the_weekend_counter",
+       "headline": "Weekend lines are costing you regulars",
+       "why_it_matters": "Wait complaints are the most common negative theme, and they cluster on Saturday and Sunday mornings.",
+       "recommended_action": "Put a second person on the register from 8 to 11am Saturday and Sunday for the next two weekends.",
+       "evidence_review_ids": [
+        "demo-fernhollow-bakery-2026-W44-r01",
+        "demo-fernhollow-bakery-2026-W44-r02",
+        "demo-fernhollow-bakery-2026-W44-r03"
+       ],
+       "severity": "high"
+      },
+      {
+       "rank": 2,
+       "theme_id": "theme_01_pastries_sell_out_before_noon",
+       "headline": "Popular pastries run out too early",
+       "why_it_matters": "Customers who arrive late leave without buying, and some say they won't come back.",
+       "recommended_action": "Double the almond croissant bake on weekends and post a sold out sign online before people make the trip.",
+       "evidence_review_ids": [
+        "demo-fernhollow-bakery-2026-W44-r04",
+        "demo-fernhollow-bakery-2026-W44-r05",
+        "demo-fernhollow-bakery-2026-W44-r06"
+       ],
+       "severity": "medium"
+      },
+      {
+       "rank": 3,
+       "theme_id": "theme_04_online_orders_not_ready_on_time",
+       "headline": "Online pickup times are slipping",
+       "why_it_matters": "Pre-orders are your most loyal customers. A missed pickup time undoes the reason they ordered ahead.",
+       "recommended_action": "Print online orders on a separate ticket rail and start them 15 minutes before the pickup time.",
+       "evidence_review_ids": [
+        "demo-fernhollow-bakery-2026-W44-r22"
+       ],
+       "severity": "medium"
+      }
+     ],
+     "email_draft": "Subject: Your week at Fernhollow Bakery\n\nHi [Name],\n\n22 reviews came in this week, averaging 4.0 stars, up from 3.5 last week.\n\nThis week's actions:\n1. Put a second person on the register from 8 to 11am Saturday and Sunday for the next two weekends.\n2. Double the almond croissant bake on weekends and post a sold out sign online before people make the trip.\n3. Print online orders on a separate ticket rail and start them 15 minutes before the pickup time.\n\nThe full brief with the review evidence is in your dashboard.\n\n— Your BizBrief",
+     "partial": false,
+     "generated_by": "simulated"
+    },
+    "themeReport": {
+     "business_id": "demo-fernhollow-bakery",
+     "week": "2026-W44",
+     "review_count": 22,
+     "avg_stars": 4.0,
+     "prev_avg_stars": 3.53,
+     "themes": [
+      {
+       "theme_id": "theme_02_excellent_sourdough_and_croissants",
+       "label": "Excellent sourdough and croissants",
+       "sentiment": "positive",
+       "review_ids": [
+        "demo-fernhollow-bakery-2026-W44-r07",
+        "demo-fernhollow-bakery-2026-W44-r08",
+        "demo-fernhollow-bakery-2026-W44-r09",
+        "demo-fernhollow-bakery-2026-W44-r10",
+        "demo-fernhollow-bakery-2026-W44-r11",
+        "demo-fernhollow-bakery-2026-W44-r12",
+        "demo-fernhollow-bakery-2026-W44-r13",
+        "demo-fernhollow-bakery-2026-W44-r14",
+        "demo-fernhollow-bakery-2026-W44-r15",
+        "demo-fernhollow-bakery-2026-W44-r16"
+       ],
+       "count": 10,
+       "sample_quotes": [
+        "The croissants are flaky and buttery every time.",
+        "Worth the drive for the country loaf alone.",
+        "Best sourdough in town. The crust is perfect."
+       ]
+      },
+      {
+       "theme_id": "theme_03_warm__friendly_staff",
+       "label": "Warm, friendly staff",
+       "sentiment": "positive",
+       "review_ids": [
+        "demo-fernhollow-bakery-2026-W44-r17",
+        "demo-fernhollow-bakery-2026-W44-r18",
+        "demo-fernhollow-bakery-2026-W44-r19",
+        "demo-fernhollow-bakery-2026-W44-r20",
+        "demo-fernhollow-bakery-2026-W44-r21"
+       ],
+       "count": 5,
+       "sample_quotes": [
+        "The staff remember my order and always say hello.",
+        "Friendly team even when it's packed."
+       ]
+      },
+      {
+       "theme_id": "theme_00_long_waits_at_the_weekend_counter",
+       "label": "Long waits at the weekend counter",
+       "sentiment": "negative",
+       "review_ids": [
+        "demo-fernhollow-bakery-2026-W44-r01",
+        "demo-fernhollow-bakery-2026-W44-r02",
+        "demo-fernhollow-bakery-2026-W44-r03"
+       ],
+       "count": 3,
+       "sample_quotes": [
+        "Twenty minutes in line for two croissants on Saturday.",
+        "The weekend queue goes out the door and barely moves.",
+        "Love the bread but I can't wait this long every Sunday."
+       ]
+      },
+      {
+       "theme_id": "theme_01_pastries_sell_out_before_noon",
+       "label": "Pastries sell out before noon",
+       "sentiment": "mixed",
+       "review_ids": [
+        "demo-fernhollow-bakery-2026-W44-r04",
+        "demo-fernhollow-bakery-2026-W44-r05",
+        "demo-fernhollow-bakery-2026-W44-r06"
+       ],
+       "count": 3,
+       "sample_quotes": [
+        "Great selection early, empty shelves by lunch.",
+        "Came at 11 and half the case was sold out.",
+        "Almond croissants were gone by 10am again."
+       ]
+      },
+      {
+       "theme_id": "theme_04_online_orders_not_ready_on_time",
+       "label": "Online orders not ready on time",
+       "sentiment": "negative",
+       "review_ids": [
+        "demo-fernhollow-bakery-2026-W44-r22"
+       ],
+       "count": 1,
+       "sample_quotes": [
+        "Ordered ahead online and they hadn't started it.",
+        "Pickup time came and went, still waited ten minutes."
+       ]
+      }
+     ],
+     "sufficient": true,
+     "partial": false
+    }
+   },
+   "2026-W45": {
+    "brief": {
+     "business_id": "demo-fernhollow-bakery",
+     "business_name": "Fernhollow Bakery",
+     "week": "2026-W45",
+     "summary": "21 reviews came in this week, averaging 4.3 stars, up from 4.0 last week. The issue to fix first is long waits at the weekend counter. Customers keep praising excellent sourdough and croissants, so protect that while you fix the rest.",
+     "trend": "up",
+     "action_items": [
+      {
+       "rank": 1,
+       "theme_id": "theme_00_long_waits_at_the_weekend_counter",
+       "headline": "Weekend lines are costing you regulars",
+       "why_it_matters": "Wait complaints are the most common negative theme, and they cluster on Saturday and Sunday mornings.",
+       "recommended_action": "Put a second person on the register from 8 to 11am Saturday and Sunday for the next two weekends.",
+       "evidence_review_ids": [
+        "demo-fernhollow-bakery-2026-W45-r01",
+        "demo-fernhollow-bakery-2026-W45-r02"
+       ],
+       "severity": "high"
+      },
+      {
+       "rank": 2,
+       "theme_id": "theme_01_pastries_sell_out_before_noon",
+       "headline": "Popular pastries run out too early",
+       "why_it_matters": "Customers who arrive late leave without buying, and some say they won't come back.",
+       "recommended_action": "Double the almond croissant bake on weekends and post a sold out sign online before people make the trip.",
+       "evidence_review_ids": [
+        "demo-fernhollow-bakery-2026-W45-r03",
+        "demo-fernhollow-bakery-2026-W45-r04"
+       ],
+       "severity": "medium"
+      }
+     ],
+     "email_draft": "Subject: Your week at Fernhollow Bakery\n\nHi [Name],\n\n21 reviews came in this week, averaging 4.3 stars, up from 4.0 last week.\n\nThis week's actions:\n1. Put a second person on the register from 8 to 11am Saturday and Sunday for the next two weekends.\n2. Double the almond croissant bake on weekends and post a sold out sign online before people make the trip.\n\nThe full brief with the review evidence is in your dashboard.\n\n— Your BizBrief",
+     "partial": false,
+     "generated_by": "simulated"
+    },
+    "themeReport": {
+     "business_id": "demo-fernhollow-bakery",
+     "week": "2026-W45",
+     "review_count": 21,
+     "avg_stars": 4.3,
+     "prev_avg_stars": 4.0,
+     "themes": [
+      {
+       "theme_id": "theme_02_excellent_sourdough_and_croissants",
+       "label": "Excellent sourdough and croissants",
+       "sentiment": "positive",
+       "review_ids": [
+        "demo-fernhollow-bakery-2026-W45-r05",
+        "demo-fernhollow-bakery-2026-W45-r06",
+        "demo-fernhollow-bakery-2026-W45-r07",
+        "demo-fernhollow-bakery-2026-W45-r08",
+        "demo-fernhollow-bakery-2026-W45-r09",
+        "demo-fernhollow-bakery-2026-W45-r10",
+        "demo-fernhollow-bakery-2026-W45-r11",
+        "demo-fernhollow-bakery-2026-W45-r12",
+        "demo-fernhollow-bakery-2026-W45-r13",
+        "demo-fernhollow-bakery-2026-W45-r14",
+        "demo-fernhollow-bakery-2026-W45-r15"
+       ],
+       "count": 11,
+       "sample_quotes": [
+        "Worth the drive for the country loaf alone.",
+        "Best sourdough in town. The crust is perfect.",
+        "The croissants are flaky and buttery every time."
+       ]
+      },
+      {
+       "theme_id": "theme_03_warm__friendly_staff",
+       "label": "Warm, friendly staff",
+       "sentiment": "positive",
+       "review_ids": [
+        "demo-fernhollow-bakery-2026-W45-r16",
+        "demo-fernhollow-bakery-2026-W45-r17",
+        "demo-fernhollow-bakery-2026-W45-r18",
+        "demo-fernhollow-bakery-2026-W45-r19",
+        "demo-fernhollow-bakery-2026-W45-r20",
+        "demo-fernhollow-bakery-2026-W45-r21"
+       ],
+       "count": 6,
+       "sample_quotes": [
+        "Friendly team even when it's packed.",
+        "The staff remember my order and always say hello."
+       ]
+      },
+      {
+       "theme_id": "theme_00_long_waits_at_the_weekend_counter",
+       "label": "Long waits at the weekend counter",
+       "sentiment": "negative",
+       "review_ids": [
+        "demo-fernhollow-bakery-2026-W45-r01",
+        "demo-fernhollow-bakery-2026-W45-r02"
+       ],
+       "count": 2,
+       "sample_quotes": [
+        "The weekend queue goes out the door and barely moves.",
+        "Love the bread but I can't wait this long every Sunday.",
+        "Only one person at the till during the morning rush."
+       ]
+      },
+      {
+       "theme_id": "theme_01_pastries_sell_out_before_noon",
+       "label": "Pastries sell out before noon",
+       "sentiment": "mixed",
+       "review_ids": [
+        "demo-fernhollow-bakery-2026-W45-r03",
+        "demo-fernhollow-bakery-2026-W45-r04"
+       ],
+       "count": 2,
+       "sample_quotes": [
+        "Came at 11 and half the case was sold out.",
+        "Almond croissants were gone by 10am again.",
+        "Great selection early, empty shelves by lunch."
+       ]
+      }
+     ],
+     "sufficient": true,
+     "partial": false
+    }
+   }
+  },
+  "demo-gearloop-bikes": {
+   "2026-W40": {
+    "brief": {
+     "business_id": "demo-gearloop-bikes",
+     "business_name": "Gearloop Bike Repair",
+     "week": "2026-W40",
+     "summary": "13 reviews came in this week, averaging 3.4 stars. The issue to fix first is repairs take longer than quoted. Customers keep praising honest, knowledgeable mechanics, so protect that while you fix the rest.",
+     "trend": "flat",
+     "action_items": [
+      {
+       "rank": 1,
+       "theme_id": "theme_00_repairs_take_longer_than_quoted",
+       "headline": "Turnaround times keep slipping",
+       "why_it_matters": "Missed promise dates are the most common complaint and the easiest to fix with communication.",
+       "recommended_action": "Text every customer the day a quote will slip, with the new date, before they have to ask.",
+       "evidence_review_ids": [
+        "demo-gearloop-bikes-2026-W40-r01",
+        "demo-gearloop-bikes-2026-W40-r02",
+        "demo-gearloop-bikes-2026-W40-r03",
+        "demo-gearloop-bikes-2026-W40-r04"
+       ],
+       "severity": "high"
+      },
+      {
+       "rank": 2,
+       "theme_id": "theme_02_prices_higher_than_expected",
+       "headline": "Price surprises at pickup",
+       "why_it_matters": "Customers accept the price when they see it up front and resent it when they don't.",
+       "recommended_action": "Post the three most common service prices at the counter and on the website this week.",
+       "evidence_review_ids": [
+        "demo-gearloop-bikes-2026-W40-r11",
+        "demo-gearloop-bikes-2026-W40-r12"
+       ],
+       "severity": "medium"
+      },
+      {
+       "rank": 3,
+       "theme_id": "theme_03_hard_to_reach_by_phone",
+       "headline": "Phone calls go unanswered",
+       "why_it_matters": "Callers who can't get through assume the shop is closed and go elsewhere.",
+       "recommended_action": "Clear the voicemail and set a message that points to online booking and texting.",
+       "evidence_review_ids": [
+        "demo-gearloop-bikes-2026-W40-r13"
+       ],
+       "severity": "low"
+      }
+     ],
+     "email_draft": "Subject: Your week at Gearloop Bike Repair\n\nHi [Name],\n\n13 reviews came in this week, averaging 3.4 stars.\n\nThis week's actions:\n1. Text every customer the day a quote will slip, with the new date, before they have to ask.\n2. Post the three most common service prices at the counter and on the website this week.\n3. Clear the voicemail and set a message that points to online booking and texting.\n\nThe full brief with the review evidence is in your dashboard.\n\n— Your BizBrief",
+     "partial": false,
+     "generated_by": "simulated"
+    },
+    "themeReport": {
+     "business_id": "demo-gearloop-bikes",
+     "week": "2026-W40",
+     "review_count": 13,
+     "avg_stars": 3.41,
+     "prev_avg_stars": null,
+     "themes": [
+      {
+       "theme_id": "theme_01_honest__knowledgeable_mechanics",
+       "label": "Honest, knowledgeable mechanics",
+       "sentiment": "positive",
+       "review_ids": [
+        "demo-gearloop-bikes-2026-W40-r05",
+        "demo-gearloop-bikes-2026-W40-r06",
+        "demo-gearloop-bikes-2026-W40-r07",
+        "demo-gearloop-bikes-2026-W40-r08",
+        "demo-gearloop-bikes-2026-W40-r09",
+        "demo-gearloop-bikes-2026-W40-r10"
+       ],
+       "count": 6,
+       "sample_quotes": [
+        "They told me I didn't need the part the other shop quoted.",
+        "Explained the whole repair and showed me the worn chain.",
+        "Finally a shop that doesn't upsell."
+       ]
+      },
+      {
+       "theme_id": "theme_00_repairs_take_longer_than_quoted",
+       "label": "Repairs take longer than quoted",
+       "sentiment": "negative",
+       "review_ids": [
+        "demo-gearloop-bikes-2026-W40-r01",
+        "demo-gearloop-bikes-2026-W40-r02",
+        "demo-gearloop-bikes-2026-W40-r03",
+        "demo-gearloop-bikes-2026-W40-r04"
+       ],
+       "count": 4,
+       "sample_quotes": [
+        "Quoted two days, got my bike back after a week.",
+        "Nobody called to say the part was delayed.",
+        "Good work but the turnaround keeps slipping."
+       ]
+      },
+      {
+       "theme_id": "theme_02_prices_higher_than_expected",
+       "label": "Prices higher than expected",
+       "sentiment": "mixed",
+       "review_ids": [
+        "demo-gearloop-bikes-2026-W40-r11",
+        "demo-gearloop-bikes-2026-W40-r12"
+       ],
+       "count": 2,
+       "sample_quotes": [
+        "Fair work but the labor rate surprised me.",
+        "A bit pricey for a basic tune up."
+       ]
+      },
+      {
+       "theme_id": "theme_03_hard_to_reach_by_phone",
+       "label": "Hard to reach by phone",
+       "sentiment": "negative",
+       "review_ids": [
+        "demo-gearloop-bikes-2026-W40-r13"
+       ],
+       "count": 1,
+       "sample_quotes": [
+        "Called four times, nobody picked up.",
+        "Voicemail is full every time I try."
+       ]
+      }
+     ],
+     "sufficient": true,
+     "partial": false
+    }
+   },
+   "2026-W41": {
+    "brief": {
+     "business_id": "demo-gearloop-bikes",
+     "business_name": "Gearloop Bike Repair",
+     "week": "2026-W41",
+     "summary": "14 reviews came in this week, averaging 3.2 stars, down from 3.4 last week. The issue to fix first is repairs take longer than quoted. Customers keep praising honest, knowledgeable mechanics, so protect that while you fix the rest.",
+     "trend": "down",
+     "action_items": [
+      {
+       "rank": 1,
+       "theme_id": "theme_00_repairs_take_longer_than_quoted",
+       "headline": "Turnaround times keep slipping",
+       "why_it_matters": "Missed promise dates are the most common complaint and the easiest to fix with communication.",
+       "recommended_action": "Text every customer the day a quote will slip, with the new date, before they have to ask.",
+       "evidence_review_ids": [
+        "demo-gearloop-bikes-2026-W41-r01",
+        "demo-gearloop-bikes-2026-W41-r02",
+        "demo-gearloop-bikes-2026-W41-r03",
+        "demo-gearloop-bikes-2026-W41-r04"
+       ],
+       "severity": "high"
+      },
+      {
+       "rank": 2,
+       "theme_id": "theme_02_prices_higher_than_expected",
+       "headline": "Price surprises at pickup",
+       "why_it_matters": "Customers accept the price when they see it up front and resent it when they don't.",
+       "recommended_action": "Post the three most common service prices at the counter and on the website this week.",
+       "evidence_review_ids": [
+        "demo-gearloop-bikes-2026-W41-r10",
+        "demo-gearloop-bikes-2026-W41-r11",
+        "demo-gearloop-bikes-2026-W41-r12"
+       ],
+       "severity": "medium"
+      },
+      {
+       "rank": 3,
+       "theme_id": "theme_03_hard_to_reach_by_phone",
+       "headline": "Phone calls go unanswered",
+       "why_it_matters": "Callers who can't get through assume the shop is closed and go elsewhere.",
+       "recommended_action": "Clear the voicemail and set a message that points to online booking and texting.",
+       "evidence_review_ids": [
+        "demo-gearloop-bikes-2026-W41-r13",
+        "demo-gearloop-bikes-2026-W41-r14"
+       ],
+       "severity": "low"
+      }
+     ],
+     "email_draft": "Subject: Your week at Gearloop Bike Repair\n\nHi [Name],\n\n14 reviews came in this week, averaging 3.2 stars, down from 3.4 last week.\n\nThis week's actions:\n1. Text every customer the day a quote will slip, with the new date, before they have to ask.\n2. Post the three most common service prices at the counter and on the website this week.\n3. Clear the voicemail and set a message that points to online booking and texting.\n\nThe full brief with the review evidence is in your dashboard.\n\n— Your BizBrief",
+     "partial": false,
+     "generated_by": "simulated"
+    },
+    "themeReport": {
+     "business_id": "demo-gearloop-bikes",
+     "week": "2026-W41",
+     "review_count": 14,
+     "avg_stars": 3.2,
+     "prev_avg_stars": 3.41,
+     "themes": [
+      {
+       "theme_id": "theme_01_honest__knowledgeable_mechanics",
+       "label": "Honest, knowledgeable mechanics",
+       "sentiment": "positive",
+       "review_ids": [
+        "demo-gearloop-bikes-2026-W41-r05",
+        "demo-gearloop-bikes-2026-W41-r06",
+        "demo-gearloop-bikes-2026-W41-r07",
+        "demo-gearloop-bikes-2026-W41-r08",
+        "demo-gearloop-bikes-2026-W41-r09"
+       ],
+       "count": 5,
+       "sample_quotes": [
+        "Explained the whole repair and showed me the worn chain.",
+        "Finally a shop that doesn't upsell.",
+        "They told me I didn't need the part the other shop quoted."
+       ]
+      },
+      {
+       "theme_id": "theme_00_repairs_take_longer_than_quoted",
+       "label": "Repairs take longer than quoted",
+       "sentiment": "negative",
+       "review_ids": [
+        "demo-gearloop-bikes-2026-W41-r01",
+        "demo-gearloop-bikes-2026-W41-r02",
+        "demo-gearloop-bikes-2026-W41-r03",
+        "demo-gearloop-bikes-2026-W41-r04"
+       ],
+       "count": 4,
+       "sample_quotes": [
+        "Nobody called to say the part was delayed.",
+        "Good work but the turnaround keeps slipping.",
+        "Quoted two days, got my bike back after a week."
+       ]
+      },
+      {
+       "theme_id": "theme_02_prices_higher_than_expected",
+       "label": "Prices higher than expected",
+       "sentiment": "mixed",
+       "review_ids": [
+        "demo-gearloop-bikes-2026-W41-r10",
+        "demo-gearloop-bikes-2026-W41-r11",
+        "demo-gearloop-bikes-2026-W41-r12"
+       ],
+       "count": 3,
+       "sample_quotes": [
+        "A bit pricey for a basic tune up.",
+        "Fair work but the labor rate surprised me."
+       ]
+      },
+      {
+       "theme_id": "theme_03_hard_to_reach_by_phone",
+       "label": "Hard to reach by phone",
+       "sentiment": "negative",
+       "review_ids": [
+        "demo-gearloop-bikes-2026-W41-r13",
+        "demo-gearloop-bikes-2026-W41-r14"
+       ],
+       "count": 2,
+       "sample_quotes": [
+        "Voicemail is full every time I try.",
+        "Called four times, nobody picked up."
+       ]
+      }
+     ],
+     "sufficient": true,
+     "partial": false
+    }
+   },
+   "2026-W42": {
+    "brief": {
+     "business_id": "demo-gearloop-bikes",
+     "business_name": "Gearloop Bike Repair",
+     "week": "2026-W42",
+     "summary": "16 reviews came in this week, averaging 3.3 stars, about level with 3.2 last week. The issue to fix first is repairs take longer than quoted. Customers keep praising honest, knowledgeable mechanics, so protect that while you fix the rest.",
+     "trend": "flat",
+     "action_items": [
+      {
+       "rank": 1,
+       "theme_id": "theme_00_repairs_take_longer_than_quoted",
+       "headline": "Turnaround times keep slipping",
+       "why_it_matters": "Missed promise dates are the most common complaint and the easiest to fix with communication.",
+       "recommended_action": "Text every customer the day a quote will slip, with the new date, before they have to ask.",
+       "evidence_review_ids": [
+        "demo-gearloop-bikes-2026-W42-r01",
+        "demo-gearloop-bikes-2026-W42-r02",
+        "demo-gearloop-bikes-2026-W42-r03",
+        "demo-gearloop-bikes-2026-W42-r04",
+        "demo-gearloop-bikes-2026-W42-r05"
+       ],
+       "severity": "high"
+      },
+      {
+       "rank": 2,
+       "theme_id": "theme_02_prices_higher_than_expected",
+       "headline": "Price surprises at pickup",
+       "why_it_matters": "Customers accept the price when they see it up front and resent it when they don't.",
+       "recommended_action": "Post the three most common service prices at the counter and on the website this week.",
+       "evidence_review_ids": [
+        "demo-gearloop-bikes-2026-W42-r13",
+        "demo-gearloop-bikes-2026-W42-r14"
+       ],
+       "severity": "medium"
+      },
+      {
+       "rank": 3,
+       "theme_id": "theme_03_hard_to_reach_by_phone",
+       "headline": "Phone calls go unanswered",
+       "why_it_matters": "Callers who can't get through assume the shop is closed and go elsewhere.",
+       "recommended_action": "Clear the voicemail and set a message that points to online booking and texting.",
+       "evidence_review_ids": [
+        "demo-gearloop-bikes-2026-W42-r15",
+        "demo-gearloop-bikes-2026-W42-r16"
+       ],
+       "severity": "low"
+      }
+     ],
+     "email_draft": "Subject: Your week at Gearloop Bike Repair\n\nHi [Name],\n\n16 reviews came in this week, averaging 3.3 stars, about level with 3.2 last week.\n\nThis week's actions:\n1. Text every customer the day a quote will slip, with the new date, before they have to ask.\n2. Post the three most common service prices at the counter and on the website this week.\n3. Clear the voicemail and set a message that points to online booking and texting.\n\nThe full brief with the review evidence is in your dashboard.\n\n— Your BizBrief",
+     "partial": false,
+     "generated_by": "simulated"
+    },
+    "themeReport": {
+     "business_id": "demo-gearloop-bikes",
+     "week": "2026-W42",
+     "review_count": 16,
+     "avg_stars": 3.3,
+     "prev_avg_stars": 3.2,
+     "themes": [
+      {
+       "theme_id": "theme_01_honest__knowledgeable_mechanics",
+       "label": "Honest, knowledgeable mechanics",
+       "sentiment": "positive",
+       "review_ids": [
+        "demo-gearloop-bikes-2026-W42-r06",
+        "demo-gearloop-bikes-2026-W42-r07",
+        "demo-gearloop-bikes-2026-W42-r08",
+        "demo-gearloop-bikes-2026-W42-r09",
+        "demo-gearloop-bikes-2026-W42-r10",
+        "demo-gearloop-bikes-2026-W42-r11",
+        "demo-gearloop-bikes-2026-W42-r12"
+       ],
+       "count": 7,
+       "sample_quotes": [
+        "Finally a shop that doesn't upsell.",
+        "They told me I didn't need the part the other shop quoted.",
+        "Explained the whole repair and showed me the worn chain."
+       ]
+      },
+      {
+       "theme_id": "theme_00_repairs_take_longer_than_quoted",
+       "label": "Repairs take longer than quoted",
+       "sentiment": "negative",
+       "review_ids": [
+        "demo-gearloop-bikes-2026-W42-r01",
+        "demo-gearloop-bikes-2026-W42-r02",
+        "demo-gearloop-bikes-2026-W42-r03",
+        "demo-gearloop-bikes-2026-W42-r04",
+        "demo-gearloop-bikes-2026-W42-r05"
+       ],
+       "count": 5,
+       "sample_quotes": [
+        "Good work but the turnaround keeps slipping.",
+        "Quoted two days, got my bike back after a week.",
+        "Nobody called to say the part was delayed."
+       ]
+      },
+      {
+       "theme_id": "theme_02_prices_higher_than_expected",
+       "label": "Prices higher than expected",
+       "sentiment": "mixed",
+       "review_ids": [
+        "demo-gearloop-bikes-2026-W42-r13",
+        "demo-gearloop-bikes-2026-W42-r14"
+       ],
+       "count": 2,
+       "sample_quotes": [
+        "Fair work but the labor rate surprised me.",
+        "A bit pricey for a basic tune up."
+       ]
+      },
+      {
+       "theme_id": "theme_03_hard_to_reach_by_phone",
+       "label": "Hard to reach by phone",
+       "sentiment": "negative",
+       "review_ids": [
+        "demo-gearloop-bikes-2026-W42-r15",
+        "demo-gearloop-bikes-2026-W42-r16"
+       ],
+       "count": 2,
+       "sample_quotes": [
+        "Called four times, nobody picked up.",
+        "Voicemail is full every time I try."
+       ]
+      }
+     ],
+     "sufficient": true,
+     "partial": false
+    }
+   },
+   "2026-W43": {
+    "brief": {
+     "business_id": "demo-gearloop-bikes",
+     "business_name": "Gearloop Bike Repair",
+     "week": "2026-W43",
+     "summary": "15 reviews came in this week, averaging 3.3 stars, about level with 3.3 last week. The issue to fix first is repairs take longer than quoted. Customers keep praising honest, knowledgeable mechanics, so protect that while you fix the rest.",
+     "trend": "flat",
+     "action_items": [
+      {
+       "rank": 1,
+       "theme_id": "theme_00_repairs_take_longer_than_quoted",
+       "headline": "Turnaround times keep slipping",
+       "why_it_matters": "Missed promise dates are the most common complaint and the easiest to fix with communication.",
+       "recommended_action": "Text every customer the day a quote will slip, with the new date, before they have to ask.",
+       "evidence_review_ids": [
+        "demo-gearloop-bikes-2026-W43-r01",
+        "demo-gearloop-bikes-2026-W43-r02",
+        "demo-gearloop-bikes-2026-W43-r03"
+       ],
+       "severity": "high"
+      },
+      {
+       "rank": 2,
+       "theme_id": "theme_02_prices_higher_than_expected",
+       "headline": "Price surprises at pickup",
+       "why_it_matters": "Customers accept the price when they see it up front and resent it when they don't.",
+       "recommended_action": "Post the three most common service prices at the counter and on the website this week.",
+       "evidence_review_ids": [
+        "demo-gearloop-bikes-2026-W43-r10",
+        "demo-gearloop-bikes-2026-W43-r11",
+        "demo-gearloop-bikes-2026-W43-r12"
+       ],
+       "severity": "medium"
+      },
+      {
+       "rank": 3,
+       "theme_id": "theme_03_hard_to_reach_by_phone",
+       "headline": "Phone calls go unanswered",
+       "why_it_matters": "Callers who can't get through assume the shop is closed and go elsewhere.",
+       "recommended_action": "Clear the voicemail and set a message that points to online booking and texting.",
+       "evidence_review_ids": [
+        "demo-gearloop-bikes-2026-W43-r13",
+        "demo-gearloop-bikes-2026-W43-r14",
+        "demo-gearloop-bikes-2026-W43-r15"
+       ],
+       "severity": "low"
+      }
+     ],
+     "email_draft": "Subject: Your week at Gearloop Bike Repair\n\nHi [Name],\n\n15 reviews came in this week, averaging 3.3 stars, about level with 3.3 last week.\n\nThis week's actions:\n1. Text every customer the day a quote will slip, with the new date, before they have to ask.\n2. Post the three most common service prices at the counter and on the website this week.\n3. Clear the voicemail and set a message that points to online booking and texting.\n\nThe full brief with the review evidence is in your dashboard.\n\n— Your BizBrief",
+     "partial": false,
+     "generated_by": "simulated"
+    },
+    "themeReport": {
+     "business_id": "demo-gearloop-bikes",
+     "week": "2026-W43",
+     "review_count": 15,
+     "avg_stars": 3.3,
+     "prev_avg_stars": 3.3,
+     "themes": [
+      {
+       "theme_id": "theme_01_honest__knowledgeable_mechanics",
+       "label": "Honest, knowledgeable mechanics",
+       "sentiment": "positive",
+       "review_ids": [
+        "demo-gearloop-bikes-2026-W43-r04",
+        "demo-gearloop-bikes-2026-W43-r05",
+        "demo-gearloop-bikes-2026-W43-r06",
+        "demo-gearloop-bikes-2026-W43-r07",
+        "demo-gearloop-bikes-2026-W43-r08",
+        "demo-gearloop-bikes-2026-W43-r09"
+       ],
+       "count": 6,
+       "sample_quotes": [
+        "They told me I didn't need the part the other shop quoted.",
+        "Explained the whole repair and showed me the worn chain.",
+        "Finally a shop that doesn't upsell."
+       ]
+      },
+      {
+       "theme_id": "theme_00_repairs_take_longer_than_quoted",
+       "label": "Repairs take longer than quoted",
+       "sentiment": "negative",
+       "review_ids": [
+        "demo-gearloop-bikes-2026-W43-r01",
+        "demo-gearloop-bikes-2026-W43-r02",
+        "demo-gearloop-bikes-2026-W43-r03"
+       ],
+       "count": 3,
+       "sample_quotes": [
+        "Quoted two days, got my bike back after a week.",
+        "Nobody called to say the part was delayed.",
+        "Good work but the turnaround keeps slipping."
+       ]
+      },
+      {
+       "theme_id": "theme_02_prices_higher_than_expected",
+       "label": "Prices higher than expected",
+       "sentiment": "mixed",
+       "review_ids": [
+        "demo-gearloop-bikes-2026-W43-r10",
+        "demo-gearloop-bikes-2026-W43-r11",
+        "demo-gearloop-bikes-2026-W43-r12"
+       ],
+       "count": 3,
+       "sample_quotes": [
+        "A bit pricey for a basic tune up.",
+        "Fair work but the labor rate surprised me."
+       ]
+      },
+      {
+       "theme_id": "theme_03_hard_to_reach_by_phone",
+       "label": "Hard to reach by phone",
+       "sentiment": "negative",
+       "review_ids": [
+        "demo-gearloop-bikes-2026-W43-r13",
+        "demo-gearloop-bikes-2026-W43-r14",
+        "demo-gearloop-bikes-2026-W43-r15"
+       ],
+       "count": 3,
+       "sample_quotes": [
+        "Voicemail is full every time I try.",
+        "Called four times, nobody picked up."
+       ]
+      }
+     ],
+     "sufficient": true,
+     "partial": false
+    }
+   },
+   "2026-W44": {
+    "brief": {
+     "business_id": "demo-gearloop-bikes",
+     "business_name": "Gearloop Bike Repair",
+     "week": "2026-W44",
+     "summary": "13 reviews came in this week, averaging 3.8 stars, up from 3.3 last week. The issue to fix first is repairs take longer than quoted. Customers keep praising honest, knowledgeable mechanics, so protect that while you fix the rest.",
+     "trend": "up",
+     "action_items": [
+      {
+       "rank": 1,
+       "theme_id": "theme_00_repairs_take_longer_than_quoted",
+       "headline": "Turnaround times keep slipping",
+       "why_it_matters": "Missed promise dates are the most common complaint and the easiest to fix with communication.",
+       "recommended_action": "Text every customer the day a quote will slip, with the new date, before they have to ask.",
+       "evidence_review_ids": [
+        "demo-gearloop-bikes-2026-W44-r01",
+        "demo-gearloop-bikes-2026-W44-r02"
+       ],
+       "severity": "high"
+      },
+      {
+       "rank": 2,
+       "theme_id": "theme_02_prices_higher_than_expected",
+       "headline": "Price surprises at pickup",
+       "why_it_matters": "Customers accept the price when they see it up front and resent it when they don't.",
+       "recommended_action": "Post the three most common service prices at the counter and on the website this week.",
+       "evidence_review_ids": [
+        "demo-gearloop-bikes-2026-W44-r11",
+        "demo-gearloop-bikes-2026-W44-r12"
+       ],
+       "severity": "medium"
+      },
+      {
+       "rank": 3,
+       "theme_id": "theme_03_hard_to_reach_by_phone",
+       "headline": "Phone calls go unanswered",
+       "why_it_matters": "Callers who can't get through assume the shop is closed and go elsewhere.",
+       "recommended_action": "Clear the voicemail and set a message that points to online booking and texting.",
+       "evidence_review_ids": [
+        "demo-gearloop-bikes-2026-W44-r13"
+       ],
+       "severity": "low"
+      }
+     ],
+     "email_draft": "Subject: Your week at Gearloop Bike Repair\n\nHi [Name],\n\n13 reviews came in this week, averaging 3.8 stars, up from 3.3 last week.\n\nThis week's actions:\n1. Text every customer the day a quote will slip, with the new date, before they have to ask.\n2. Post the three most common service prices at the counter and on the website this week.\n3. Clear the voicemail and set a message that points to online booking and texting.\n\nThe full brief with the review evidence is in your dashboard.\n\n— Your BizBrief",
+     "partial": false,
+     "generated_by": "simulated"
+    },
+    "themeReport": {
+     "business_id": "demo-gearloop-bikes",
+     "week": "2026-W44",
+     "review_count": 13,
+     "avg_stars": 3.84,
+     "prev_avg_stars": 3.3,
+     "themes": [
+      {
+       "theme_id": "theme_01_honest__knowledgeable_mechanics",
+       "label": "Honest, knowledgeable mechanics",
+       "sentiment": "positive",
+       "review_ids": [
+        "demo-gearloop-bikes-2026-W44-r03",
+        "demo-gearloop-bikes-2026-W44-r04",
+        "demo-gearloop-bikes-2026-W44-r05",
+        "demo-gearloop-bikes-2026-W44-r06",
+        "demo-gearloop-bikes-2026-W44-r07",
+        "demo-gearloop-bikes-2026-W44-r08",
+        "demo-gearloop-bikes-2026-W44-r09",
+        "demo-gearloop-bikes-2026-W44-r10"
+       ],
+       "count": 8,
+       "sample_quotes": [
+        "Explained the whole repair and showed me the worn chain.",
+        "Finally a shop that doesn't upsell.",
+        "They told me I didn't need the part the other shop quoted."
+       ]
+      },
+      {
+       "theme_id": "theme_00_repairs_take_longer_than_quoted",
+       "label": "Repairs take longer than quoted",
+       "sentiment": "negative",
+       "review_ids": [
+        "demo-gearloop-bikes-2026-W44-r01",
+        "demo-gearloop-bikes-2026-W44-r02"
+       ],
+       "count": 2,
+       "sample_quotes": [
+        "Nobody called to say the part was delayed.",
+        "Good work but the turnaround keeps slipping.",
+        "Quoted two days, got my bike back after a week."
+       ]
+      },
+      {
+       "theme_id": "theme_02_prices_higher_than_expected",
+       "label": "Prices higher than expected",
+       "sentiment": "mixed",
+       "review_ids": [
+        "demo-gearloop-bikes-2026-W44-r11",
+        "demo-gearloop-bikes-2026-W44-r12"
+       ],
+       "count": 2,
+       "sample_quotes": [
+        "Fair work but the labor rate surprised me.",
+        "A bit pricey for a basic tune up."
+       ]
+      },
+      {
+       "theme_id": "theme_03_hard_to_reach_by_phone",
+       "label": "Hard to reach by phone",
+       "sentiment": "negative",
+       "review_ids": [
+        "demo-gearloop-bikes-2026-W44-r13"
+       ],
+       "count": 1,
+       "sample_quotes": [
+        "Called four times, nobody picked up.",
+        "Voicemail is full every time I try."
+       ]
+      }
+     ],
+     "sufficient": true,
+     "partial": false
+    }
+   },
+   "2026-W45": {
+    "brief": {
+     "business_id": "demo-gearloop-bikes",
+     "business_name": "Gearloop Bike Repair",
+     "week": "2026-W45",
+     "summary": "13 reviews came in this week, averaging 3.7 stars, down from 3.8 last week. The issue to fix first is repairs take longer than quoted. Customers keep praising honest, knowledgeable mechanics, so protect that while you fix the rest.",
+     "trend": "down",
+     "action_items": [
+      {
+       "rank": 1,
+       "theme_id": "theme_00_repairs_take_longer_than_quoted",
+       "headline": "Turnaround times keep slipping",
+       "why_it_matters": "Missed promise dates are the most common complaint and the easiest to fix with communication.",
+       "recommended_action": "Text every customer the day a quote will slip, with the new date, before they have to ask.",
+       "evidence_review_ids": [
+        "demo-gearloop-bikes-2026-W45-r01",
+        "demo-gearloop-bikes-2026-W45-r02"
+       ],
+       "severity": "high"
+      },
+      {
+       "rank": 2,
+       "theme_id": "theme_02_prices_higher_than_expected",
+       "headline": "Price surprises at pickup",
+       "why_it_matters": "Customers accept the price when they see it up front and resent it when they don't.",
+       "recommended_action": "Post the three most common service prices at the counter and on the website this week.",
+       "evidence_review_ids": [
+        "demo-gearloop-bikes-2026-W45-r10",
+        "demo-gearloop-bikes-2026-W45-r11",
+        "demo-gearloop-bikes-2026-W45-r12"
+       ],
+       "severity": "medium"
+      },
+      {
+       "rank": 3,
+       "theme_id": "theme_03_hard_to_reach_by_phone",
+       "headline": "Phone calls go unanswered",
+       "why_it_matters": "Callers who can't get through assume the shop is closed and go elsewhere.",
+       "recommended_action": "Clear the voicemail and set a message that points to online booking and texting.",
+       "evidence_review_ids": [
+        "demo-gearloop-bikes-2026-W45-r13"
+       ],
+       "severity": "low"
+      }
+     ],
+     "email_draft": "Subject: Your week at Gearloop Bike Repair\n\nHi [Name],\n\n13 reviews came in this week, averaging 3.7 stars, down from 3.8 last week.\n\nThis week's actions:\n1. Text every customer the day a quote will slip, with the new date, before they have to ask.\n2. Post the three most common service prices at the counter and on the website this week.\n3. Clear the voicemail and set a message that points to online booking and texting.\n\nThe full brief with the review evidence is in your dashboard.\n\n— Your BizBrief",
+     "partial": false,
+     "generated_by": "simulated"
+    },
+    "themeReport": {
+     "business_id": "demo-gearloop-bikes",
+     "week": "2026-W45",
+     "review_count": 13,
+     "avg_stars": 3.73,
+     "prev_avg_stars": 3.84,
+     "themes": [
+      {
+       "theme_id": "theme_01_honest__knowledgeable_mechanics",
+       "label": "Honest, knowledgeable mechanics",
+       "sentiment": "positive",
+       "review_ids": [
+        "demo-gearloop-bikes-2026-W45-r03",
+        "demo-gearloop-bikes-2026-W45-r04",
+        "demo-gearloop-bikes-2026-W45-r05",
+        "demo-gearloop-bikes-2026-W45-r06",
+        "demo-gearloop-bikes-2026-W45-r07",
+        "demo-gearloop-bikes-2026-W45-r08",
+        "demo-gearloop-bikes-2026-W45-r09"
+       ],
+       "count": 7,
+       "sample_quotes": [
+        "Finally a shop that doesn't upsell.",
+        "They told me I didn't need the part the other shop quoted.",
+        "Explained the whole repair and showed me the worn chain."
+       ]
+      },
+      {
+       "theme_id": "theme_02_prices_higher_than_expected",
+       "label": "Prices higher than expected",
+       "sentiment": "mixed",
+       "review_ids": [
+        "demo-gearloop-bikes-2026-W45-r10",
+        "demo-gearloop-bikes-2026-W45-r11",
+        "demo-gearloop-bikes-2026-W45-r12"
+       ],
+       "count": 3,
+       "sample_quotes": [
+        "A bit pricey for a basic tune up.",
+        "Fair work but the labor rate surprised me."
+       ]
+      },
+      {
+       "theme_id": "theme_00_repairs_take_longer_than_quoted",
+       "label": "Repairs take longer than quoted",
+       "sentiment": "negative",
+       "review_ids": [
+        "demo-gearloop-bikes-2026-W45-r01",
+        "demo-gearloop-bikes-2026-W45-r02"
+       ],
+       "count": 2,
+       "sample_quotes": [
+        "Good work but the turnaround keeps slipping.",
+        "Quoted two days, got my bike back after a week.",
+        "Nobody called to say the part was delayed."
+       ]
+      },
+      {
+       "theme_id": "theme_03_hard_to_reach_by_phone",
+       "label": "Hard to reach by phone",
+       "sentiment": "negative",
+       "review_ids": [
+        "demo-gearloop-bikes-2026-W45-r13"
+       ],
+       "count": 1,
+       "sample_quotes": [
+        "Voicemail is full every time I try.",
+        "Called four times, nobody picked up."
+       ]
+      }
+     ],
+     "sufficient": true,
+     "partial": false
+    }
+   }
+  },
+  "demo-saltmarsh-yoga": {
+   "2026-W40": {
+    "brief": {
+     "business_id": "demo-saltmarsh-yoga",
+     "business_name": "Saltmarsh Yoga Studio",
+     "week": "2026-W40",
+     "summary": "9 reviews came in this week, averaging 3.6 stars. The issue to fix first is classes overbooked. Customers keep praising calm space and great teachers, so protect that while you fix the rest.",
+     "trend": "flat",
+     "action_items": [
+      {
+       "rank": 1,
+       "theme_id": "theme_01_classes_overbooked",
+       "headline": "Peak classes are overcrowded",
+       "why_it_matters": "Crowding is the top complaint from members, and the ones who mention it rate the studio lowest.",
+       "recommended_action": "Cap the 6pm class at 22 mats and open a waitlist in the booking app.",
+       "evidence_review_ids": [
+        "demo-saltmarsh-yoga-2026-W40-r06",
+        "demo-saltmarsh-yoga-2026-W40-r07",
+        "demo-saltmarsh-yoga-2026-W40-r08"
+       ],
+       "severity": "high"
+      },
+      {
+       "rank": 2,
+       "theme_id": "theme_02_changing_room_needs_attention",
+       "headline": "Changing room upkeep",
+       "why_it_matters": "It is not driving cancellations yet, but it comes up every week.",
+       "recommended_action": "Add a mid-afternoon clean to the staff checklist and replace the two broken lockers.",
+       "evidence_review_ids": [
+        "demo-saltmarsh-yoga-2026-W40-r09"
+       ],
+       "severity": "low"
+      }
+     ],
+     "email_draft": "Subject: Your week at Saltmarsh Yoga Studio\n\nHi [Name],\n\n9 reviews came in this week, averaging 3.6 stars.\n\nThis week's actions:\n1. Cap the 6pm class at 22 mats and open a waitlist in the booking app.\n2. Add a mid-afternoon clean to the staff checklist and replace the two broken lockers.\n\nThe full brief with the review evidence is in your dashboard.\n\n— Your BizBrief",
+     "partial": false,
+     "generated_by": "simulated"
+    },
+    "themeReport": {
+     "business_id": "demo-saltmarsh-yoga",
+     "week": "2026-W40",
+     "review_count": 9,
+     "avg_stars": 3.61,
+     "prev_avg_stars": null,
+     "themes": [
+      {
+       "theme_id": "theme_00_calm_space_and_great_teachers",
+       "label": "Calm space and great teachers",
+       "sentiment": "positive",
+       "review_ids": [
+        "demo-saltmarsh-yoga-2026-W40-r01",
+        "demo-saltmarsh-yoga-2026-W40-r02",
+        "demo-saltmarsh-yoga-2026-W40-r03",
+        "demo-saltmarsh-yoga-2026-W40-r04",
+        "demo-saltmarsh-yoga-2026-W40-r05"
+       ],
+       "count": 5,
+       "sample_quotes": [
+        "The evening flow class is the best part of my week.",
+        "Teachers give real adjustments, not just cues.",
+        "Beautiful light in the main room."
+       ]
+      },
+      {
+       "theme_id": "theme_01_classes_overbooked",
+       "label": "Classes overbooked",
+       "sentiment": "negative",
+       "review_ids": [
+        "demo-saltmarsh-yoga-2026-W40-r06",
+        "demo-saltmarsh-yoga-2026-W40-r07",
+        "demo-saltmarsh-yoga-2026-W40-r08"
+       ],
+       "count": 3,
+       "sample_quotes": [
+        "Mats were six inches apart in the 6pm class.",
+        "Booked a spot and there was no room when I arrived.",
+        "Too crowded to do a full sun salutation."
+       ]
+      },
+      {
+       "theme_id": "theme_02_changing_room_needs_attention",
+       "label": "Changing room needs attention",
+       "sentiment": "mixed",
+       "review_ids": [
+        "demo-saltmarsh-yoga-2026-W40-r09"
+       ],
+       "count": 1,
+       "sample_quotes": [
+        "Showers are great but the lockers are always broken.",
+        "Changing room gets messy by the evening."
+       ]
+      }
+     ],
+     "sufficient": true,
+     "partial": false
+    }
+   },
+   "2026-W41": {
+    "brief": {
+     "business_id": "demo-saltmarsh-yoga",
+     "business_name": "Saltmarsh Yoga Studio",
+     "week": "2026-W41",
+     "summary": "12 reviews came in this week, averaging 3.5 stars, about level with 3.6 last week. The issue to fix first is classes overbooked. Customers keep praising calm space and great teachers, so protect that while you fix the rest.",
+     "trend": "flat",
+     "action_items": [
+      {
+       "rank": 1,
+       "theme_id": "theme_01_classes_overbooked",
+       "headline": "Peak classes are overcrowded",
+       "why_it_matters": "Crowding is the top complaint from members, and the ones who mention it rate the studio lowest.",
+       "recommended_action": "Cap the 6pm class at 22 mats and open a waitlist in the booking app.",
+       "evidence_review_ids": [
+        "demo-saltmarsh-yoga-2026-W41-r07",
+        "demo-saltmarsh-yoga-2026-W41-r08",
+        "demo-saltmarsh-yoga-2026-W41-r09",
+        "demo-saltmarsh-yoga-2026-W41-r10"
+       ],
+       "severity": "high"
+      },
+      {
+       "rank": 2,
+       "theme_id": "theme_02_changing_room_needs_attention",
+       "headline": "Changing room upkeep",
+       "why_it_matters": "It is not driving cancellations yet, but it comes up every week.",
+       "recommended_action": "Add a mid-afternoon clean to the staff checklist and replace the two broken lockers.",
+       "evidence_review_ids": [
+        "demo-saltmarsh-yoga-2026-W41-r11",
+        "demo-saltmarsh-yoga-2026-W41-r12"
+       ],
+       "severity": "low"
+      }
+     ],
+     "email_draft": "Subject: Your week at Saltmarsh Yoga Studio\n\nHi [Name],\n\n12 reviews came in this week, averaging 3.5 stars, about level with 3.6 last week.\n\nThis week's actions:\n1. Cap the 6pm class at 22 mats and open a waitlist in the booking app.\n2. Add a mid-afternoon clean to the staff checklist and replace the two broken lockers.\n\nThe full brief with the review evidence is in your dashboard.\n\n— Your BizBrief",
+     "partial": false,
+     "generated_by": "simulated"
+    },
+    "themeReport": {
+     "business_id": "demo-saltmarsh-yoga",
+     "week": "2026-W41",
+     "review_count": 12,
+     "avg_stars": 3.53,
+     "prev_avg_stars": 3.61,
+     "themes": [
+      {
+       "theme_id": "theme_00_calm_space_and_great_teachers",
+       "label": "Calm space and great teachers",
+       "sentiment": "positive",
+       "review_ids": [
+        "demo-saltmarsh-yoga-2026-W41-r01",
+        "demo-saltmarsh-yoga-2026-W41-r02",
+        "demo-saltmarsh-yoga-2026-W41-r03",
+        "demo-saltmarsh-yoga-2026-W41-r04",
+        "demo-saltmarsh-yoga-2026-W41-r05",
+        "demo-saltmarsh-yoga-2026-W41-r06"
+       ],
+       "count": 6,
+       "sample_quotes": [
+        "Teachers give real adjustments, not just cues.",
+        "Beautiful light in the main room.",
+        "The evening flow class is the best part of my week."
+       ]
+      },
+      {
+       "theme_id": "theme_01_classes_overbooked",
+       "label": "Classes overbooked",
+       "sentiment": "negative",
+       "review_ids": [
+        "demo-saltmarsh-yoga-2026-W41-r07",
+        "demo-saltmarsh-yoga-2026-W41-r08",
+        "demo-saltmarsh-yoga-2026-W41-r09",
+        "demo-saltmarsh-yoga-2026-W41-r10"
+       ],
+       "count": 4,
+       "sample_quotes": [
+        "Booked a spot and there was no room when I arrived.",
+        "Too crowded to do a full sun salutation.",
+        "Mats were six inches apart in the 6pm class."
+       ]
+      },
+      {
+       "theme_id": "theme_02_changing_room_needs_attention",
+       "label": "Changing room needs attention",
+       "sentiment": "mixed",
+       "review_ids": [
+        "demo-saltmarsh-yoga-2026-W41-r11",
+        "demo-saltmarsh-yoga-2026-W41-r12"
+       ],
+       "count": 2,
+       "sample_quotes": [
+        "Changing room gets messy by the evening.",
+        "Showers are great but the lockers are always broken."
+       ]
+      }
+     ],
+     "sufficient": true,
+     "partial": false
+    }
+   },
+   "2026-W42": {
+    "brief": {
+     "business_id": "demo-saltmarsh-yoga",
+     "business_name": "Saltmarsh Yoga Studio",
+     "week": "2026-W42",
+     "summary": "Not enough reviews this week to produce a meaningful brief (3 received; 5 required). Check back next week once more feedback has come in.",
+     "trend": "up",
+     "action_items": [],
+     "email_draft": null,
+     "partial": false,
+     "generated_by": "simulated"
+    },
+    "themeReport": {
+     "business_id": "demo-saltmarsh-yoga",
+     "week": "2026-W42",
+     "review_count": 3,
+     "avg_stars": 3.77,
+     "prev_avg_stars": 3.53,
+     "themes": [],
+     "sufficient": false,
+     "partial": false
+    }
+   },
+   "2026-W43": {
+    "brief": {
+     "business_id": "demo-saltmarsh-yoga",
+     "business_name": "Saltmarsh Yoga Studio",
+     "week": "2026-W43",
+     "summary": "11 reviews came in this week, averaging 3.4 stars, down from 3.8 last week. The issue to fix first is classes overbooked. Customers keep praising calm space and great teachers, so protect that while you fix the rest.",
+     "trend": "down",
+     "action_items": [
+      {
+       "rank": 1,
+       "theme_id": "theme_01_classes_overbooked",
+       "headline": "Peak classes are overcrowded",
+       "why_it_matters": "Crowding is the top complaint from members, and the ones who mention it rate the studio lowest.",
+       "recommended_action": "Cap the 6pm class at 22 mats and open a waitlist in the booking app.",
+       "evidence_review_ids": [
+        "demo-saltmarsh-yoga-2026-W43-r06",
+        "demo-saltmarsh-yoga-2026-W43-r07",
+        "demo-saltmarsh-yoga-2026-W43-r08",
+        "demo-saltmarsh-yoga-2026-W43-r09"
+       ],
+       "severity": "high"
+      },
+      {
+       "rank": 2,
+       "theme_id": "theme_02_changing_room_needs_attention",
+       "headline": "Changing room upkeep",
+       "why_it_matters": "It is not driving cancellations yet, but it comes up every week.",
+       "recommended_action": "Add a mid-afternoon clean to the staff checklist and replace the two broken lockers.",
+       "evidence_review_ids": [
+        "demo-saltmarsh-yoga-2026-W43-r10",
+        "demo-saltmarsh-yoga-2026-W43-r11"
+       ],
+       "severity": "low"
+      }
+     ],
+     "email_draft": "Subject: Your week at Saltmarsh Yoga Studio\n\nHi [Name],\n\n11 reviews came in this week, averaging 3.4 stars, down from 3.8 last week.\n\nThis week's actions:\n1. Cap the 6pm class at 22 mats and open a waitlist in the booking app.\n2. Add a mid-afternoon clean to the staff checklist and replace the two broken lockers.\n\nThe full brief with the review evidence is in your dashboard.\n\n— Your BizBrief",
+     "partial": false,
+     "generated_by": "simulated"
+    },
+    "themeReport": {
+     "business_id": "demo-saltmarsh-yoga",
+     "week": "2026-W43",
+     "review_count": 11,
+     "avg_stars": 3.43,
+     "prev_avg_stars": 3.77,
+     "themes": [
+      {
+       "theme_id": "theme_00_calm_space_and_great_teachers",
+       "label": "Calm space and great teachers",
+       "sentiment": "positive",
+       "review_ids": [
+        "demo-saltmarsh-yoga-2026-W43-r01",
+        "demo-saltmarsh-yoga-2026-W43-r02",
+        "demo-saltmarsh-yoga-2026-W43-r03",
+        "demo-saltmarsh-yoga-2026-W43-r04",
+        "demo-saltmarsh-yoga-2026-W43-r05"
+       ],
+       "count": 5,
+       "sample_quotes": [
+        "The evening flow class is the best part of my week.",
+        "Teachers give real adjustments, not just cues.",
+        "Beautiful light in the main room."
+       ]
+      },
+      {
+       "theme_id": "theme_01_classes_overbooked",
+       "label": "Classes overbooked",
+       "sentiment": "negative",
+       "review_ids": [
+        "demo-saltmarsh-yoga-2026-W43-r06",
+        "demo-saltmarsh-yoga-2026-W43-r07",
+        "demo-saltmarsh-yoga-2026-W43-r08",
+        "demo-saltmarsh-yoga-2026-W43-r09"
+       ],
+       "count": 4,
+       "sample_quotes": [
+        "Mats were six inches apart in the 6pm class.",
+        "Booked a spot and there was no room when I arrived.",
+        "Too crowded to do a full sun salutation."
+       ]
+      },
+      {
+       "theme_id": "theme_02_changing_room_needs_attention",
+       "label": "Changing room needs attention",
+       "sentiment": "mixed",
+       "review_ids": [
+        "demo-saltmarsh-yoga-2026-W43-r10",
+        "demo-saltmarsh-yoga-2026-W43-r11"
+       ],
+       "count": 2,
+       "sample_quotes": [
+        "Changing room gets messy by the evening.",
+        "Showers are great but the lockers are always broken."
+       ]
+      }
+     ],
+     "sufficient": true,
+     "partial": false
+    }
+   },
+   "2026-W44": {
+    "brief": {
+     "business_id": "demo-saltmarsh-yoga",
+     "business_name": "Saltmarsh Yoga Studio",
+     "week": "2026-W44",
+     "summary": "11 reviews came in this week, averaging 3.7 stars, up from 3.4 last week. The issue to fix first is classes overbooked. Customers keep praising calm space and great teachers, so protect that while you fix the rest.",
+     "trend": "up",
+     "action_items": [
+      {
+       "rank": 1,
+       "theme_id": "theme_01_classes_overbooked",
+       "headline": "Peak classes are overcrowded",
+       "why_it_matters": "Crowding is the top complaint from members, and the ones who mention it rate the studio lowest.",
+       "recommended_action": "Cap the 6pm class at 22 mats and open a waitlist in the booking app.",
+       "evidence_review_ids": [
+        "demo-saltmarsh-yoga-2026-W44-r07",
+        "demo-saltmarsh-yoga-2026-W44-r08",
+        "demo-saltmarsh-yoga-2026-W44-r09"
+       ],
+       "severity": "high"
+      },
+      {
+       "rank": 2,
+       "theme_id": "theme_02_changing_room_needs_attention",
+       "headline": "Changing room upkeep",
+       "why_it_matters": "It is not driving cancellations yet, but it comes up every week.",
+       "recommended_action": "Add a mid-afternoon clean to the staff checklist and replace the two broken lockers.",
+       "evidence_review_ids": [
+        "demo-saltmarsh-yoga-2026-W44-r10",
+        "demo-saltmarsh-yoga-2026-W44-r11"
+       ],
+       "severity": "low"
+      }
+     ],
+     "email_draft": "Subject: Your week at Saltmarsh Yoga Studio\n\nHi [Name],\n\n11 reviews came in this week, averaging 3.7 stars, up from 3.4 last week.\n\nThis week's actions:\n1. Cap the 6pm class at 22 mats and open a waitlist in the booking app.\n2. Add a mid-afternoon clean to the staff checklist and replace the two broken lockers.\n\nThe full brief with the review evidence is in your dashboard.\n\n— Your BizBrief",
+     "partial": false,
+     "generated_by": "simulated"
+    },
+    "themeReport": {
+     "business_id": "demo-saltmarsh-yoga",
+     "week": "2026-W44",
+     "review_count": 11,
+     "avg_stars": 3.68,
+     "prev_avg_stars": 3.43,
+     "themes": [
+      {
+       "theme_id": "theme_00_calm_space_and_great_teachers",
+       "label": "Calm space and great teachers",
+       "sentiment": "positive",
+       "review_ids": [
+        "demo-saltmarsh-yoga-2026-W44-r01",
+        "demo-saltmarsh-yoga-2026-W44-r02",
+        "demo-saltmarsh-yoga-2026-W44-r03",
+        "demo-saltmarsh-yoga-2026-W44-r04",
+        "demo-saltmarsh-yoga-2026-W44-r05",
+        "demo-saltmarsh-yoga-2026-W44-r06"
+       ],
+       "count": 6,
+       "sample_quotes": [
+        "Teachers give real adjustments, not just cues.",
+        "Beautiful light in the main room.",
+        "The evening flow class is the best part of my week."
+       ]
+      },
+      {
+       "theme_id": "theme_01_classes_overbooked",
+       "label": "Classes overbooked",
+       "sentiment": "negative",
+       "review_ids": [
+        "demo-saltmarsh-yoga-2026-W44-r07",
+        "demo-saltmarsh-yoga-2026-W44-r08",
+        "demo-saltmarsh-yoga-2026-W44-r09"
+       ],
+       "count": 3,
+       "sample_quotes": [
+        "Booked a spot and there was no room when I arrived.",
+        "Too crowded to do a full sun salutation.",
+        "Mats were six inches apart in the 6pm class."
+       ]
+      },
+      {
+       "theme_id": "theme_02_changing_room_needs_attention",
+       "label": "Changing room needs attention",
+       "sentiment": "mixed",
+       "review_ids": [
+        "demo-saltmarsh-yoga-2026-W44-r10",
+        "demo-saltmarsh-yoga-2026-W44-r11"
+       ],
+       "count": 2,
+       "sample_quotes": [
+        "Showers are great but the lockers are always broken.",
+        "Changing room gets messy by the evening."
+       ]
+      }
+     ],
+     "sufficient": true,
+     "partial": false
+    }
+   },
+   "2026-W45": {
+    "brief": {
+     "business_id": "demo-saltmarsh-yoga",
+     "business_name": "Saltmarsh Yoga Studio",
+     "week": "2026-W45",
+     "summary": "10 reviews came in this week, averaging 4.0 stars, up from 3.7 last week. The issue to fix first is classes overbooked. Customers keep praising calm space and great teachers, so protect that while you fix the rest.",
+     "trend": "up",
+     "action_items": [
+      {
+       "rank": 1,
+       "theme_id": "theme_01_classes_overbooked",
+       "headline": "Peak classes are overcrowded",
+       "why_it_matters": "Crowding is the top complaint from members, and the ones who mention it rate the studio lowest.",
+       "recommended_action": "Cap the 6pm class at 22 mats and open a waitlist in the booking app.",
+       "evidence_review_ids": [
+        "demo-saltmarsh-yoga-2026-W45-r08",
+        "demo-saltmarsh-yoga-2026-W45-r09"
+       ],
+       "severity": "high"
+      },
+      {
+       "rank": 2,
+       "theme_id": "theme_02_changing_room_needs_attention",
+       "headline": "Changing room upkeep",
+       "why_it_matters": "It is not driving cancellations yet, but it comes up every week.",
+       "recommended_action": "Add a mid-afternoon clean to the staff checklist and replace the two broken lockers.",
+       "evidence_review_ids": [
+        "demo-saltmarsh-yoga-2026-W45-r10"
+       ],
+       "severity": "low"
+      }
+     ],
+     "email_draft": "Subject: Your week at Saltmarsh Yoga Studio\n\nHi [Name],\n\n10 reviews came in this week, averaging 4.0 stars, up from 3.7 last week.\n\nThis week's actions:\n1. Cap the 6pm class at 22 mats and open a waitlist in the booking app.\n2. Add a mid-afternoon clean to the staff checklist and replace the two broken lockers.\n\nThe full brief with the review evidence is in your dashboard.\n\n— Your BizBrief",
+     "partial": false,
+     "generated_by": "simulated"
+    },
+    "themeReport": {
+     "business_id": "demo-saltmarsh-yoga",
+     "week": "2026-W45",
+     "review_count": 10,
+     "avg_stars": 4.0,
+     "prev_avg_stars": 3.68,
+     "themes": [
+      {
+       "theme_id": "theme_00_calm_space_and_great_teachers",
+       "label": "Calm space and great teachers",
+       "sentiment": "positive",
+       "review_ids": [
+        "demo-saltmarsh-yoga-2026-W45-r01",
+        "demo-saltmarsh-yoga-2026-W45-r02",
+        "demo-saltmarsh-yoga-2026-W45-r03",
+        "demo-saltmarsh-yoga-2026-W45-r04",
+        "demo-saltmarsh-yoga-2026-W45-r05",
+        "demo-saltmarsh-yoga-2026-W45-r06",
+        "demo-saltmarsh-yoga-2026-W45-r07"
+       ],
+       "count": 7,
+       "sample_quotes": [
+        "Beautiful light in the main room.",
+        "The evening flow class is the best part of my week.",
+        "Teachers give real adjustments, not just cues."
+       ]
+      },
+      {
+       "theme_id": "theme_01_classes_overbooked",
+       "label": "Classes overbooked",
+       "sentiment": "negative",
+       "review_ids": [
+        "demo-saltmarsh-yoga-2026-W45-r08",
+        "demo-saltmarsh-yoga-2026-W45-r09"
+       ],
+       "count": 2,
+       "sample_quotes": [
+        "Too crowded to do a full sun salutation.",
+        "Mats were six inches apart in the 6pm class.",
+        "Booked a spot and there was no room when I arrived."
+       ]
+      },
+      {
+       "theme_id": "theme_02_changing_room_needs_attention",
+       "label": "Changing room needs attention",
+       "sentiment": "mixed",
+       "review_ids": [
+        "demo-saltmarsh-yoga-2026-W45-r10"
+       ],
+       "count": 1,
+       "sample_quotes": [
+        "Changing room gets messy by the evening.",
+        "Showers are great but the lockers are always broken."
+       ]
+      }
+     ],
+     "sufficient": true,
+     "partial": false
+    }
+   }
+  },
+  "demo-copperpot-diner": {
+   "2026-W40": {
+    "brief": {
+     "business_id": "demo-copperpot-diner",
+     "business_name": "Copperpot Diner",
+     "week": "2026-W40",
+     "summary": "14 reviews came in this week, averaging 4.2 stars. The issue to fix first is cold food at busy times. Customers keep praising hearty breakfast, generous portions, so protect that while you fix the rest.",
+     "trend": "flat",
+     "action_items": [
+      {
+       "rank": 1,
+       "theme_id": "theme_01_cold_food_at_busy_times",
+       "headline": "Food is reaching tables cold",
+       "why_it_matters": "Lukewarm plates are the top complaint at weekend brunch, the diner's busiest service.",
+       "recommended_action": "Add heat lamps at the pass and have the expo call runners when a ticket is up for over a minute.",
+       "evidence_review_ids": [
+        "demo-copperpot-diner-2026-W40-r08",
+        "demo-copperpot-diner-2026-W40-r09"
+       ],
+       "severity": "high"
+      },
+      {
+       "rank": 2,
+       "theme_id": "theme_03_noisy_dining_room",
+       "headline": "Brunch noise level",
+       "why_it_matters": "Some guests say they won't bring family back because it is too loud to talk.",
+       "recommended_action": "Turn the music down during brunch and try felt pads under the chairs.",
+       "evidence_review_ids": [
+        "demo-copperpot-diner-2026-W40-r14"
+       ],
+       "severity": "low"
+      }
+     ],
+     "email_draft": "Subject: Your week at Copperpot Diner\n\nHi [Name],\n\n14 reviews came in this week, averaging 4.2 stars.\n\nThis week's actions:\n1. Add heat lamps at the pass and have the expo call runners when a ticket is up for over a minute.\n2. Turn the music down during brunch and try felt pads under the chairs.\n\nThe full brief with the review evidence is in your dashboard.\n\n— Your BizBrief",
+     "partial": false,
+     "generated_by": "simulated"
+    },
+    "themeReport": {
+     "business_id": "demo-copperpot-diner",
+     "week": "2026-W40",
+     "review_count": 14,
+     "avg_stars": 4.2,
+     "prev_avg_stars": null,
+     "themes": [
+      {
+       "theme_id": "theme_00_hearty_breakfast__generous_portions",
+       "label": "Hearty breakfast, generous portions",
+       "sentiment": "positive",
+       "review_ids": [
+        "demo-copperpot-diner-2026-W40-r01",
+        "demo-copperpot-diner-2026-W40-r02",
+        "demo-copperpot-diner-2026-W40-r03",
+        "demo-copperpot-diner-2026-W40-r04",
+        "demo-copperpot-diner-2026-W40-r05",
+        "demo-copperpot-diner-2026-W40-r06",
+        "demo-copperpot-diner-2026-W40-r07"
+       ],
+       "count": 7,
+       "sample_quotes": [
+        "Pancakes the size of the plate.",
+        "Best hash browns in the neighborhood.",
+        "Huge portions for the price."
+       ]
+      },
+      {
+       "theme_id": "theme_02_friendly__fast_servers",
+       "label": "Friendly, fast servers",
+       "sentiment": "positive",
+       "review_ids": [
+        "demo-copperpot-diner-2026-W40-r10",
+        "demo-copperpot-diner-2026-W40-r11",
+        "demo-copperpot-diner-2026-W40-r12",
+        "demo-copperpot-diner-2026-W40-r13"
+       ],
+       "count": 4,
+       "sample_quotes": [
+        "Our server kept the coffee coming without asking.",
+        "Fast and friendly even on a packed Saturday."
+       ]
+      },
+      {
+       "theme_id": "theme_01_cold_food_at_busy_times",
+       "label": "Cold food at busy times",
+       "sentiment": "negative",
+       "review_ids": [
+        "demo-copperpot-diner-2026-W40-r08",
+        "demo-copperpot-diner-2026-W40-r09"
+       ],
+       "count": 2,
+       "sample_quotes": [
+        "Eggs came out lukewarm on Sunday.",
+        "Food sat at the pass while servers were swamped.",
+        "My coffee went cold before the food arrived."
+       ]
+      },
+      {
+       "theme_id": "theme_03_noisy_dining_room",
+       "label": "Noisy dining room",
+       "sentiment": "mixed",
+       "review_ids": [
+        "demo-copperpot-diner-2026-W40-r14"
+       ],
+       "count": 1,
+       "sample_quotes": [
+        "Great food, but we couldn't hear each other talk.",
+        "Gets very loud during brunch."
+       ]
+      }
+     ],
+     "sufficient": true,
+     "partial": false
+    }
+   },
+   "2026-W41": {
+    "brief": {
+     "business_id": "demo-copperpot-diner",
+     "business_name": "Copperpot Diner",
+     "week": "2026-W41",
+     "summary": "15 reviews came in this week, averaging 4.0 stars, down from 4.2 last week. The issue to fix first is cold food at busy times. Customers keep praising hearty breakfast, generous portions, so protect that while you fix the rest.",
+     "trend": "down",
+     "action_items": [
+      {
+       "rank": 1,
+       "theme_id": "theme_01_cold_food_at_busy_times",
+       "headline": "Food is reaching tables cold",
+       "why_it_matters": "Lukewarm plates are the top complaint at weekend brunch, the diner's busiest service.",
+       "recommended_action": "Add heat lamps at the pass and have the expo call runners when a ticket is up for over a minute.",
+       "evidence_review_ids": [
+        "demo-copperpot-diner-2026-W41-r07",
+        "demo-copperpot-diner-2026-W41-r08",
+        "demo-copperpot-diner-2026-W41-r09"
+       ],
+       "severity": "high"
+      },
+      {
+       "rank": 2,
+       "theme_id": "theme_03_noisy_dining_room",
+       "headline": "Brunch noise level",
+       "why_it_matters": "Some guests say they won't bring family back because it is too loud to talk.",
+       "recommended_action": "Turn the music down during brunch and try felt pads under the chairs.",
+       "evidence_review_ids": [
+        "demo-copperpot-diner-2026-W41-r15"
+       ],
+       "severity": "low"
+      }
+     ],
+     "email_draft": "Subject: Your week at Copperpot Diner\n\nHi [Name],\n\n15 reviews came in this week, averaging 4.0 stars, down from 4.2 last week.\n\nThis week's actions:\n1. Add heat lamps at the pass and have the expo call runners when a ticket is up for over a minute.\n2. Turn the music down during brunch and try felt pads under the chairs.\n\nThe full brief with the review evidence is in your dashboard.\n\n— Your BizBrief",
+     "partial": false,
+     "generated_by": "simulated"
+    },
+    "themeReport": {
+     "business_id": "demo-copperpot-diner",
+     "week": "2026-W41",
+     "review_count": 15,
+     "avg_stars": 4.05,
+     "prev_avg_stars": 4.2,
+     "themes": [
+      {
+       "theme_id": "theme_00_hearty_breakfast__generous_portions",
+       "label": "Hearty breakfast, generous portions",
+       "sentiment": "positive",
+       "review_ids": [
+        "demo-copperpot-diner-2026-W41-r01",
+        "demo-copperpot-diner-2026-W41-r02",
+        "demo-copperpot-diner-2026-W41-r03",
+        "demo-copperpot-diner-2026-W41-r04",
+        "demo-copperpot-diner-2026-W41-r05",
+        "demo-copperpot-diner-2026-W41-r06"
+       ],
+       "count": 6,
+       "sample_quotes": [
+        "Best hash browns in the neighborhood.",
+        "Huge portions for the price.",
+        "Pancakes the size of the plate."
+       ]
+      },
+      {
+       "theme_id": "theme_02_friendly__fast_servers",
+       "label": "Friendly, fast servers",
+       "sentiment": "positive",
+       "review_ids": [
+        "demo-copperpot-diner-2026-W41-r10",
+        "demo-copperpot-diner-2026-W41-r11",
+        "demo-copperpot-diner-2026-W41-r12",
+        "demo-copperpot-diner-2026-W41-r13",
+        "demo-copperpot-diner-2026-W41-r14"
+       ],
+       "count": 5,
+       "sample_quotes": [
+        "Fast and friendly even on a packed Saturday.",
+        "Our server kept the coffee coming without asking."
+       ]
+      },
+      {
+       "theme_id": "theme_01_cold_food_at_busy_times",
+       "label": "Cold food at busy times",
+       "sentiment": "negative",
+       "review_ids": [
+        "demo-copperpot-diner-2026-W41-r07",
+        "demo-copperpot-diner-2026-W41-r08",
+        "demo-copperpot-diner-2026-W41-r09"
+       ],
+       "count": 3,
+       "sample_quotes": [
+        "Food sat at the pass while servers were swamped.",
+        "My coffee went cold before the food arrived.",
+        "Eggs came out lukewarm on Sunday."
+       ]
+      },
+      {
+       "theme_id": "theme_03_noisy_dining_room",
+       "label": "Noisy dining room",
+       "sentiment": "mixed",
+       "review_ids": [
+        "demo-copperpot-diner-2026-W41-r15"
+       ],
+       "count": 1,
+       "sample_quotes": [
+        "Gets very loud during brunch.",
+        "Great food, but we couldn't hear each other talk."
+       ]
+      }
+     ],
+     "sufficient": true,
+     "partial": false
+    }
+   },
+   "2026-W42": {
+    "brief": {
+     "business_id": "demo-copperpot-diner",
+     "business_name": "Copperpot Diner",
+     "week": "2026-W42",
+     "summary": "17 reviews came in this week, averaging 4.0 stars, about level with 4.0 last week. The issue to fix first is cold food at busy times. Customers keep praising hearty breakfast, generous portions, so protect that while you fix the rest.",
+     "trend": "flat",
+     "action_items": [
+      {
+       "rank": 1,
+       "theme_id": "theme_01_cold_food_at_busy_times",
+       "headline": "Food is reaching tables cold",
+       "why_it_matters": "Lukewarm plates are the top complaint at weekend brunch, the diner's busiest service.",
+       "recommended_action": "Add heat lamps at the pass and have the expo call runners when a ticket is up for over a minute.",
+       "evidence_review_ids": [
+        "demo-copperpot-diner-2026-W42-r09",
+        "demo-copperpot-diner-2026-W42-r10",
+        "demo-copperpot-diner-2026-W42-r11"
+       ],
+       "severity": "high"
+      },
+      {
+       "rank": 2,
+       "theme_id": "theme_03_noisy_dining_room",
+       "headline": "Brunch noise level",
+       "why_it_matters": "Some guests say they won't bring family back because it is too loud to talk.",
+       "recommended_action": "Turn the music down during brunch and try felt pads under the chairs.",
+       "evidence_review_ids": [
+        "demo-copperpot-diner-2026-W42-r16",
+        "demo-copperpot-diner-2026-W42-r17"
+       ],
+       "severity": "low"
+      }
+     ],
+     "email_draft": "Subject: Your week at Copperpot Diner\n\nHi [Name],\n\n17 reviews came in this week, averaging 4.0 stars, about level with 4.0 last week.\n\nThis week's actions:\n1. Add heat lamps at the pass and have the expo call runners when a ticket is up for over a minute.\n2. Turn the music down during brunch and try felt pads under the chairs.\n\nThe full brief with the review evidence is in your dashboard.\n\n— Your BizBrief",
+     "partial": false,
+     "generated_by": "simulated"
+    },
+    "themeReport": {
+     "business_id": "demo-copperpot-diner",
+     "week": "2026-W42",
+     "review_count": 17,
+     "avg_stars": 4.04,
+     "prev_avg_stars": 4.05,
+     "themes": [
+      {
+       "theme_id": "theme_00_hearty_breakfast__generous_portions",
+       "label": "Hearty breakfast, generous portions",
+       "sentiment": "positive",
+       "review_ids": [
+        "demo-copperpot-diner-2026-W42-r01",
+        "demo-copperpot-diner-2026-W42-r02",
+        "demo-copperpot-diner-2026-W42-r03",
+        "demo-copperpot-diner-2026-W42-r04",
+        "demo-copperpot-diner-2026-W42-r05",
+        "demo-copperpot-diner-2026-W42-r06",
+        "demo-copperpot-diner-2026-W42-r07",
+        "demo-copperpot-diner-2026-W42-r08"
+       ],
+       "count": 8,
+       "sample_quotes": [
+        "Huge portions for the price.",
+        "Pancakes the size of the plate.",
+        "Best hash browns in the neighborhood."
+       ]
+      },
+      {
+       "theme_id": "theme_02_friendly__fast_servers",
+       "label": "Friendly, fast servers",
+       "sentiment": "positive",
+       "review_ids": [
+        "demo-copperpot-diner-2026-W42-r12",
+        "demo-copperpot-diner-2026-W42-r13",
+        "demo-copperpot-diner-2026-W42-r14",
+        "demo-copperpot-diner-2026-W42-r15"
+       ],
+       "count": 4,
+       "sample_quotes": [
+        "Our server kept the coffee coming without asking.",
+        "Fast and friendly even on a packed Saturday."
+       ]
+      },
+      {
+       "theme_id": "theme_01_cold_food_at_busy_times",
+       "label": "Cold food at busy times",
+       "sentiment": "negative",
+       "review_ids": [
+        "demo-copperpot-diner-2026-W42-r09",
+        "demo-copperpot-diner-2026-W42-r10",
+        "demo-copperpot-diner-2026-W42-r11"
+       ],
+       "count": 3,
+       "sample_quotes": [
+        "My coffee went cold before the food arrived.",
+        "Eggs came out lukewarm on Sunday.",
+        "Food sat at the pass while servers were swamped."
+       ]
+      },
+      {
+       "theme_id": "theme_03_noisy_dining_room",
+       "label": "Noisy dining room",
+       "sentiment": "mixed",
+       "review_ids": [
+        "demo-copperpot-diner-2026-W42-r16",
+        "demo-copperpot-diner-2026-W42-r17"
+       ],
+       "count": 2,
+       "sample_quotes": [
+        "Great food, but we couldn't hear each other talk.",
+        "Gets very loud during brunch."
+       ]
+      }
+     ],
+     "sufficient": true,
+     "partial": false
+    }
+   },
+   "2026-W43": {
+    "brief": {
+     "business_id": "demo-copperpot-diner",
+     "business_name": "Copperpot Diner",
+     "week": "2026-W43",
+     "summary": "16 reviews came in this week, averaging 3.8 stars, down from 4.0 last week. The issue to fix first is cold food at busy times. Customers keep praising hearty breakfast, generous portions, so protect that while you fix the rest.",
+     "trend": "down",
+     "action_items": [
+      {
+       "rank": 1,
+       "theme_id": "theme_01_cold_food_at_busy_times",
+       "headline": "Food is reaching tables cold",
+       "why_it_matters": "Lukewarm plates are the top complaint at weekend brunch, the diner's busiest service.",
+       "recommended_action": "Add heat lamps at the pass and have the expo call runners when a ticket is up for over a minute.",
+       "evidence_review_ids": [
+        "demo-copperpot-diner-2026-W43-r08",
+        "demo-copperpot-diner-2026-W43-r09",
+        "demo-copperpot-diner-2026-W43-r10",
+        "demo-copperpot-diner-2026-W43-r11"
+       ],
+       "severity": "high"
+      },
+      {
+       "rank": 2,
+       "theme_id": "theme_03_noisy_dining_room",
+       "headline": "Brunch noise level",
+       "why_it_matters": "Some guests say they won't bring family back because it is too loud to talk.",
+       "recommended_action": "Turn the music down during brunch and try felt pads under the chairs.",
+       "evidence_review_ids": [
+        "demo-copperpot-diner-2026-W43-r15",
+        "demo-copperpot-diner-2026-W43-r16"
+       ],
+       "severity": "low"
+      }
+     ],
+     "email_draft": "Subject: Your week at Copperpot Diner\n\nHi [Name],\n\n16 reviews came in this week, averaging 3.8 stars, down from 4.0 last week.\n\nThis week's actions:\n1. Add heat lamps at the pass and have the expo call runners when a ticket is up for over a minute.\n2. Turn the music down during brunch and try felt pads under the chairs.\n\nThe full brief with the review evidence is in your dashboard.\n\n— Your BizBrief",
+     "partial": false,
+     "generated_by": "simulated"
+    },
+    "themeReport": {
+     "business_id": "demo-copperpot-diner",
+     "week": "2026-W43",
+     "review_count": 16,
+     "avg_stars": 3.83,
+     "prev_avg_stars": 4.04,
+     "themes": [
+      {
+       "theme_id": "theme_00_hearty_breakfast__generous_portions",
+       "label": "Hearty breakfast, generous portions",
+       "sentiment": "positive",
+       "review_ids": [
+        "demo-copperpot-diner-2026-W43-r01",
+        "demo-copperpot-diner-2026-W43-r02",
+        "demo-copperpot-diner-2026-W43-r03",
+        "demo-copperpot-diner-2026-W43-r04",
+        "demo-copperpot-diner-2026-W43-r05",
+        "demo-copperpot-diner-2026-W43-r06",
+        "demo-copperpot-diner-2026-W43-r07"
+       ],
+       "count": 7,
+       "sample_quotes": [
+        "Pancakes the size of the plate.",
+        "Best hash browns in the neighborhood.",
+        "Huge portions for the price."
+       ]
+      },
+      {
+       "theme_id": "theme_01_cold_food_at_busy_times",
+       "label": "Cold food at busy times",
+       "sentiment": "negative",
+       "review_ids": [
+        "demo-copperpot-diner-2026-W43-r08",
+        "demo-copperpot-diner-2026-W43-r09",
+        "demo-copperpot-diner-2026-W43-r10",
+        "demo-copperpot-diner-2026-W43-r11"
+       ],
+       "count": 4,
+       "sample_quotes": [
+        "Eggs came out lukewarm on Sunday.",
+        "Food sat at the pass while servers were swamped.",
+        "My coffee went cold before the food arrived."
+       ]
+      },
+      {
+       "theme_id": "theme_02_friendly__fast_servers",
+       "label": "Friendly, fast servers",
+       "sentiment": "positive",
+       "review_ids": [
+        "demo-copperpot-diner-2026-W43-r12",
+        "demo-copperpot-diner-2026-W43-r13",
+        "demo-copperpot-diner-2026-W43-r14"
+       ],
+       "count": 3,
+       "sample_quotes": [
+        "Fast and friendly even on a packed Saturday.",
+        "Our server kept the coffee coming without asking."
+       ]
+      },
+      {
+       "theme_id": "theme_03_noisy_dining_room",
+       "label": "Noisy dining room",
+       "sentiment": "mixed",
+       "review_ids": [
+        "demo-copperpot-diner-2026-W43-r15",
+        "demo-copperpot-diner-2026-W43-r16"
+       ],
+       "count": 2,
+       "sample_quotes": [
+        "Gets very loud during brunch.",
+        "Great food, but we couldn't hear each other talk."
+       ]
+      }
+     ],
+     "sufficient": true,
+     "partial": false
+    }
+   },
+   "2026-W44": {
+    "brief": {
+     "business_id": "demo-copperpot-diner",
+     "business_name": "Copperpot Diner",
+     "week": "2026-W44",
+     "summary": "18 reviews came in this week, averaging 3.8 stars, about level with 3.8 last week. The issue to fix first is cold food at busy times. Customers keep praising hearty breakfast, generous portions, so protect that while you fix the rest.",
+     "trend": "flat",
+     "action_items": [
+      {
+       "rank": 1,
+       "theme_id": "theme_01_cold_food_at_busy_times",
+       "headline": "Food is reaching tables cold",
+       "why_it_matters": "Lukewarm plates are the top complaint at weekend brunch, the diner's busiest service.",
+       "recommended_action": "Add heat lamps at the pass and have the expo call runners when a ticket is up for over a minute.",
+       "evidence_review_ids": [
+        "demo-copperpot-diner-2026-W44-r08",
+        "demo-copperpot-diner-2026-W44-r09",
+        "demo-copperpot-diner-2026-W44-r10",
+        "demo-copperpot-diner-2026-W44-r11",
+        "demo-copperpot-diner-2026-W44-r12"
+       ],
+       "severity": "high"
+      },
+      {
+       "rank": 2,
+       "theme_id": "theme_03_noisy_dining_room",
+       "headline": "Brunch noise level",
+       "why_it_matters": "Some guests say they won't bring family back because it is too loud to talk.",
+       "recommended_action": "Turn the music down during brunch and try felt pads under the chairs.",
+       "evidence_review_ids": [
+        "demo-copperpot-diner-2026-W44-r17",
+        "demo-copperpot-diner-2026-W44-r18"
+       ],
+       "severity": "low"
+      }
+     ],
+     "email_draft": "Subject: Your week at Copperpot Diner\n\nHi [Name],\n\n18 reviews came in this week, averaging 3.8 stars, about level with 3.8 last week.\n\nThis week's actions:\n1. Add heat lamps at the pass and have the expo call runners when a ticket is up for over a minute.\n2. Turn the music down during brunch and try felt pads under the chairs.\n\nThe full brief with the review evidence is in your dashboard.\n\n— Your BizBrief",
+     "partial": false,
+     "generated_by": "simulated"
+    },
+    "themeReport": {
+     "business_id": "demo-copperpot-diner",
+     "week": "2026-W44",
+     "review_count": 18,
+     "avg_stars": 3.77,
+     "prev_avg_stars": 3.83,
+     "themes": [
+      {
+       "theme_id": "theme_00_hearty_breakfast__generous_portions",
+       "label": "Hearty breakfast, generous portions",
+       "sentiment": "positive",
+       "review_ids": [
+        "demo-copperpot-diner-2026-W44-r01",
+        "demo-copperpot-diner-2026-W44-r02",
+        "demo-copperpot-diner-2026-W44-r03",
+        "demo-copperpot-diner-2026-W44-r04",
+        "demo-copperpot-diner-2026-W44-r05",
+        "demo-copperpot-diner-2026-W44-r06",
+        "demo-copperpot-diner-2026-W44-r07"
+       ],
+       "count": 7,
+       "sample_quotes": [
+        "Best hash browns in the neighborhood.",
+        "Huge portions for the price.",
+        "Pancakes the size of the plate."
+       ]
+      },
+      {
+       "theme_id": "theme_01_cold_food_at_busy_times",
+       "label": "Cold food at busy times",
+       "sentiment": "negative",
+       "review_ids": [
+        "demo-copperpot-diner-2026-W44-r08",
+        "demo-copperpot-diner-2026-W44-r09",
+        "demo-copperpot-diner-2026-W44-r10",
+        "demo-copperpot-diner-2026-W44-r11",
+        "demo-copperpot-diner-2026-W44-r12"
+       ],
+       "count": 5,
+       "sample_quotes": [
+        "Food sat at the pass while servers were swamped.",
+        "My coffee went cold before the food arrived.",
+        "Eggs came out lukewarm on Sunday."
+       ]
+      },
+      {
+       "theme_id": "theme_02_friendly__fast_servers",
+       "label": "Friendly, fast servers",
+       "sentiment": "positive",
+       "review_ids": [
+        "demo-copperpot-diner-2026-W44-r13",
+        "demo-copperpot-diner-2026-W44-r14",
+        "demo-copperpot-diner-2026-W44-r15",
+        "demo-copperpot-diner-2026-W44-r16"
+       ],
+       "count": 4,
+       "sample_quotes": [
+        "Our server kept the coffee coming without asking.",
+        "Fast and friendly even on a packed Saturday."
+       ]
+      },
+      {
+       "theme_id": "theme_03_noisy_dining_room",
+       "label": "Noisy dining room",
+       "sentiment": "mixed",
+       "review_ids": [
+        "demo-copperpot-diner-2026-W44-r17",
+        "demo-copperpot-diner-2026-W44-r18"
+       ],
+       "count": 2,
+       "sample_quotes": [
+        "Great food, but we couldn't hear each other talk.",
+        "Gets very loud during brunch."
+       ]
+      }
+     ],
+     "sufficient": true,
+     "partial": false
+    }
+   },
+   "2026-W45": {
+    "brief": {
+     "business_id": "demo-copperpot-diner",
+     "business_name": "Copperpot Diner",
+     "week": "2026-W45",
+     "summary": "17 reviews came in this week, averaging 4.1 stars, up from 3.8 last week. The issue to fix first is cold food at busy times. Customers keep praising hearty breakfast, generous portions, so protect that while you fix the rest.",
+     "trend": "up",
+     "action_items": [
+      {
+       "rank": 1,
+       "theme_id": "theme_01_cold_food_at_busy_times",
+       "headline": "Food is reaching tables cold",
+       "why_it_matters": "Lukewarm plates are the top complaint at weekend brunch, the diner's busiest service.",
+       "recommended_action": "Add heat lamps at the pass and have the expo call runners when a ticket is up for over a minute.",
+       "evidence_review_ids": [
+        "demo-copperpot-diner-2026-W45-r09",
+        "demo-copperpot-diner-2026-W45-r10",
+        "demo-copperpot-diner-2026-W45-r11"
+       ],
+       "severity": "high"
+      },
+      {
+       "rank": 2,
+       "theme_id": "theme_03_noisy_dining_room",
+       "headline": "Brunch noise level",
+       "why_it_matters": "Some guests say they won't bring family back because it is too loud to talk.",
+       "recommended_action": "Turn the music down during brunch and try felt pads under the chairs.",
+       "evidence_review_ids": [
+        "demo-copperpot-diner-2026-W45-r17"
+       ],
+       "severity": "low"
+      }
+     ],
+     "email_draft": "Subject: Your week at Copperpot Diner\n\nHi [Name],\n\n17 reviews came in this week, averaging 4.1 stars, up from 3.8 last week.\n\nThis week's actions:\n1. Add heat lamps at the pass and have the expo call runners when a ticket is up for over a minute.\n2. Turn the music down during brunch and try felt pads under the chairs.\n\nThe full brief with the review evidence is in your dashboard.\n\n— Your BizBrief",
+     "partial": false,
+     "generated_by": "simulated"
+    },
+    "themeReport": {
+     "business_id": "demo-copperpot-diner",
+     "week": "2026-W45",
+     "review_count": 17,
+     "avg_stars": 4.12,
+     "prev_avg_stars": 3.77,
+     "themes": [
+      {
+       "theme_id": "theme_00_hearty_breakfast__generous_portions",
+       "label": "Hearty breakfast, generous portions",
+       "sentiment": "positive",
+       "review_ids": [
+        "demo-copperpot-diner-2026-W45-r01",
+        "demo-copperpot-diner-2026-W45-r02",
+        "demo-copperpot-diner-2026-W45-r03",
+        "demo-copperpot-diner-2026-W45-r04",
+        "demo-copperpot-diner-2026-W45-r05",
+        "demo-copperpot-diner-2026-W45-r06",
+        "demo-copperpot-diner-2026-W45-r07",
+        "demo-copperpot-diner-2026-W45-r08"
+       ],
+       "count": 8,
+       "sample_quotes": [
+        "Huge portions for the price.",
+        "Pancakes the size of the plate.",
+        "Best hash browns in the neighborhood."
+       ]
+      },
+      {
+       "theme_id": "theme_02_friendly__fast_servers",
+       "label": "Friendly, fast servers",
+       "sentiment": "positive",
+       "review_ids": [
+        "demo-copperpot-diner-2026-W45-r12",
+        "demo-copperpot-diner-2026-W45-r13",
+        "demo-copperpot-diner-2026-W45-r14",
+        "demo-copperpot-diner-2026-W45-r15",
+        "demo-copperpot-diner-2026-W45-r16"
+       ],
+       "count": 5,
+       "sample_quotes": [
+        "Fast and friendly even on a packed Saturday.",
+        "Our server kept the coffee coming without asking."
+       ]
+      },
+      {
+       "theme_id": "theme_01_cold_food_at_busy_times",
+       "label": "Cold food at busy times",
+       "sentiment": "negative",
+       "review_ids": [
+        "demo-copperpot-diner-2026-W45-r09",
+        "demo-copperpot-diner-2026-W45-r10",
+        "demo-copperpot-diner-2026-W45-r11"
+       ],
+       "count": 3,
+       "sample_quotes": [
+        "My coffee went cold before the food arrived.",
+        "Eggs came out lukewarm on Sunday.",
+        "Food sat at the pass while servers were swamped."
+       ]
+      },
+      {
+       "theme_id": "theme_03_noisy_dining_room",
+       "label": "Noisy dining room",
+       "sentiment": "mixed",
+       "review_ids": [
+        "demo-copperpot-diner-2026-W45-r17"
+       ],
+       "count": 1,
+       "sample_quotes": [
+        "Gets very loud during brunch.",
+        "Great food, but we couldn't hear each other talk."
+       ]
+      }
+     ],
+     "sufficient": true,
+     "partial": false
+    }
+   }
+  }
+ },
+ "schedules": {
+  "demo-fernhollow-bakery": {
+   "business_id": "demo-fernhollow-bakery",
+   "cadence": "weekly",
+   "day_of_week": "mon",
+   "email_mode": "draft_only"
+  },
+  "demo-gearloop-bikes": {
+   "business_id": "demo-gearloop-bikes",
+   "cadence": "weekly",
+   "day_of_week": "tue",
+   "email_mode": "draft_only"
+  },
+  "demo-saltmarsh-yoga": {
+   "business_id": "demo-saltmarsh-yoga",
+   "cadence": "biweekly",
+   "day_of_week": "sun",
+   "email_mode": "draft_only"
+  },
+  "demo-copperpot-diner": {
+   "business_id": "demo-copperpot-diner",
+   "cadence": "weekly",
+   "day_of_week": "mon",
+   "email_mode": "draft_only"
+  }
+ },
+ "runs": {
+  "demo-fernhollow-bakery": [
+   {
+    "run_id": "demo_fernhol_2026-W45",
+    "business_id": "demo-fernhollow-bakery",
+    "week": "2026-W45",
+    "status": "success",
+    "started_at": "2026-11-09T07:00:00Z",
+    "finished_at": "2026-11-09T07:03:49Z",
+    "total_cost_usd": 0.0122,
+    "batches_total": 2,
+    "batches_failed": 0,
+    "note": null
+   },
+   {
+    "run_id": "demo_fernhol_2026-W44",
+    "business_id": "demo-fernhollow-bakery",
+    "week": "2026-W44",
+    "status": "success",
+    "started_at": "2026-11-02T07:00:00Z",
+    "finished_at": "2026-11-02T07:03:58Z",
+    "total_cost_usd": 0.0122,
+    "batches_total": 2,
+    "batches_failed": 0,
+    "note": null
+   },
+   {
+    "run_id": "demo_fernhol_2026-W43",
+    "business_id": "demo-fernhollow-bakery",
+    "week": "2026-W43",
+    "status": "partial",
+    "started_at": "2026-10-26T07:00:00Z",
+    "finished_at": "2026-10-26T07:04:16Z",
+    "total_cost_usd": 0.02,
+    "batches_total": 2,
+    "batches_failed": 1,
+    "note": "1/2 batches failed after retries; brief produced from 1"
+   },
+   {
+    "run_id": "demo_fernhol_2026-W42",
+    "business_id": "demo-fernhollow-bakery",
+    "week": "2026-W42",
+    "status": "success",
+    "started_at": "2026-10-19T07:00:00Z",
+    "finished_at": "2026-10-19T07:04:16Z",
+    "total_cost_usd": 0.0122,
+    "batches_total": 2,
+    "batches_failed": 0,
+    "note": null
+   },
+   {
+    "run_id": "demo_fernhol_2026-W41",
+    "business_id": "demo-fernhollow-bakery",
+    "week": "2026-W41",
+    "status": "success",
+    "started_at": "2026-10-12T07:00:00Z",
+    "finished_at": "2026-10-12T07:03:58Z",
+    "total_cost_usd": 0.0122,
+    "batches_total": 2,
+    "batches_failed": 0,
+    "note": null
+   },
+   {
+    "run_id": "demo_fernhol_2026-W40",
+    "business_id": "demo-fernhollow-bakery",
+    "week": "2026-W40",
+    "status": "success",
+    "started_at": "2026-10-05T07:00:00Z",
+    "finished_at": "2026-10-05T07:03:13Z",
+    "total_cost_usd": 0.093,
+    "batches_total": 1,
+    "batches_failed": 0,
+    "note": null
+   }
+  ],
+  "demo-gearloop-bikes": [
+   {
+    "run_id": "demo_gearloo_2026-W45",
+    "business_id": "demo-gearloop-bikes",
+    "week": "2026-W45",
+    "status": "success",
+    "started_at": "2026-11-09T07:00:00Z",
+    "finished_at": "2026-11-09T07:02:37Z",
+    "total_cost_usd": 0.02,
+    "batches_total": 1,
+    "batches_failed": 0,
+    "note": null
+   },
+   {
+    "run_id": "demo_gearloo_2026-W44",
+    "business_id": "demo-gearloop-bikes",
+    "week": "2026-W44",
+    "status": "success",
+    "started_at": "2026-11-02T07:00:00Z",
+    "finished_at": "2026-11-02T07:02:37Z",
+    "total_cost_usd": 0.0076,
+    "batches_total": 1,
+    "batches_failed": 0,
+    "note": null
+   },
+   {
+    "run_id": "demo_gearloo_2026-W43",
+    "business_id": "demo-gearloop-bikes",
+    "week": "2026-W43",
+    "status": "success",
+    "started_at": "2026-10-26T07:00:00Z",
+    "finished_at": "2026-10-26T07:02:55Z",
+    "total_cost_usd": 0.0076,
+    "batches_total": 1,
+    "batches_failed": 0,
+    "note": null
+   },
+   {
+    "run_id": "demo_gearloo_2026-W42",
+    "business_id": "demo-gearloop-bikes",
+    "week": "2026-W42",
+    "status": "success",
+    "started_at": "2026-10-19T07:00:00Z",
+    "finished_at": "2026-10-19T07:03:04Z",
+    "total_cost_usd": 0.02,
+    "batches_total": 1,
+    "batches_failed": 0,
+    "note": null
+   },
+   {
+    "run_id": "demo_gearloo_2026-W41",
+    "business_id": "demo-gearloop-bikes",
+    "week": "2026-W41",
+    "status": "success",
+    "started_at": "2026-10-12T07:00:00Z",
+    "finished_at": "2026-10-12T07:02:46Z",
+    "total_cost_usd": 0.0076,
+    "batches_total": 1,
+    "batches_failed": 0,
+    "note": null
+   },
+   {
+    "run_id": "demo_gearloo_2026-W40",
+    "business_id": "demo-gearloop-bikes",
+    "week": "2026-W40",
+    "status": "success",
+    "started_at": "2026-10-05T07:00:00Z",
+    "finished_at": "2026-10-05T07:02:37Z",
+    "total_cost_usd": 0.0076,
+    "batches_total": 1,
+    "batches_failed": 0,
+    "note": null
+   }
+  ],
+  "demo-saltmarsh-yoga": [
+   {
+    "run_id": "demo_saltmar_2026-W45",
+    "business_id": "demo-saltmarsh-yoga",
+    "week": "2026-W45",
+    "status": "success",
+    "started_at": "2026-11-09T07:00:00Z",
+    "finished_at": "2026-11-09T07:02:10Z",
+    "total_cost_usd": 0.0076,
+    "batches_total": 1,
+    "batches_failed": 0,
+    "note": null
+   },
+   {
+    "run_id": "demo_saltmar_2026-W44",
+    "business_id": "demo-saltmarsh-yoga",
+    "week": "2026-W44",
+    "status": "success",
+    "started_at": "2026-11-02T07:00:00Z",
+    "finished_at": "2026-11-02T07:02:19Z",
+    "total_cost_usd": 0.02,
+    "batches_total": 1,
+    "batches_failed": 0,
+    "note": null
+   },
+   {
+    "run_id": "demo_saltmar_2026-W43",
+    "business_id": "demo-saltmarsh-yoga",
+    "week": "2026-W43",
+    "status": "success",
+    "started_at": "2026-10-26T07:00:00Z",
+    "finished_at": "2026-10-26T07:02:19Z",
+    "total_cost_usd": 0.0076,
+    "batches_total": 1,
+    "batches_failed": 0,
+    "note": null
+   },
+   {
+    "run_id": "demo_saltmar_2026-W42",
+    "business_id": "demo-saltmarsh-yoga",
+    "week": "2026-W42",
+    "status": "success",
+    "started_at": "2026-10-19T07:00:00Z",
+    "finished_at": "2026-10-19T07:01:07Z",
+    "total_cost_usd": 0.0,
+    "batches_total": 0,
+    "batches_failed": 0,
+    "note": "Insufficient reviews (3 < 5); no brief produced."
+   },
+   {
+    "run_id": "demo_saltmar_2026-W41",
+    "business_id": "demo-saltmarsh-yoga",
+    "week": "2026-W41",
+    "status": "success",
+    "started_at": "2026-10-12T07:00:00Z",
+    "finished_at": "2026-10-12T07:02:28Z",
+    "total_cost_usd": 0.02,
+    "batches_total": 1,
+    "batches_failed": 0,
+    "note": null
+   },
+   {
+    "run_id": "demo_saltmar_2026-W40",
+    "business_id": "demo-saltmarsh-yoga",
+    "week": "2026-W40",
+    "status": "success",
+    "started_at": "2026-10-05T07:00:00Z",
+    "finished_at": "2026-10-05T07:02:01Z",
+    "total_cost_usd": 0.0076,
+    "batches_total": 1,
+    "batches_failed": 0,
+    "note": null
+   }
+  ],
+  "demo-copperpot-diner": [
+   {
+    "run_id": "demo_copperp_2026-W45",
+    "business_id": "demo-copperpot-diner",
+    "week": "2026-W45",
+    "status": "success",
+    "started_at": "2026-11-09T07:00:00Z",
+    "finished_at": "2026-11-09T07:03:13Z",
+    "total_cost_usd": 0.0076,
+    "batches_total": 1,
+    "batches_failed": 0,
+    "note": null
+   },
+   {
+    "run_id": "demo_copperp_2026-W44",
+    "business_id": "demo-copperpot-diner",
+    "week": "2026-W44",
+    "status": "success",
+    "started_at": "2026-11-02T07:00:00Z",
+    "finished_at": "2026-11-02T07:03:22Z",
+    "total_cost_usd": 0.0076,
+    "batches_total": 1,
+    "batches_failed": 0,
+    "note": null
+   },
+   {
+    "run_id": "demo_copperp_2026-W43",
+    "business_id": "demo-copperpot-diner",
+    "week": "2026-W43",
+    "status": "success",
+    "started_at": "2026-10-26T07:00:00Z",
+    "finished_at": "2026-10-26T07:03:04Z",
+    "total_cost_usd": 0.02,
+    "batches_total": 1,
+    "batches_failed": 0,
+    "note": null
+   },
+   {
+    "run_id": "demo_copperp_2026-W42",
+    "business_id": "demo-copperpot-diner",
+    "week": "2026-W42",
+    "status": "success",
+    "started_at": "2026-10-19T07:00:00Z",
+    "finished_at": "2026-10-19T07:03:13Z",
+    "total_cost_usd": 0.0076,
+    "batches_total": 1,
+    "batches_failed": 0,
+    "note": null
+   },
+   {
+    "run_id": "demo_copperp_2026-W41",
+    "business_id": "demo-copperpot-diner",
+    "week": "2026-W41",
+    "status": "success",
+    "started_at": "2026-10-12T07:00:00Z",
+    "finished_at": "2026-10-12T07:02:55Z",
+    "total_cost_usd": 0.0076,
+    "batches_total": 1,
+    "batches_failed": 0,
+    "note": null
+   },
+   {
+    "run_id": "demo_copperp_2026-W40",
+    "business_id": "demo-copperpot-diner",
+    "week": "2026-W40",
+    "status": "success",
+    "started_at": "2026-10-05T07:00:00Z",
+    "finished_at": "2026-10-05T07:02:46Z",
+    "total_cost_usd": 0.02,
+    "batches_total": 1,
+    "batches_failed": 0,
+    "note": null
+   }
+  ]
+ },
+ "metrics": {
+  "total_cost_usd": 0.5034,
+  "total_calls": 72,
+  "by_model": {
+   "claude-haiku-4-5-20251001": {
+    "calls": 64,
+    "total_cost_usd": 0.2944,
+    "avg_latency_ms": 610,
+    "p95_latency_ms": 1450,
+    "total_input_tokens": 198400,
+    "total_output_tokens": 57600,
+    "cache_read_tokens": 0,
+    "cache_creation_tokens": 0,
+    "prompt_cache_saved_usd": 0.0
+   },
+   "claude-sonnet-4-6": {
+    "calls": 7,
+    "total_cost_usd": 0.119,
+    "avg_latency_ms": 1480,
+    "p95_latency_ms": 2900,
+    "total_input_tokens": 23100,
+    "total_output_tokens": 6650,
+    "cache_read_tokens": 15918,
+    "cache_creation_tokens": 2274,
+    "prompt_cache_saved_usd": 0.043
+   },
+   "claude-opus-4-8": {
+    "calls": 1,
+    "total_cost_usd": 0.09,
+    "avg_latency_ms": 3900,
+    "p95_latency_ms": 6800,
+    "total_input_tokens": 3400,
+    "total_output_tokens": 1000,
+    "cache_read_tokens": 2274,
+    "cache_creation_tokens": 2274,
+    "prompt_cache_saved_usd": 0.0307
+   }
+  },
+  "by_stage": {
+   "analyze": {
+    "calls": 27,
+    "total_cost_usd": 0.2923,
+    "avg_latency_ms": 1240
+   },
+   "brief": {
+    "calls": 45,
+    "total_cost_usd": 0.0731,
+    "avg_latency_ms": 820
+   }
+  },
+  "routing_mix": {
+   "haiku_pct": 88.9,
+   "sonnet_pct": 9.7,
+   "opus_pct": 1.4
+  },
+  "idempotency_skips": 37,
+  "days_covered": 42,
+  "generated_at": "2026-11-16T07:00:00Z"
+ }
+}

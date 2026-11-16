@@ -8,12 +8,14 @@ Description: >
   custom metrics and rendered on a live dashboard.
 
 Parameters:
-  AnthropicApiKey:
+  AnthropicSecretArn:
     Type: String
-    NoEcho: true
+    AllowedPattern: ^arn:aws[a-z-]*:secretsmanager:[a-z0-9-]+:\d{12}:secret:.+$
     Description: >
-      Anthropic API key. Stored in AWS Secrets Manager (NOT as a plaintext
-      Lambda env var). The analyze/brief functions fetch it at cold start.
+      ARN of a Secrets Manager secret holding the Anthropic API key, created once
+      with `aws secretsmanager create-secret` (see DEPLOY.md). The key itself
+      never passes through CloudFormation. The analyze/brief functions fetch it
+      at cold start.
   Stage:
     Type: String
     Default: dev
@@ -29,11 +31,26 @@ Parameters:
     Description: >
       Optional email for the dead-letter-queue alarm. If set, you'll get an SNS
       confirmation email; confirm it to receive alerts when a run fails. Leave
-      empty to create the alarm without email notification.
+      empty to create the alarm without email notification. Also receives the
+      monthly budget alert when set.
+  ReservedConcurrency:
+    Type: Number
+    Default: 2
+    MinValue: 0
+    Description: >
+      Concurrent executions reserved for (and capping) each function. Bounds
+      parallel model spend. Set 0 to leave functions uncapped, which new
+      accounts with a 10-execution quota need, since AWS refuses any reservation
+      that would leave fewer than 10 unreserved.
+  MonthlyBudgetUsd:
+    Type: Number
+    Default: 10
+    Description: AWS Budgets monthly cost limit. Alerts AlarmEmail at 80% actual and 100% forecast.
 
 Conditions:
-  # True when AlarmEmail is non-empty — gates the SNS email subscription.
+  # True when AlarmEmail is non-empty — gates the SNS subscription and budget.
   HasAlarmEmail: !Not [!Equals [!Ref AlarmEmail, ""]]
+  HasConcurrencyCap: !Not [!Equals [!Ref ReservedConcurrency, 0]]
 
 Globals:
   Function:
@@ -41,6 +58,7 @@ Globals:
     Timeout: 120          # analyze can fan out several model calls
     MemorySize: 512
     Architectures: [arm64]
+    ReservedConcurrentExecutions: !If [HasConcurrencyCap, !Ref ReservedConcurrency, !Ref AWS::NoValue]
     Environment:
       Variables:
         BIZBRIEF_TABLE: !Ref ReviewsTable
@@ -49,9 +67,10 @@ Globals:
         # circular dependency. The names are deterministic via !Sub.
         BIZBRIEF_RAW_BUCKET: !Sub bizbrief-raw-${Stage}-${AWS::AccountId}
         BIZBRIEF_BRIEFS_BUCKET: !Sub bizbrief-briefs-${Stage}-${AWS::AccountId}
-        # The key is fetched from Secrets Manager at cold start (see secrets.py),
-        # NOT injected as a plaintext env var. Only the secret's ARN is exposed.
-        ANTHROPIC_SECRET_ARN: !Ref AnthropicSecret
+        # The key is fetched from Secrets Manager at cold start (see
+        # secrets_provider.py), NOT injected as a plaintext env var. Only the
+        # secret's ARN is exposed.
+        ANTHROPIC_SECRET_ARN: !Ref AnthropicSecretArn
 
 Resources:
 
@@ -96,17 +115,6 @@ Resources:
           KeyType: HASH
         - AttributeName: SK
           KeyType: RANGE
-
-  # Anthropic API key in Secrets Manager. Seeded from the AnthropicApiKey
-  # parameter at deploy time; the functions read it via secrets.py at cold start.
-  # To rotate without redeploying: update the secret value directly in Secrets
-  # Manager (aws secretsmanager put-secret-value ...).
-  AnthropicSecret:
-    Type: AWS::SecretsManager::Secret
-    Properties:
-      Name: !Sub bizbrief/anthropic-api-key-${Stage}
-      Description: Anthropic API key for BizBrief analyze/brief Lambdas.
-      SecretString: !Ref AnthropicApiKey
 
   # The raw bucket's S3->Lambda notification is wired explicitly (not via SAM's
   # Events: S3 sugar) to avoid the CloudFormation circular dependency between
@@ -192,6 +200,24 @@ Resources:
         IgnorePublicAcls: true
         RestrictPublicBuckets: true
 
+  BriefsBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref BriefsBucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: DenyInsecureTransport
+            Effect: Deny
+            Principal: "*"
+            Action: s3:*
+            Resource:
+              - !Sub arn:aws:s3:::bizbrief-briefs-${Stage}-${AWS::AccountId}
+              - !Sub arn:aws:s3:::bizbrief-briefs-${Stage}-${AWS::AccountId}/*
+            Condition:
+              Bool:
+                aws:SecureTransport: "false"
+
   # Dead-letter queue for failed async invocations (cloud analogue of
   # data/logs/dead-letter/). Failed events land here instead of vanishing.
   DeadLetterQueue:
@@ -237,6 +263,37 @@ Resources:
       AlarmActions:
         - !Ref AlarmTopic
 
+  # Account-level spend tripwire. Only created with AlarmEmail, since a budget
+  # with nobody to notify does nothing.
+  MonthlyBudget:
+    Type: AWS::Budgets::Budget
+    Condition: HasAlarmEmail
+    Properties:
+      Budget:
+        BudgetName: !Sub bizbrief-monthly-${Stage}
+        BudgetType: COST
+        TimeUnit: MONTHLY
+        BudgetLimit:
+          Amount: !Ref MonthlyBudgetUsd
+          Unit: USD
+      NotificationsWithSubscribers:
+        - Notification:
+            NotificationType: ACTUAL
+            ComparisonOperator: GREATER_THAN
+            Threshold: 80
+            ThresholdType: PERCENTAGE
+          Subscribers:
+            - SubscriptionType: EMAIL
+              Address: !Ref AlarmEmail
+        - Notification:
+            NotificationType: FORECASTED
+            ComparisonOperator: GREATER_THAN
+            Threshold: 100
+            ThresholdType: PERCENTAGE
+          Subscribers:
+            - SubscriptionType: EMAIL
+              Address: !Ref AlarmEmail
+
   # ---------------------------------------------------------------------------
   # Functions
   # ---------------------------------------------------------------------------
@@ -250,14 +307,34 @@ Resources:
       Environment:
         Variables:
           ANALYZE_FUNCTION_NAME: !Sub bizbrief-analyze-${Stage}
+      # S3 invokes ingest asynchronously. Without this a failed upload event
+      # would be retried and then dropped with no trace.
+      EventInvokeConfig:
+        MaximumRetryAttempts: 2
+        DestinationConfig:
+          OnFailure:
+            Type: SQS
+            Destination: !GetAtt DeadLetterQueue.Arn
+      # Least privilege: exactly the calls handler_ingest + storage make.
       Policies:
-        - DynamoDBCrudPolicy:
-            TableName: !Ref ReviewsTable
-        - S3ReadPolicy:
-            BucketName: !Sub bizbrief-raw-${Stage}-${AWS::AccountId}
-        - CloudWatchPutMetricPolicy: {}
-        - LambdaInvokePolicy:
-            FunctionName: !Sub bizbrief-analyze-${Stage}
+        - Statement:
+            - Effect: Allow
+              Action: s3:GetObject
+              Resource: !Sub arn:aws:s3:::bizbrief-raw-${Stage}-${AWS::AccountId}/uploads/*
+            - Effect: Allow
+              Action:
+                - dynamodb:BatchWriteItem   # put_reviews
+                - dynamodb:PutItem          # claim_upload
+              Resource: !GetAtt ReviewsTable.Arn
+            - Effect: Allow
+              Action: lambda:InvokeFunction
+              Resource: !Sub arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:bizbrief-analyze-${Stage}
+            - Effect: Allow
+              Action: cloudwatch:PutMetricData
+              Resource: "*"
+              Condition:
+                StringEquals:
+                  cloudwatch:namespace: BizBrief
       # S3 trigger wired explicitly via RawBucket.NotificationConfiguration +
       # IngestInvokePermission (above) to avoid a circular dependency.
 
@@ -279,13 +356,24 @@ Resources:
             Type: SQS
             Destination: !GetAtt DeadLetterQueue.Arn
       Policies:
-        - DynamoDBCrudPolicy:
-            TableName: !Ref ReviewsTable
-        - CloudWatchPutMetricPolicy: {}
-        - LambdaInvokePolicy:
-            FunctionName: !Sub bizbrief-brief-${Stage}
-        - AWSSecretsManagerGetSecretValuePolicy:
-            SecretArn: !Ref AnthropicSecret
+        - Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:Query     # get_reviews
+                - dynamodb:PutItem   # put_theme_report
+              Resource: !GetAtt ReviewsTable.Arn
+            - Effect: Allow
+              Action: lambda:InvokeFunction
+              Resource: !Sub arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:bizbrief-brief-${Stage}
+            - Effect: Allow
+              Action: secretsmanager:GetSecretValue
+              Resource: !Ref AnthropicSecretArn
+            - Effect: Allow
+              Action: cloudwatch:PutMetricData
+              Resource: "*"
+              Condition:
+                StringEquals:
+                  cloudwatch:namespace: BizBrief
 
   BriefFunction:
     Type: AWS::Serverless::Function
@@ -302,13 +390,24 @@ Resources:
             Type: SQS
             Destination: !GetAtt DeadLetterQueue.Arn
       Policies:
-        - DynamoDBCrudPolicy:
-            TableName: !Ref ReviewsTable
-        - S3CrudPolicy:
-            BucketName: !Sub bizbrief-briefs-${Stage}-${AWS::AccountId}
-        - CloudWatchPutMetricPolicy: {}
-        - AWSSecretsManagerGetSecretValuePolicy:
-            SecretArn: !Ref AnthropicSecret
+        - Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:GetItem   # get_theme_report
+                - dynamodb:PutItem   # put_brief
+              Resource: !GetAtt ReviewsTable.Arn
+            - Effect: Allow
+              Action: s3:PutObject   # put_brief renders <biz>/<week>.brief.json
+              Resource: !Sub arn:aws:s3:::bizbrief-briefs-${Stage}-${AWS::AccountId}/*
+            - Effect: Allow
+              Action: secretsmanager:GetSecretValue
+              Resource: !Ref AnthropicSecretArn
+            - Effect: Allow
+              Action: cloudwatch:PutMetricData
+              Resource: "*"
+              Condition:
+                StringEquals:
+                  cloudwatch:namespace: BizBrief
 
   # ---------------------------------------------------------------------------
   # Live cost / latency / throughput dashboard

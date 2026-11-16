@@ -41,7 +41,7 @@ before spending anything — see `infra/README.md` (`make local-e2e`).
 
 **What's defined in `infra/template.yaml`:** 3 Lambda functions, the S3 trigger,
 the DynamoDB table (on-demand), an SQS dead-letter queue, least-privilege IAM
-per function, and a 4-widget CloudWatch dashboard. The Lambdas import the same
+per function, a monthly AWS Budget, and a 4-widget CloudWatch dashboard. The Lambdas import the same
 `pipeline/` + `reliability/` code as the local app, so the **model router,
 prompt caching, retry/backoff, cost ceiling, and idempotency cache all carry
 over to the cloud unchanged**.
@@ -90,7 +90,7 @@ aws sts get-caller-identity
 > account). The deployer needs: `cloudformation:*`; full `s3:*` scoped to the
 > SAM staging bucket (`aws-sam-cli-managed-default*`) and `bizbrief-*` buckets;
 > `lambda:*`; create/manage on DynamoDB, SQS, CloudWatch (dashboards + alarms),
-> CloudWatch Logs, SNS, and Secrets Manager; and `iam:CreateRole`/`PassRole`/…
+> CloudWatch Logs, SNS, and AWS Budgets; and `iam:CreateRole`/`PassRole`/…
 > scoped to `arn:aws:iam::*:role/bizbrief-*`. SAM creates the per-function
 > execution roles for you. **Heads-up:** with least-privilege you'll likely hit
 > one missing S3/Logs action at a time across early deploys — granting `s3:*`
@@ -98,20 +98,30 @@ aws sts get-caller-identity
 
 ---
 
-## 3. How the Anthropic key is handled (Secrets Manager — already wired)
+## 3. Store the Anthropic key in Secrets Manager (one time)
 
-You supply the key **once**, at deploy time, via the `AnthropicApiKey`
-parameter. The template does **not** put it in the Lambda environment as
-plaintext. Instead it:
+The key never passes through CloudFormation. You create the secret yourself,
+once, and give the stack only its ARN.
 
-1. Stores the value in an `AWS::SecretsManager::Secret`
-   (`bizbrief/anthropic-api-key-<stage>`).
-2. Exposes only the secret's ARN to the functions (`ANTHROPIC_SECRET_ARN`).
-3. Grants the analyze + brief functions a scoped `secretsmanager:GetSecretValue`.
+```bash
+aws secretsmanager create-secret \
+  --name bizbrief/anthropic-api-key-prod \
+  --secret-string "sk-ant-..." \
+  --query ARN --output text
+# arn:aws:secretsmanager:us-east-1:123456789012:secret:bizbrief/anthropic-api-key-prod-AbCdEf
+```
 
-At cold start, `infra/lambdas/secrets_provider.py` fetches the key and places it
-in the environment so the shared `reliability.call_model` works unchanged. The
-key is never a readable plaintext env var.
+Keep that ARN. It is the `AnthropicSecretArn` parameter in the next steps.
+The secret is not part of the stack, so `make delete` leaves it in place.
+
+How the functions use it:
+
+1. Only the ARN is exposed to the functions (`ANTHROPIC_SECRET_ARN`).
+2. Only analyze and brief get `secretsmanager:GetSecretValue`, scoped to that ARN.
+3. At cold start, `infra/lambdas/secrets_provider.py` fetches the key with short
+   timeouts and places it in the environment, so the shared
+   `reliability.call_model` works unchanged. If the fetch fails, the invocation
+   fails at once with a clear error instead of hanging.
 
 **To rotate the key later** (no redeploy needed):
 ```bash
@@ -153,8 +163,10 @@ The guided prompts (first deploy only — answers are saved to `samconfig.toml`)
 | AWS Region | `us-east-1` (or yours) |
 | Parameter Stage | `prod` (or `dev`) |
 | Parameter LogRetentionDays | press Enter for default `30` |
-| Parameter AlarmEmail | your email for DLQ failure alerts, or Enter to skip |
-| Parameter AnthropicApiKey | `sk-ant-...` (hidden; stored in Secrets Manager, not a plaintext env var) |
+| Parameter AnthropicSecretArn | the ARN printed in [§3](#3-store-the-anthropic-key-in-secrets-manager-one-time) |
+| Parameter AlarmEmail | your email for DLQ failure and budget alerts, or Enter to skip |
+| Parameter ReservedConcurrency | press Enter for default `2` (use `0` if your account's Lambda concurrency quota is 10) |
+| Parameter MonthlyBudgetUsd | press Enter for default `10` |
 | Confirm changes before deploy | `Y` |
 | Allow SAM to create IAM roles | `Y` ← required (per-function execution roles) |
 | Disable rollback | `N` |
@@ -302,23 +314,26 @@ make delete       # sam delete — removes the whole stack
 
 ## 10. Production hardening
 
-These are **already built into the template** — they deploy automatically, no
-extra steps:
+These are **already built into the template**. They deploy automatically, with
+no extra steps:
 
-- [x] **Secrets Manager for the API key** ([§3](#3-how-the-anthropic-key-is-handled-secrets-manager--already-wired)) — key fetched at cold start, never a plaintext env var.
-- [x] **Per-function log retention** — explicit `LogGroup`s with a `LogRetentionDays` parameter (default 30) so CloudWatch Logs don't accumulate cost indefinitely.
-- [x] **DLQ alarm** — a CloudWatch alarm on dead-letter-queue depth (≥1) wired to an SNS topic. Pass `AlarmEmail=you@example.com` at deploy to get failure emails (confirm the SNS subscription once).
-- [x] **Raw-bucket write restriction** — bucket policy denies `PutObject` from outside the account and denies non-TLS access (protects the cost-incurring trigger).
-- [x] **Stage separation** — the `Stage` parameter namespaces every resource; deploy `dev` and `prod` independently.
-
-One thing **you** still own outside the template:
-
-- [ ] **Billing budget alarm** — set an AWS Budgets monthly cost alarm (e.g. $5) in the Billing console as a spend tripwire. Free, and the one guardrail the template can't create for you.
+- [x] **Secrets Manager for the API key** ([§3](#3-store-the-anthropic-key-in-secrets-manager-one-time)). Created once outside the stack. Only its ARN goes through CloudFormation.
+- [x] **Least-privilege IAM per function**. Each role lists only the S3, DynamoDB, Lambda and Secrets Manager actions its handler calls. Metrics are limited to the `BizBrief` namespace.
+- [x] **Concurrency cap**. `ReservedConcurrency` (default 2) bounds how many copies of each function can spend on the model at once.
+- [x] **Monthly budget**. An AWS Budget (`MonthlyBudgetUsd`, default $10) emails `AlarmEmail` at 80% of actual spend and when the forecast passes 100%.
+- [x] **No lost events**. Ingest, analyze and brief all send failed async invocations to the DLQ.
+- [x] **DLQ alarm**. A CloudWatch alarm on dead-letter-queue depth (≥1) is wired to an SNS topic. Pass `AlarmEmail=you@example.com` at deploy to get failure emails (confirm the SNS subscription once).
+- [x] **Bucket policies**. The raw bucket denies `PutObject` from outside the account. Both buckets deny non-TLS access.
+- [x] **Input validation in ingest**. Keys must match `uploads/<business_id>/<YYYY-Www>.jsonl`. Empty, malformed, non-UTF-8 or oversized (over 5 MB) files are rejected and logged before any model call. A repeated S3 delivery of the same object is skipped.
+- [x] **Time-boxed retries**. Model retries and backoff stop before the Lambda timeout, and the SDK's own retries are off so attempts don't multiply.
+- [x] **Cost ceiling**. When the per-run ceiling trips, analyze stops calling the model, saves what it has as `partial`, and logs a RunRecord.
+- [x] **Per-function log retention**. Explicit `LogGroup`s with a `LogRetentionDays` parameter (default 30).
+- [x] **Stage separation**. The `Stage` parameter namespaces every resource. Deploy `dev` and `prod` independently.
 
 Optional extras:
 
 - **CI/CD** — `.github/workflows/deploy.yml` does OIDC-based `sam deploy` on push to `main`. It's dormant until you create a GitHub deploy role and set the `AWS_DEPLOY_ROLE_ARN` repo variable (setup steps are documented inline in that file).
-- **Reserved/provisioned concurrency** — only if cold-start latency matters; on-demand is cheaper otherwise.
+- **Provisioned concurrency**. Only if cold-start latency matters. On-demand is cheaper otherwise.
 
 ---
 
@@ -328,7 +343,8 @@ Optional extras:
 # prereqs: aws configure done, Docker running
 cd infra
 make build
-make deploy        # guided; supply stack name, region, stage, Anthropic key
+# once: aws secretsmanager create-secret ... (see §3), keep the ARN
+make deploy        # guided; supply stack name, region, stage, AnthropicSecretArn
 
 # trigger
 RAW=$(aws cloudformation describe-stacks --stack-name bizbrief \
